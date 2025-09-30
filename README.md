@@ -222,21 +222,6 @@ Post.joins(:author).where.has {
 # )
 ```
 
-##### Exists
-
-```ruby
-Post.where.has {
-  exists Post.where.has { author_id == 1 }
-}
-# SELECT "posts".* FROM "posts"
-# WHERE (
-#   EXISTS(
-#     SELECT "posts".* FROM "posts"
-#     WHERE "posts"."author_id" = 1
-#   )
-# )
-```
-
 ##### Custom SQL Operators
 
 ```ruby
