@@ -1,7 +1,13 @@
+This is a fork of rzane/baby_squeel.
+I aim to keep it compatible with Rails and publish my commits in case others find them useful.
+However, I do not recommend using baby_squeel or this fork.
+I plan to remove functions I don’t need from this project without providing deprecations.
+
+---
+
 # BabySqueel 🐷
 
-![Build](https://github.com/rzane/baby_squeel/workflows/Build/badge.svg)
-![Version](https://img.shields.io/gem/v/baby_squeel)
+![Build](https://github.com/rocket-turtle/baby_squeel/workflows/Build/badge.svg)
 
 Have you ever used the [Squeel](https://github.com/activerecord-hackery/squeel) gem? It's a really nice way to build complex queries. However, Squeel monkeypatches Active Record internals, because it was aimed at enhancing the existing API with the aim of inclusion into Rails. However, that inclusion never happened, and it left Squeel susceptible to breakage from arbitrary changes in Active Record, eventually burning out the maintainer.
 
@@ -323,10 +329,6 @@ The following methods give you access to BabySqueel's DSL:
 | `where.has`   | `where`                  |
 | `when_having` | `having`                 |
 
-## Migrating from Squeel
-
-Check out the [migration guide](https://github.com/rzane/baby_squeel/wiki/Migrating-from-Squeel).
-
 ## Development
 
 1. Pick an Active Record version to develop against, then export it: `export AR=7.2.2`.
@@ -353,7 +355,7 @@ You can also run `bin/console` to open up a prompt where you'll have access to s
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/rzane/baby_squeel.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rocket-turtle/baby_squeel.
 
 ## License
 

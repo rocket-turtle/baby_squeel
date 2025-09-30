@@ -26,14 +26,8 @@ RSpec.configure do |config|
   config.default_formatter = config.files_to_run.one? ? :doc : :progress
   config.run_all_when_everything_filtered = true
   config.example_status_persistence_file_path = 'tmp/spec-results.log'
-  config.filter_run_excluding compat: ENV['COMPAT'] != "1"
 
   config.before :suite do
     puts "\nRunning with ActiveRecord #{ActiveRecord::VERSION::STRING}"
-
-    if ENV['COMPAT'] == "1"
-      puts "Running in Squeel Compatibility mode"
-      BabySqueel.enable_compatibility!
-    end
   end
 end
