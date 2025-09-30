@@ -154,22 +154,6 @@ describe '#where.has' do
     expect(relation).to match_sql_snapshot
   end
 
-  it 'builds an exists query' do
-    relation = Post.where.has {
-      exists Post.where.has { author_id == 1 }
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
-  it 'builds a not exists query' do
-    relation = Post.where.has {
-      not_exists Post.where.has { author_id == 1 }
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
   it 'wheres an association using #==' do
     author = Author.new(id: 42)
     relation = Post.where.has do |post|

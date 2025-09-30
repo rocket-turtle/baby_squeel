@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove exists and not_exists
 - remove Ransack (copy Polyamorous) (#4)
 - remove sifters
 - remove Squeel compatibility mode (#5)
