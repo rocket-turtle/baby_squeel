@@ -49,7 +49,7 @@ module BabySqueel
         # construct_tables! got removed by rails
         # https://github.com/rails/rails/commit/590b045ee2c0906ff162e6658a184afb201865d7
         #
-        # construct_tables_for_association! is a method from the polyamorous (ransack) gem
+        # construct_tables_for_association! is a method from Polyamorous::JoinDependencyExtensions
         join_root = join_dependency.send(:join_root)
         join_root.each_children do |parent, child|
           join_dependency.construct_tables_for_association!(parent, child)

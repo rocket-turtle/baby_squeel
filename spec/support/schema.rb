@@ -18,7 +18,8 @@ ActiveRecord::Schema.define do
     t.belongs_to :author
     t.datetime :published_at
     t.integer :view_count
-    t.integer :parent_id
+    t.belongs_to :parent
+    t.belongs_to :child
     t.timestamps null: false
   end
 
