@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove Squeel compatibility mode (#5)
 - Added support for Ransack 4.4 (#134)
 - Added support for ActiveRecord 8.0
 - Added support for ActiveRecord 7.2

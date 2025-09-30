@@ -12,13 +12,6 @@ module BabySqueel
       yield self
     end
 
-    # Turn on BabySqueel's compatibility mode. This will
-    # make BabySqueel act more like Squeel.
-    def enable_compatibility!
-      require 'baby_squeel/compat'
-      BabySqueel::Compat.enable!
-    end
-
     # Get a BabySqueel table instance.
     #
     # ==== Examples
