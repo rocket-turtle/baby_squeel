@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove Ransack (copy Polyamorous) (#4)
 - remove sifters
 - remove Squeel compatibility mode (#5)
 - Added support for Ransack 4.4 (#134)
