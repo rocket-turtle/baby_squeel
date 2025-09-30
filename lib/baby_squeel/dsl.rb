@@ -28,47 +28,6 @@ module BabySqueel
       Nodes.wrap Arel::Nodes::Grouping.new(expr)
     end
 
-    # Create a SQL function. See Arel::Nodes::NamedFunction.
-    #
-    # ==== Arguments
-    #
-    # * +name+ - The name of a SQL function (ex. coalesce).
-    # * +args+ - The arguments to be passed to the SQL function.
-    #
-    # ==== Example
-    #     Post.selecting { func('coalesce', id, 1) }
-    #     #=> SELECT COALESCE("posts"."id", 1) FROM "posts"
-    #
-    def func(name, *args)
-      Nodes.wrap Arel::Nodes::NamedFunction.new(name.to_s, args)
-    end
-
-    # Generate an EXISTS subselect from an ActiveRecord::Relation
-    #
-    # ==== Arguments
-    #
-    # * +relation+ - An ActiveRecord::Relation
-    #
-    # ==== Example
-    #     Post.where.has { exists Post.where(id: 1) }
-    #
-    def exists(relation)
-      func 'EXISTS', sql(relation.to_sql)
-    end
-
-    # Generate a NOT EXISTS subselect from an ActiveRecord::Relation
-    #
-    # ==== Arguments
-    #
-    # * +relation+ - An ActiveRecord::Relation
-    #
-    # ==== Example
-    #     Post.where.has { not_exists Post.where(id: 1) }
-    #
-    def not_exists(rel)
-      func 'NOT EXISTS', sql(rel.to_sql)
-    end
-
     # See Arel::sql
     def sql(value)
       Nodes.wrap ::Arel.sql(value)
@@ -82,7 +41,7 @@ module BabySqueel
     private
 
     def resolver
-      @resolver ||= Resolver.new(self, [:function, :column, :association])
+      @resolver ||= Resolver.new(self, [:column, :association])
     end
   end
 end

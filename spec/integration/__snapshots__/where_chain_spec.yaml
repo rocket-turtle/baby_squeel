@@ -36,10 +36,6 @@
   JOIN "authors" ON "authors"."id" = "posts"."author_id" LEFT OUTER JOIN "comments"
   ON "comments"."author_id" = "authors"."id" WHERE "comments"."id" IN (1, 2) AND "authors"."name"
   = 'Joe'
-"#where.has wheres on an alias with a function 1": SELECT "posts".* FROM "posts" INNER
-  JOIN "authors" ON "authors"."id" = "posts"."author_id" INNER JOIN "posts" "posts_authors"
-  ON "posts_authors"."author_id" = "authors"."id" WHERE coalesce("posts_authors"."id",
-  1) > 0
 "#where.has wheres with a subquery 1": SELECT "posts".* FROM "posts" INNER JOIN "authors"
   ON "authors"."id" = "posts"."author_id" WHERE "authors"."id" IN (SELECT "authors"."id"
   FROM "authors" LIMIT 3)
@@ -53,10 +49,6 @@
   "posts"."author_id" NOT IN (SELECT "authors"."id" FROM "authors" WHERE (1=0))
 "#where.has wheres using a simple table 1": SELECT "posts".* FROM "posts" INNER JOIN
   "authors" ON "authors"."id" = "posts"."author_id" WHERE "authors"."name" = 'Yo Gotti'
-"#where.has builds an exists query 1": SELECT "posts".* FROM "posts" WHERE EXISTS(SELECT
-  "posts".* FROM "posts" WHERE "posts"."author_id" = 1)
-"#where.has builds a not exists query 1": SELECT "posts".* FROM "posts" WHERE NOT
-  EXISTS(SELECT "posts".* FROM "posts" WHERE "posts"."author_id" = 1)
 "#where.has wheres an association using #== 1": SELECT "posts".* FROM "posts" WHERE
   "posts"."author_id" = 42
 "#where.has wheres an association using #!= 1": SELECT "posts".* FROM "posts" WHERE
