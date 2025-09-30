@@ -19,15 +19,6 @@ module BabySqueel
       end
     end
 
-    # Invokes a sifter defined on the model
-    #
-    # ==== Examples
-    #     Post.where.has { sift(:name_contains, 'joe') }
-    #
-    def sift(sifter_name, *args)
-      Nodes.wrap _scope.public_send("sift_#{sifter_name}", *args)
-    end
-
     private
 
     def resolver

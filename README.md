@@ -291,31 +291,6 @@ Post.selecting { title.op('||', quoted('diddly')) }
 Post.selecting { func('coalesce', id, 1) }
 ```
 
-## Sifters
-
-Sifters are like little snippets of conditions that can take arguments.
-
-```ruby
-class Post < ActiveRecord::Base
-  sifter :funny do
-    title == 'rabies'
-  end
-end
-
-class Author < ActiveRecord::Base
-  sifter :name_contains do |string|
-    name =~ "%#{string}%"
-  end
-end
-
-Post.joins(:author).where.has {
-  sift(:funny) | author.sift(:name_contains, 'blergh')
-}
-# SELECT "posts".* FROM "posts"
-# INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-# WHERE ("posts"."title" = 'rabies' OR "authors"."name" LIKE '%blergh%')
-```
-
 ## What's what?
 
 The following methods give you access to BabySqueel's DSL:

@@ -8,12 +8,6 @@ module BabySqueel
       def evaluate(scope, &block) # :nodoc:
         Nodes.unwrap new(scope).evaluate(&block)
       end
-
-      def evaluate_sifter(scope, *args, &block) # :nodoc:
-        evaluate scope do |root|
-          root.instance_exec(*args, &block)
-        end
-      end
     end
 
     # Create a Grouping node. This allows you to set balanced
