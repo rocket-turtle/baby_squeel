@@ -24,11 +24,6 @@ describe '#plucking' do
     expect(result).to match_array([1])
   end
 
-  it 'plucks with function' do
-    result = Post.plucking { upper(title) }
-    expect(result).to match_array(['ONE', 'TWO'])
-  end
-
   it 'plucks with expression' do
     result = Post.plucking { title == 'one' }
     expect(result).to match_array([0, 1])

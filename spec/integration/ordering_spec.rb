@@ -22,14 +22,6 @@ describe '#ordering' do
     expect(relation).to match_sql_snapshot
   end
 
-  it 'orders using functions' do
-    relation = Post.joins(:author).ordering {
-      coalesce(id, author.id).desc
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
   it 'orders using operations' do
     relation = Post.joins(:author).ordering {
       (author.id - id).desc

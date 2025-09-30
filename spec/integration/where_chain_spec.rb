@@ -23,14 +23,6 @@ describe '#where.has' do
     expect(relation).to match_sql_snapshot
   end
 
-  it 'wheres using functions' do
-    relation = Post.joins(:author).where.has {
-      coalesce(title, author.name) == 'meatloaf'
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
   it 'wheres using operations' do
     relation = Post.where.has { (id + 1) == 2 }
 
@@ -101,14 +93,6 @@ describe '#where.has' do
     expect(relation).to match_sql_snapshot
   end
 
-  it 'wheres on an alias with a function' do
-    relation = Post.joins(author: :posts).where.has {
-      coalesce(author.posts.id, 1) > 0
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
   it 'wheres with a subquery' do
     relation = Post.joins(:author).where.has {
       author.id.in Author.selecting { id }.limit(3)
@@ -149,22 +133,6 @@ describe '#where.has' do
 
     relation = Post.joins(:author).where.has {
       simple.name == 'Yo Gotti'
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
-  it 'builds an exists query' do
-    relation = Post.where.has {
-      exists Post.where.has { author_id == 1 }
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
-  it 'builds a not exists query' do
-    relation = Post.where.has {
-      not_exists Post.where.has { author_id == 1 }
     }
 
     expect(relation).to match_sql_snapshot

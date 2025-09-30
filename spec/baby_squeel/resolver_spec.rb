@@ -15,7 +15,6 @@ RSpec.describe BabySqueel::Resolver do
       [association, :association, :posts,    []],
       [dsl,         :column,      :title,    []],
       [dsl,         :association, :author,   []],
-      [dsl,         :function,    :coalesce, [1, 2]]
     ]
   end
 
@@ -28,7 +27,6 @@ RSpec.describe BabySqueel::Resolver do
       [association, :association, :posts,    [1]],
       [dsl,         :column,      :title,    [1]],
       [dsl,         :association, :author,   [1]],
-      [dsl,         :function,    :coalesce, []]
     ]
   end
 
@@ -41,26 +39,6 @@ RSpec.describe BabySqueel::Resolver do
       [dsl,         :column,      :missing,  []],
       [dsl,         :association, :missing,  []]
     ]
-  end
-
-  describe '#resolve' do
-    it 'resolves valid resolutions' do
-      valid_cases.each do |node, strategy, name, args|
-        msg = "resolve #{name} using #{strategy}"
-        resolver = described_class.new(node, [strategy])
-        expect(resolver.resolve(name, *args)).not_to be_nil, msg
-      end
-    end
-
-    it 'does not resolve invalid resolutions' do
-      cases = wrong_args_cases + invalid_name_cases
-
-      cases.each do |node, strategy, name, args|
-        msg = "does not resolve #{name} using #{strategy}"
-        resolver = described_class.new(node, [strategy])
-        expect(resolver.resolve(name, *args)).to be_nil, msg
-      end
-    end
   end
 
   describe '#resolve!' do

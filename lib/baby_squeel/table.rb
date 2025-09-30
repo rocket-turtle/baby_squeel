@@ -121,6 +121,7 @@ module BabySqueel
     end
 
     def method_missing(*args, &block)
+      puts caller
       resolver.resolve!(*args, &block) || super
     end
   end

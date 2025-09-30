@@ -201,13 +201,6 @@ Post.selecting { id.count }.grouping { author_id }.when_having { id.count > 5 }
 # HAVING (COUNT("posts"."id") > 5)
 ```
 
-##### Functions
-
-```ruby
-Post.selecting { coalesce(author_id, 5).as('author_id_with_default') }
-# SELECT coalesce("posts"."author_id", 5) AS author_id_with_default FROM "posts"
-```
-
 ##### Subqueries
 
 ```ruby
@@ -219,21 +212,6 @@ Post.joins(:author).where.has {
 # WHERE "authors"."id" IN (
 #   SELECT "authors"."id" FROM "authors"
 #   WHERE "authors"."name" = 'Ray'
-# )
-```
-
-##### Exists
-
-```ruby
-Post.where.has {
-  exists Post.where.has { author_id == 1 }
-}
-# SELECT "posts".* FROM "posts"
-# WHERE (
-#   EXISTS(
-#     SELECT "posts".* FROM "posts"
-#     WHERE "posts"."author_id" = 1
-#   )
 # )
 ```
 
@@ -286,9 +264,6 @@ Post.select('1 as one').ordering { sql('one').desc }
 
 # Quoting
 Post.selecting { title.op('||', quoted('diddly')) }
-
-# Functions
-Post.selecting { func('coalesce', id, 1) }
 ```
 
 ## What's what?
