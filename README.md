@@ -1,7 +1,19 @@
-This is a fork of rzane/baby_squeel.
+This is a fork of [baby_squeel](https://github.com/rzane/baby_squeel).
 I aim to keep it compatible with Rails and publish my commits in case others find them useful.
 However, I do not recommend using baby_squeel or this fork.
-I plan to remove functions I don’t need from this project without providing deprecations.
+I plan to remove functions which I don’t need from this project without providing deprecations.
+
+Release
+```
+update lib/baby_squeel/version.rb
+update CHANGELOG.md
+
+$ git add .
+$ git commit -m "release x.y.z.internalA"
+$ gem build baby_squeel.gemspec
+
+upload gem to own gemserver
+```
 
 ---
 
@@ -297,9 +309,9 @@ The following methods give you access to BabySqueel's DSL:
 
 Onliner to run the specs with different rails versions
 ```
-    export AR='~> 7.1.5'; rm Gemfile.lock; bin/setup; rake
-    export AR='~> 7.2.2'; rm Gemfile.lock; bin/setup; rake
-    export AR='~> 8.0.2'; rm Gemfile.lock; bin/setup; rake
+export AR='~> 7.1.5'; rm Gemfile.lock; bin/setup; rake
+export AR='~> 7.2.2'; rm Gemfile.lock; bin/setup; rake
+export AR='~> 8.0.2'; rm Gemfile.lock; bin/setup; rake
 ```
 
 You can also run `bin/console` to open up a prompt where you'll have access to some models to experiment with.
