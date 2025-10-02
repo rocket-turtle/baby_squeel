@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [3.0.0.internal2] - 2025-10-01
+
 - remove exists and not_exists
 - remove Ransack (copy Polyamorous) (#4)
 - remove sifters
