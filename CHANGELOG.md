@@ -1,25 +1,27 @@
 ## [Unreleased]
 
+- Add ActiveRecord main to testmatrix
+
 ## [3.0.0.internal2] - 2025-10-01
 
 - remove exists and not_exists
 - remove Ransack (copy Polyamorous) (#4)
 - remove sifters
 - remove Squeel compatibility mode (#5)
-- Added support for Ransack 4.4 (#134)
-- Added support for ActiveRecord 8.0
-- Added support for ActiveRecord 7.2
-- Droped support for ActiveRecord 6.1 and 7.0
-- Added Ruby 3.3 and 3.4 to test matrix
-- Droped support for Ruby 3.0 and 3.1
+- Add support for Ransack 4.4 (#134)
+- Add support for ActiveRecord 8.0
+- Add support for ActiveRecord 7.2
+- Drop support for ActiveRecord 6.1 and 7.0
+- Add Ruby 3.3 and 3.4 to test matrix
+- Drop support for Ruby 3.0 and 3.1
 
 ## [3.0.0] - 2023-11-20
 
-- Added support for ActiveRecord 7.1 (#125)
-- Added support for Ruby 3.2 (#128)
+- Add support for ActiveRecord 7.1 (#125)
+- Add support for Ruby 3.2 (#128)
 - Updated ransack to 4.1. (#126)
-- Droped support for Ruby 2.6 and 2.7. (#126)
-- Droped support for ActiveRecord 6.0. (#126)
+- Drop support for Ruby 2.6 and 2.7. (#126)
+- Drop support for ActiveRecord 6.0. (#126)
 
 ## [2.0.0] - 2022-08-28
 
