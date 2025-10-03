@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Fix specs for ActiveRecord 8.1
 - Add ActiveRecord main to testmatrix
 
 ## [3.0.0.internal2] - 2025-10-01
