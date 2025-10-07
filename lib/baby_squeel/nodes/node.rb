@@ -14,7 +14,6 @@ module BabySqueel
 
       extend Operators::ArelAliasing
       include Operators::Equality
-      include Operators::Generic
     end
   end
 end

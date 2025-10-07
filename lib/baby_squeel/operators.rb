@@ -24,22 +24,5 @@ module BabySqueel
       arel_alias :==, :eq
       arel_alias :'!=', :not_eq
     end
-
-    module Generic
-      # Create a SQL operation. See Arel::Nodes::InfixOperation.
-      #
-      # ==== Arguments
-      #
-      # * +operator+ - A SQL operator.
-      # * +other+ - The argument to be passed to the SQL operator.
-      #
-      # ==== Example
-      #    Post.selecting { title.op('||', quoted('diddly')) }
-      #    #=> SELECT "posts"."title" || 'diddly' FROM "posts"
-      #
-      def op(operator, other)
-        Nodes.wrap Arel::Nodes::InfixOperation.new(operator, self, other)
-      end
-    end
   end
 end

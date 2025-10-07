@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove op, quoted, sql
 - remove BabySqueel.configure and BabySqueel[]
 - remove BabySqueel::ActiveRecord::Calculations (plucking, averaging, counting, maximizing, minimizing, summing)
 - remove reordering, ordering, grouping, when_having

@@ -17,7 +17,7 @@ module BabySqueel
           Function.new(arel)
         when Arel::Nodes::Binary
           Binary.new(arel)
-        when Arel::Nodes::Node, Arel::Nodes::SqlLiteral
+        when Arel::Nodes::Node
           Node.new(arel)
         else
           arel
