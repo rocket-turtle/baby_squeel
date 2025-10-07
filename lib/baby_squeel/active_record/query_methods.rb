@@ -30,26 +30,6 @@ module BabySqueel
         select DSL.evaluate(self, &block)
       end
 
-      # Constructs Arel for ActiveRecord::QueryMethods#order using the DSL.
-      def ordering(&block)
-        order DSL.evaluate(self, &block)
-      end
-
-      # Constructs Arel for ActiveRecord::QueryMethods#reorder using the DSL.
-      def reordering(&block)
-        reorder DSL.evaluate(self, &block)
-      end
-
-      # Constructs Arel for ActiveRecord::QueryMethods#group using the DSL.
-      def grouping(&block)
-        group DSL.evaluate(self, &block)
-      end
-
-      # Constructs Arel for ActiveRecord::QueryMethods#having using the DSL.
-      def when_having(&block)
-        having DSL.evaluate(self, &block)
-      end
-
       def construct_join_dependency(associations, join_type)
         result = super(associations, join_type)
         if associations.any? { |assoc| assoc.is_a?(BabySqueel::Join) }

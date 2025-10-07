@@ -5,10 +5,6 @@ module BabySqueel
     module Base
       delegate :joining,
                :selecting,
-               :ordering,
-               :reordering,
-               :grouping,
-               :when_having,
                :plucking,
                :averaging,
                :counting,
