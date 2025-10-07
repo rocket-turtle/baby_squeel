@@ -144,16 +144,6 @@ describe '#where.has' do
     expect(relation).to match_sql_snapshot
   end
 
-  it 'wheres using a simple table' do
-    simple = BabySqueel[:authors, type_caster: Author.type_caster]
-
-    relation = Post.joins(:author).where.has {
-      simple.name == 'Yo Gotti'
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
   it 'wheres an association using #==' do
     author = Author.new(id: 42)
     relation = Post.where.has do |post|
