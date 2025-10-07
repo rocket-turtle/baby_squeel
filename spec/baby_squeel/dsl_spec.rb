@@ -14,18 +14,6 @@ describe BabySqueel::DSL do
     subject(:table) { dsl }
   end
 
-  describe '#func' do
-    it 'constructs a named function' do
-      expect(dsl.func(:coalesce, 0, 1)).to produce_sql('coalesce(0, 1)')
-    end
-  end
-
-  describe '#method_missing' do
-    it 'resolves functions' do
-      expect(dsl.coalesce(0, 1)).to be_a(Arel::Nodes::NamedFunction)
-    end
-  end
-
   describe '#evaluate' do
     context 'when an arity is given' do
       it 'yields itself' do

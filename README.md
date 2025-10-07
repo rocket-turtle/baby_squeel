@@ -182,13 +182,6 @@ Picture.joining { imageable.of(Post).outer }
 # LEFT OUTER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'
 ```
 
-##### Functions
-
-```ruby
-Post.selecting { coalesce(author_id, 5).as('author_id_with_default') }
-# SELECT coalesce("posts"."author_id", 5) AS author_id_with_default FROM "posts"
-```
-
 ##### Subqueries
 
 ```ruby
@@ -224,11 +217,6 @@ Picture.
 ```
 
 ##### Helpers
-
-```ruby
-# Functions
-Post.selecting { func('coalesce', id, 1) }
-```
 
 ## What's what?
 

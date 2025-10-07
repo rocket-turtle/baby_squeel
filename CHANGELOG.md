@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove functions
 - remove DSL#\_
 - remove op, quoted, sql
 - remove BabySqueel.configure and BabySqueel[]
