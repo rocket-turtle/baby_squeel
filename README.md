@@ -130,28 +130,6 @@ Post.joins(author: :posts).where.has { author.posts.title.matches('%fun%') }
 # WHERE ("posts_authors"."title" LIKE '%fun%')
 ```
 
-##### Orders
-
-```ruby
-Post.ordering { [id.desc, title.asc] }
-# SELECT "posts".* FROM "posts"
-# ORDER BY "posts"."id" DESC, "posts"."title" ASC
-
-Post.ordering { (id * 5).desc }
-# SELECT "posts".* FROM "posts"
-# ORDER BY "posts"."id" * 5 DESC
-
-Post.select(:author_id).group(:author_id).ordering { id.count.desc }
-# SELECT "posts"."author_id" FROM "posts"
-# GROUP BY "posts"."author_id"
-# ORDER BY COUNT("posts"."id") DESC
-
-Post.joins(:author).ordering { author.id.desc }
-# SELECT "posts".* FROM "posts"
-# INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-# ORDER BY "authors"."id" DESC
-```
-
 ##### Joins
 
 ```ruby
@@ -202,15 +180,6 @@ Picture.joining { imageable.of(Post) }
 Picture.joining { imageable.of(Post).outer }
 # SELECT "pictures".* FROM "pictures"
 # LEFT OUTER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'
-```
-
-##### Grouping
-
-```ruby
-Post.selecting { id.count }.grouping { author_id }.when_having { id.count.gt(5) }
-# SELECT COUNT("posts"."id") FROM "posts"
-# GROUP BY "posts"."author_id"
-# HAVING (COUNT("posts"."id") > 5)
 ```
 
 ##### Functions
@@ -279,7 +248,7 @@ Picture.
 
 ```ruby
 # SQL Literals
-Post.select('1 as one').ordering { sql('one').desc }
+Post.select('1 as one').selecting { sql('one') }
 
 # Quoting
 Post.selecting { title.op('||', quoted('diddly')) }
@@ -295,11 +264,8 @@ The following methods give you access to BabySqueel's DSL:
 | BabySqueel    | Active Record Equivalent |
 | ------------- | ------------------------ |
 | `selecting`   | `select`                 |
-| `ordering`    | `order`                  |
 | `joining`     | `joins`                  |
-| `grouping`    | `group`                  |
 | `where.has`   | `where`                  |
-| `when_having` | `having`                 |
 
 ## Development
 
