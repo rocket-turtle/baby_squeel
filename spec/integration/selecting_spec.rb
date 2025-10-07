@@ -20,14 +20,6 @@ describe '#selecting' do
     expect(relation).to match_sql_snapshot
   end
 
-  it 'selects using functions' do
-    relation = Post.joins(:author).selecting {
-      coalesce(id, author.id)
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
   it 'selects using operations' do
     relation = Post.joins(:author).selecting {
       author.id - id

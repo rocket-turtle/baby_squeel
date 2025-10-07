@@ -4,9 +4,6 @@
 "#where.has accepts nil 1": SELECT "posts".* FROM "posts"
 "#where.has wheres on associations 1": SELECT "posts".* FROM "posts" INNER JOIN "authors"
   ON "authors"."id" = "posts"."author_id" WHERE "authors"."name" = 'Yo Gotti'
-"#where.has wheres using functions 1": SELECT "posts".* FROM "posts" INNER JOIN "authors"
-  ON "authors"."id" = "posts"."author_id" WHERE coalesce("posts"."title", "authors"."name")
-  = 'meatloaf'
 "#where.has wheres using operations 1": SELECT "posts".* FROM "posts" WHERE ("posts"."id"
   + 1) = 2
 "#where.has wheres using complex conditions 1": SELECT "posts".* FROM "posts" INNER
@@ -36,10 +33,6 @@
   JOIN "authors" ON "authors"."id" = "posts"."author_id" LEFT OUTER JOIN "comments"
   ON "comments"."author_id" = "authors"."id" WHERE "comments"."id" IN (1, 2) AND "authors"."name"
   = 'Joe'
-"#where.has wheres on an alias with a function 1": SELECT "posts".* FROM "posts" INNER
-  JOIN "authors" ON "authors"."id" = "posts"."author_id" INNER JOIN "posts" "posts_authors"
-  ON "posts_authors"."author_id" = "authors"."id" WHERE coalesce("posts_authors"."id",
-  1) > 0
 "#where.has wheres with a subquery 1": SELECT "posts".* FROM "posts" INNER JOIN "authors"
   ON "authors"."id" = "posts"."author_id" WHERE "authors"."id" IN (SELECT "authors"."id"
   FROM "authors" LIMIT 3)
@@ -57,9 +50,6 @@
   "posts"."author_id" = 42
 "#where.has wheres an association using #!= 1": SELECT "posts".* FROM "posts" WHERE
   "posts"."author_id" != 42
-"#where.has wheres using functions 1 (Active Record: v8.1)": SELECT "posts".* FROM
-  "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id" WHERE coalesce("posts"."title",
-  "authors"."name") = 'meatloaf'
 "#where.has wheres on an aliased association 1 (Active Record: v8.1)": SELECT "posts".*
   FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id" INNER
   JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
@@ -69,7 +59,3 @@
   INNER JOIN "authors" ON "authors"."id" = "posts"."author_id" INNER JOIN "comments"
   AS "author_comments_posts" ON "author_comments_posts"."author_id" = "authors"."id"
   WHERE "author_comments_posts"."id" > 0
-"#where.has wheres on an alias with a function 1 (Active Record: v8.1)": SELECT "posts".*
-  FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id" INNER
-  JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
-  WHERE coalesce("posts_authors"."id", 1) > 0

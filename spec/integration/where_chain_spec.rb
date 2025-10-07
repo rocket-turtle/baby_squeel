@@ -23,14 +23,6 @@ describe '#where.has' do
     expect(relation).to match_sql_snapshot
   end
 
-  it 'wheres using functions' do
-    relation = Post.joins(:author).where.has {
-      coalesce(title, author.name).eq('meatloaf')
-    }
-
-    expect(relation).to match_sql_snapshot(variants: ['8.1'])
-  end
-
   it 'wheres using operations' do
     relation = Post.where.has { (id + 1).eq(2) }
 
@@ -99,14 +91,6 @@ describe '#where.has' do
                     .where.has { author.name == 'Joe' }
 
     expect(relation).to match_sql_snapshot
-  end
-
-  it 'wheres on an alias with a function' do
-    relation = Post.joins(author: :posts).where.has {
-      coalesce(author.posts.id, 1).gt(0)
-    }
-
-    expect(relation).to match_sql_snapshot(variants: ['8.1'])
   end
 
   it 'wheres with a subquery' do

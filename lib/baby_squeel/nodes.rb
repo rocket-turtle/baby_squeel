@@ -1,6 +1,5 @@
 require 'baby_squeel/nodes/node'
 require 'baby_squeel/nodes/attribute'
-require 'baby_squeel/nodes/function'
 require 'baby_squeel/nodes/grouping'
 require 'baby_squeel/nodes/binary'
 
@@ -13,8 +12,6 @@ module BabySqueel
         case arel
         when Arel::Nodes::Grouping
           Grouping.new(arel)
-        when Arel::Nodes::Function
-          Function.new(arel)
         when Arel::Nodes::Binary
           Binary.new(arel)
         when Arel::Nodes::Node

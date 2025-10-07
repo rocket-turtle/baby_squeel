@@ -10,25 +10,10 @@ module BabySqueel
       end
     end
 
-    # Create a SQL function. See Arel::Nodes::NamedFunction.
-    #
-    # ==== Arguments
-    #
-    # * +name+ - The name of a SQL function (ex. coalesce).
-    # * +args+ - The arguments to be passed to the SQL function.
-    #
-    # ==== Example
-    #     Post.selecting { func('coalesce', id, 1) }
-    #     #=> SELECT COALESCE("posts"."id", 1) FROM "posts"
-    #
-    def func(name, *args)
-      Nodes.wrap Arel::Nodes::NamedFunction.new(name.to_s, args)
-    end
-
     private
 
     def resolver
-      @resolver ||= Resolver.new(self, [:function, :column, :association])
+      @resolver ||= Resolver.new(self, [:column, :association])
     end
   end
 end
