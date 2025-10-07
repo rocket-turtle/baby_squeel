@@ -1,8 +1,8 @@
-require 'baby_squeel/nodes/node'
+require 'baby_squeel/nodes/proxy'
 
 module BabySqueel
   module Nodes
-    class Binary < Node
+    class Binary < Proxy
       def initialize(node)
         super
         node.extend Arel::AliasPredication

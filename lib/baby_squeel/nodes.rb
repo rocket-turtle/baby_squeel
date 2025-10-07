@@ -1,4 +1,4 @@
-require 'baby_squeel/nodes/node'
+require 'baby_squeel/nodes/proxy'
 require 'baby_squeel/nodes/attribute'
 require 'baby_squeel/nodes/grouping'
 require 'baby_squeel/nodes/binary'
@@ -15,7 +15,7 @@ module BabySqueel
         when Arel::Nodes::Binary
           Binary.new(arel)
         when Arel::Nodes::Node
-          Node.new(arel)
+          Proxy.new(arel)
         else
           arel
         end
