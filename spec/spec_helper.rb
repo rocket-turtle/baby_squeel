@@ -1,6 +1,5 @@
 require 'bundler/setup'
 require 'simplecov'
-require 'pry'
 require 'byebug'
 
 SimpleCov.start { add_filter 'spec/' }
@@ -12,12 +11,8 @@ require 'support/matchers'
 require 'support/factories'
 require 'support/polyamorous_helper'
 
-if ActiveSupport.respond_to?(:deprecator)
-  ActiveSupport.deprecator.behavior = :raise
-  ActiveRecord.deprecator.behavior = :raise
-else
-  ActiveSupport::Deprecation.behavior = :raise
-end
+ActiveSupport.deprecator.behavior = :raise
+ActiveRecord.deprecator.behavior = :raise
 
 RSpec.configure do |config|
   config.include Factories
