@@ -58,7 +58,7 @@ Post.where(Post.arel_table[:created_at].gteq(2.weeks.ago))
 Well, that's great, but it's also pretty verbose. Why don't you give BabySqueel a try:
 
 ```ruby
-Post.where.has { created_at >= 2.weeks.ago }
+Post.where.has { created_at.gteq(2.weeks.ago) }
 ```
 
 #### Quick note
@@ -66,7 +66,7 @@ Post.where.has { created_at >= 2.weeks.ago }
 BabySqueel's blocks use `instance_eval`, which means you won't have access to your instance variables or methods. Don't worry, there's a really easy solution. Just give arity to the block:
 
 ```ruby
-Post.where.has { |post| post.created_at >= 2.weeks.ago }
+Post.where.has { |post| post.created_at.gteq(2.weeks.ago) }
 ```
 
 ## Usage
@@ -110,20 +110,20 @@ Post.where.has { title == 'My Post' }
 # SELECT "posts".* FROM "posts"
 # WHERE "posts"."title" = 'My Post'
 
-Post.where.has { title =~ 'My P%' }
+Post.where.has { title.matches('My P%') }
 # SELECT "posts".* FROM "posts"
 # WHERE ("posts"."title" LIKE 'My P%')
 
-Author.where.has { (name =~ 'Ray%') & (id < 5) | (name.lower =~ 'zane%') & (id > 100) }
+Author.where.has { name.matches('Ray%').and(id.lt(5)).or(name.lower.matches('zane%').and(id.gt(100))) }
 # SELECT "authors".* FROM "authors"
 # WHERE ("authors"."name" LIKE 'Ray%' AND "authors"."id" < 5 OR LOWER("authors"."name") LIKE 'zane%' AND "authors"."id" > 100)
 
-Post.joins(:author).where.has { author.name == 'Ray' }
+Post.joins(:author).where.has { author.name.eq('Ray') }
 # SELECT "posts".* FROM "posts"
 # INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
 # WHERE "authors"."name" = 'Ray'
 
-Post.joins(author: :posts).where.has { author.posts.title =~ '%fun%' }
+Post.joins(author: :posts).where.has { author.posts.title.matches('%fun%') }
 # SELECT "posts".* FROM "posts"
 # INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
 # INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
@@ -187,11 +187,11 @@ Post.joining { author.outer.posts }
 # LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
 # INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
 
-Post.joining { author.on((author.id == author_id) | (author.name == title)) }
+Post.joining { author.on(author.id.eq(author_id).or(author.name.eq(title))) }
 # SELECT "posts".* FROM "posts"
 # INNER JOIN "authors" ON ("authors"."id" = "posts"."author_id" OR "authors"."name" = "posts"."title")
 
-Post.joining { |post| post.author.as('a').on { (id == post.author_id) | (name == post.title) } }
+Post.joining { |post| post.author.as('a').on { id.eq(post.author_id).or(name.eq(post.title)) } }
 # SELECT "posts".* FROM "posts"
 # INNER JOIN "authors" "a" ON ("a"."id" = "posts"."author_id" OR "a"."name" = "posts"."title")
 
@@ -207,7 +207,7 @@ Picture.joining { imageable.of(Post).outer }
 ##### Grouping
 
 ```ruby
-Post.selecting { id.count }.grouping { author_id }.when_having { id.count > 5 }
+Post.selecting { id.count }.grouping { author_id }.when_having { id.count.gt(5) }
 # SELECT COUNT("posts"."id") FROM "posts"
 # GROUP BY "posts"."author_id"
 # HAVING (COUNT("posts"."id") > 5)

@@ -13,11 +13,8 @@ module BabySqueel
       end
 
       extend Operators::ArelAliasing
-      include Operators::Comparison
       include Operators::Equality
       include Operators::Generic
-      include Operators::Grouping
-      include Operators::Matching
     end
   end
 end
