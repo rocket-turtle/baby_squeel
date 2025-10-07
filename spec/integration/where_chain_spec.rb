@@ -25,21 +25,21 @@ describe '#where.has' do
 
   it 'wheres using functions' do
     relation = Post.joins(:author).where.has {
-      coalesce(title, author.name) == 'meatloaf'
+      coalesce(title, author.name).eq('meatloaf')
     }
 
     expect(relation).to match_sql_snapshot(variants: ['8.1'])
   end
 
   it 'wheres using operations' do
-    relation = Post.where.has { (id + 1) == 2 }
+    relation = Post.where.has { (id + 1).eq(2) }
 
     expect(relation).to match_sql_snapshot
   end
 
   it 'wheres using complex conditions' do
     relation = Post.joins(:author).where.has {
-      (title =~ 'Simp%').or(author.name == 'meatloaf')
+      title.matches('Simp%').or(author.name.eq('meatloaf'))
     }
 
     expect(relation).to match_sql_snapshot
@@ -47,7 +47,7 @@ describe '#where.has' do
 
   it 'wheres on deep associations' do
     relation = Post.joins(author: :comments).where.has {
-      author.comments.id > 0
+      author.comments.id.gt(0)
     }
 
     expect(relation).to match_sql_snapshot
@@ -55,7 +55,7 @@ describe '#where.has' do
 
   it 'wheres on an aliased association' do
     relation = Post.joins(author: :posts).where.has {
-      author.posts.id > 0
+      author.posts.id.gt(0)
     }
 
     expect(relation).to match_sql_snapshot(variants: ['8.1'])
@@ -63,7 +63,7 @@ describe '#where.has' do
 
   it 'wheres on an aliased association with through' do
     relation = Post.joins(:comments, :author_comments).where.has {
-      author_comments.id > 0
+      author_comments.id.gt(0)
     }
 
     expect(relation).to match_sql_snapshot(variants: ['8.1'])
@@ -71,7 +71,7 @@ describe '#where.has' do
 
   it 'wheres on polymorphic associations' do
     relation = Picture.joining { imageable.of(Post) }.where.has {
-      imageable.of(Post).title =~ 'meatloaf'
+      imageable.of(Post).title.matches('meatloaf')
     }
 
     expect(relation).to match_sql_snapshot
@@ -79,7 +79,7 @@ describe '#where.has' do
 
   it 'wheres on polymorphic associations outer join' do
     relation = Picture.joining { imageable.of(Post).outer }.where.has {
-      imageable.of(Post).title =~ 'meatloaf'
+      imageable.of(Post).title.matches('meatloaf')
     }
 
     expect(relation).to match_sql_snapshot
@@ -103,7 +103,7 @@ describe '#where.has' do
 
   it 'wheres on an alias with a function' do
     relation = Post.joins(author: :posts).where.has {
-      coalesce(author.posts.id, 1) > 0
+      coalesce(author.posts.id, 1).gt(0)
     }
 
     expect(relation).to match_sql_snapshot(variants: ['8.1'])

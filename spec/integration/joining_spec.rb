@@ -80,7 +80,7 @@ describe '#joining' do
       it 'inner joins' do
         relation = Post.joining {
           author.on(
-            (author_id == author.id) & (author.id != 5) | (author.name == nil)
+            author_id.eq(author.id).and(author.id != 5).or(author.name.eq(nil))
           )
         }
 
@@ -90,7 +90,7 @@ describe '#joining' do
       it 'outer joins' do
         relation = Post.joining {
           author.outer.on(
-            (author_id == author.id) & (author.id != 5) | (author.name == nil)
+            author_id.eq(author.id).and(author.id != 5).or(author.name.eq(nil))
           )
         }
 
@@ -132,7 +132,7 @@ describe '#joining' do
     it 'correctly aliases when joining the same table twice' do
       relation = Post.joining { [author.outer, parent.outer.author.outer] }
       relation = relation.where.has do
-        (author.outer.name == 'Rick') | (parent.outer.author.outer.name == 'Flair')
+        author.outer.name.eq('Rick').or(parent.outer.author.outer.name.eq('Flair'))
       end
 
       expect(relation).to match_sql_snapshot(variants: ['8.1'])

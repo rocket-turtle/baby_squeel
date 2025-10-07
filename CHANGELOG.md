@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove Operators::Grouping, Operators::Matching, Operators::Comparison
 - Fix specs for ActiveRecord 8.1
 - Add ActiveRecord main to testmatrix
 
