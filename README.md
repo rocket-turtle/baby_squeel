@@ -92,12 +92,6 @@ end
 ##### Selects
 
 ```ruby
-Post.selecting { (id + 5).as('id_plus_five') }
-# SELECT ("posts"."id" + 5) AS id_plus_five FROM "posts"
-
-Post.selecting { id.sum }
-# SELECT SUM("posts"."id") FROM "posts"
-
 Post.joins(:author).selecting { [id, author.id] }
 # SELECT "posts"."id", "authors"."id" FROM "posts"
 # INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"

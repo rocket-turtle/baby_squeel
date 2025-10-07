@@ -1,8 +1,8 @@
-require 'baby_squeel/nodes/node'
+require 'baby_squeel/nodes/proxy'
 
 module BabySqueel
   module Nodes
-    class Attribute < Node
+    class Attribute < Proxy
       def initialize(parent, name)
         @parent = parent
         @name = name.to_s

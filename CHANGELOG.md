@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove BabySqueel::Nodes::Node and Arel::Math
 - remove Operators::Equality, Operators::ArelAliasing
 - remove functions
 - remove DSL#\_
