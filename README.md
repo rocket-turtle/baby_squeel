@@ -106,7 +106,7 @@ Post.joins(:author).selecting { [id, author.id] }
 ##### Wheres
 
 ```ruby
-Post.where.has { title == 'My Post' }
+Post.where.has { title.eq('My Post') }
 # SELECT "posts".* FROM "posts"
 # WHERE "posts"."title" = 'My Post'
 

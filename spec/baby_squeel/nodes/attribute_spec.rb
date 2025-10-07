@@ -16,7 +16,7 @@ describe BabySqueel::Nodes::Attribute do
     end
 
     it 'accepts an ActiveRecord relation' do
-      relation = Post.selecting { id }.where.has { title == nil }
+      relation = Post.selecting { id }.where.has { title.eq(nil) }
 
       expect(attribute.in(relation)).to produce_sql(<<-EOSQL)
         "posts"."id" IN (
@@ -47,7 +47,7 @@ describe BabySqueel::Nodes::Attribute do
     end
 
     it 'accepts an ActiveRecord relation' do
-      relation = Post.selecting { id }.where.has { title == nil }
+      relation = Post.selecting { id }.where.has { title.eq(nil) }
 
       expect(attribute.not_in(relation)).to produce_sql(<<-EOSQL)
         "posts"."id" NOT IN (

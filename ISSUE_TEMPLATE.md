@@ -29,7 +29,7 @@ end
 
 class BabySqueelTest < Minitest::Spec
   it 'works' do
-    scope = Dog.where.has { name == 'Fido' }
+    scope = Dog.where.has { name.eq('Fido') }
 
     scope.to_sql.must_equal %{
       SELECT "dogs".* FROM "dogs" WHERE "dogs"."name" = 'Fido'

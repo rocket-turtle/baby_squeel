@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe '#where.has' do
   it 'wheres on an attribute' do
-    relation = Post.where.has {
-      title == 'OJ Simpson'
-    }
+    relation = Post.where.has { title.eq('OJ Simpson') }
 
     expect(relation).to match_sql_snapshot
   end
@@ -17,7 +15,7 @@ describe '#where.has' do
 
   it 'wheres on associations' do
     relation = Post.joins(:author).where.has {
-      author.name == 'Yo Gotti'
+      author.name.eq('Yo Gotti')
     }
 
     expect(relation).to match_sql_snapshot
@@ -79,16 +77,16 @@ describe '#where.has' do
 
   it 'wheres and correctly aliases' do
     relation = Post.joining { author.comments }
-                    .where.has { author.comments.id.in [1, 2] }
-                    .where.has { author.name == 'Joe' }
+                   .where.has { author.comments.id.in [1, 2] }
+                   .where.has { author.name.eq('Joe') }
 
     expect(relation).to match_sql_snapshot
   end
 
   it 'wheres on an alias with outer join' do
     relation = Post.joining { author.comments.outer }
-                    .where.has { author.comments.id.in [1, 2] }
-                    .where.has { author.name == 'Joe' }
+                   .where.has { author.comments.id.in [1, 2] }
+                   .where.has { author.name.eq('Joe') }
 
     expect(relation).to match_sql_snapshot
   end
@@ -163,7 +161,7 @@ end
 
 describe '#where_values_hash' do
   it 'returns the same hash that Rails normally would' do
-    bs = Author.where.has{id == 123}
+    bs = Author.where.has { id.eq(123) }
     ar = Author.where(id: 123)
     expect(bs.where_values_hash).to eq(ar.where_values_hash)
   end

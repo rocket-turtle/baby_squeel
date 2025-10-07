@@ -10,9 +10,7 @@ describe BabySqueel::Nodes::Binary do
     )
   }
 
-  subject(:node) {
-    attribute == 1
-  }
+  subject(:node) { attribute.eq(1) }
 
   describe '#to_sql' do
     it 'creates the right SQL' do

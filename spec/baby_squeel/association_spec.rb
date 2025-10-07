@@ -47,21 +47,6 @@ describe BabySqueel::Association do
     end
   end
 
-  describe '#!=' do
-    subject(:association) { create_association Post, :author }
-
-    it 'generates SQL' do
-      node = association != Author.new(id: 42)
-      expect(node._arel.to_sql).to match_sql_snapshot
-    end
-
-    it 'throws for an invalid comparison' do
-      expect {
-        association != 'foo'
-      }.to raise_error(BabySqueel::AssociationComparisonError)
-    end
-  end
-
   describe '#add_to_tree' do
     def make_tree(tree_node)
       hash = {}
@@ -98,7 +83,7 @@ describe BabySqueel::Association do
 
   describe '#_arel' do
     context 'when explicitly joining' do
-      let(:condition) { association.author_id == association.author.id }
+      let(:condition) { association.author_id.eq(association.author.id) }
       let(:assoc)     { association.author.on(condition) }
 
       it 'resolves to an Arel join node' do
