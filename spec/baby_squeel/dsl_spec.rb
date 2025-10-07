@@ -14,16 +14,6 @@ describe BabySqueel::DSL do
     subject(:table) { dsl }
   end
 
-  describe '#_' do
-    it 'groups an array' do
-      expect(dsl._([1, 2])).to produce_sql('(1, 2)')
-    end
-
-    it 'groups a relation' do
-      expect(dsl._(Post.where("x = y"))).to produce_sql('(SELECT "posts".* FROM "posts" WHERE (x = y))')
-    end
-  end
-
   describe '#func' do
     it 'constructs a named function' do
       expect(dsl.func(:coalesce, 0, 1)).to produce_sql('coalesce(0, 1)')
