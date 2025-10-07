@@ -10,7 +10,6 @@ require 'support/schema'
 require 'support/models'
 require 'support/matchers'
 require 'support/factories'
-require 'support/query_tracker'
 require 'support/polyamorous_helper'
 
 if ActiveSupport.respond_to?(:deprecator)
@@ -22,7 +21,6 @@ end
 
 RSpec.configure do |config|
   config.include Factories
-  config.include QueryTracker
   config.include PolyamorousHelper, :polyamorous
 
   config.filter_run focus: true
