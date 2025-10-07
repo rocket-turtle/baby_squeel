@@ -28,7 +28,7 @@ module BabySqueel
       "association was implicitly joined. Either join the association " \
       "with `on` or remove the alias. For example:" \
       "\n\n  Post.joining { author }" \
-      "\n  Post.joining { author.on(author_id == author.id) }\n\n"
+      "\n  Post.joining { author.on(author_id.eq(author.id)) }\n\n"
 
     def initialize(association, alias_name)
       super format(MESSAGE, association: association, alias_name: alias_name)

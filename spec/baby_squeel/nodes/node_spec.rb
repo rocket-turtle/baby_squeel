@@ -6,11 +6,6 @@ describe BabySqueel::Nodes::Node do
     described_class.new(Post.arel_table[:id])
   }
 
-  describe 'included modules' do
-    subject { described_class.ancestors }
-    specify { is_expected.to include(BabySqueel::Operators::Equality) }
-  end
-
   it 'extends any node with math' do
     expect((node + 5) * 5).to produce_sql('("posts"."id" + 5) * 5')
   end

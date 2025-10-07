@@ -8,7 +8,7 @@ shared_examples_for 'a table' do
   end
 
   describe '#on' do
-    let(:expr) { table.id == 1 }
+    let(:expr) { table.id.eq(1) }
 
     it 'sets the on clause' do
       expect(table.on(expr)._on._arel).to eq(expr)

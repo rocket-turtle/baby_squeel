@@ -1,4 +1,3 @@
-require 'baby_squeel/operators'
 require 'baby_squeel/nodes/proxy'
 
 module BabySqueel
@@ -11,9 +10,6 @@ module BabySqueel
         super
         node.extend Arel::Math
       end
-
-      extend Operators::ArelAliasing
-      include Operators::Equality
     end
   end
 end

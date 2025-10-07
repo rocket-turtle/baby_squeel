@@ -4,7 +4,7 @@ describe '#joining' do
   context 'when joining explicitly' do
     it 'inner joins' do
       relation = Post.joining {
-        author.on(author.id == author_id)
+        author.on(author.id.eq(author_id))
       }
 
       expect(relation).to match_sql_snapshot
@@ -12,7 +12,7 @@ describe '#joining' do
 
     it 'inner joins explicitly' do
       relation = Post.joining {
-        author.inner.on(author.id == author_id)
+        author.inner.on(author.id.eq(author_id))
       }
 
       expect(relation).to match_sql_snapshot
@@ -20,7 +20,7 @@ describe '#joining' do
 
     it 'inner joins explicitly with alias' do
       relation = Post.joining { |post|
-        post.author.as('a').on { id == post.author_id }
+        post.author.as('a').on { id.eq(post.author_id) }
       }
 
       expect(relation).to match_sql_snapshot(variants: ['8.1'])
@@ -28,27 +28,27 @@ describe '#joining' do
 
     it 'outer joins' do
       relation = Post.joining {
-        author.outer.on(author.id == author_id)
+        author.outer.on(author.id.eq(author_id))
       }
 
       expect(relation).to match_sql_snapshot
     end
 
     it 'self joins' do
-      relation = Post.joining { on(id == 1) }
+      relation = Post.joining { on(id.eq(1)) }
 
       expect(relation).to match_sql_snapshot
     end
 
     it 'self outer joins' do
-      relation = Post.joining { outer.on(id == 1) }
+      relation = Post.joining { outer.on(id.eq(1)) }
 
       expect(relation).to match_sql_snapshot
     end
 
     it 'self joins with alias' do
       relation = Post.joining {
-        on(id == 1).alias('meatloaf')
+        on(id.eq(1)).alias('meatloaf')
       }
 
       expect(relation).to match_sql_snapshot(variants: ['8.1'])
@@ -56,7 +56,7 @@ describe '#joining' do
 
     it 'aliases' do
       relation = Post.joining {
-        author.alias('a').on(author.id == author_id)
+        author.alias('a').on(author.id.eq(author_id))
       }
 
       expect(relation).to match_sql_snapshot(variants: ['8.1'])
@@ -64,7 +64,7 @@ describe '#joining' do
 
     it 'aliases after the on clause' do
       relation = Post.joining {
-        author.on(author.id == author_id).alias('a')
+        author.on(author.id.eq(author_id)).alias('a')
       }
 
       expect(relation).to match_sql_snapshot(variants: ['8.1'])
@@ -80,7 +80,7 @@ describe '#joining' do
       it 'inner joins' do
         relation = Post.joining {
           author.on(
-            author_id.eq(author.id).and(author.id != 5).or(author.name.eq(nil))
+            author_id.eq(author.id).and(author.id.not_eq(5)).or(author.name.eq(nil))
           )
         }
 
@@ -90,7 +90,7 @@ describe '#joining' do
       it 'outer joins' do
         relation = Post.joining {
           author.outer.on(
-            author_id.eq(author.id).and(author.id != 5).or(author.name.eq(nil))
+            author_id.eq(author.id).and(author.id.not_eq(5)).or(author.name.eq(nil))
           )
         }
 
@@ -161,7 +161,7 @@ describe '#joining' do
 
     describe 'habtm' do
       it 'inner joins' do
-        relation = ResearchPaper.joins(:authors).where.has { authors.name == "Alex" }
+        relation = ResearchPaper.joins(:authors).where.has { authors.name.eq("Alex") }
 
         expect(relation).to match_sql_snapshot
       end
@@ -321,7 +321,7 @@ describe '#joining' do
       relation = Post
       relation = relation.joining { [author, comments.author] }
       relation = relation.where.has {
-        comments.author.name == 'Bob'
+        comments.author.name.eq('Bob')
       }
 
       expect(relation.to_sql).to match_sql_snapshot(variants: ['8.1'])

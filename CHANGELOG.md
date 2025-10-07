@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove Operators::Equality, Operators::ArelAliasing
 - remove functions
 - remove DSL#\_
 - remove op, quoted, sql
