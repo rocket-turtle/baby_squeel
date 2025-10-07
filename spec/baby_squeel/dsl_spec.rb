@@ -14,29 +14,6 @@ describe BabySqueel::DSL do
     subject(:table) { dsl }
   end
 
-  describe '#sql' do
-    it 'converts something to a sql literal' do
-      expect(dsl.sql('something')).to be_a(Arel::Nodes::SqlLiteral)
-    end
-
-    it 'wraps the node' do
-      expression = dsl.sql('something') == 'test'
-      expect(expression).to produce_sql("something = 'test'")
-    end
-  end
-
-  describe '#quoted' do
-    subject { dsl.quoted('fat') }
-
-    it 'quotes using the connection adapter' do
-      is_expected.to eq("'fat'")
-    end
-
-    it 'returns a sql literal' do
-      is_expected.to be_a(Arel::Nodes::SqlLiteral)
-    end
-  end
-
   describe '#_' do
     it 'groups an array' do
       expect(dsl._([1, 2])).to produce_sql('(1, 2)')

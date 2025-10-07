@@ -203,15 +203,6 @@ Post.joins(:author).where.has {
 # )
 ```
 
-##### Custom SQL Operators
-
-```ruby
-authors = Author.selecting { name.op('||', quoted('-dizzle')).as('swag') }
-# SELECT "authors"."name" || '-dizzle' AS swag FROM "authors"
-
-authors.first.swag #=> 'Ray Zane-dizzle'
-```
-
 ##### Polymorphism
 
 Given this polymorphism:
@@ -235,12 +226,6 @@ Picture.
 ##### Helpers
 
 ```ruby
-# SQL Literals
-Post.select('1 as one').selecting { sql('one') }
-
-# Quoting
-Post.selecting { title.op('||', quoted('diddly')) }
-
 # Functions
 Post.selecting { func('coalesce', id, 1) }
 ```

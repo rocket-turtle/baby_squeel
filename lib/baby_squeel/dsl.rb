@@ -43,16 +43,6 @@ module BabySqueel
       Nodes.wrap Arel::Nodes::NamedFunction.new(name.to_s, args)
     end
 
-    # See Arel::sql
-    def sql(value)
-      Nodes.wrap ::Arel.sql(value)
-    end
-
-    # Quotes a string and marks it as SQL
-    def quoted(value)
-      sql _scope.connection.quote(value)
-    end
-
     private
 
     def resolver
