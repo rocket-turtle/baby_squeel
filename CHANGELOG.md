@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [3.0.0.internal3] - 2025-11-27
+
 - Add support for ActiveRecord 8.1
 - remove BabySqueel::Nodes::Node and Arel::Math
 - remove Operators::Equality, Operators::ArelAliasing
