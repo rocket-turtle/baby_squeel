@@ -33,6 +33,6 @@ describe '#selecting' do
       author.posts.id
     }
 
-    expect(relation).to match_sql_snapshot(variants: ['8.1'])
+    expect(relation).to match_sql_snapshot(variants: ['8.1', '8.2'])
   end
 end
