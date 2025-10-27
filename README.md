@@ -232,7 +232,8 @@ Onliner to run the specs with different rails versions
 ```
 export AR='~> 7.1.5'; rm Gemfile.lock; bin/setup; rake
 export AR='~> 7.2.2'; rm Gemfile.lock; bin/setup; rake
-export AR='~> 8.0.2'; rm Gemfile.lock; bin/setup; rake
+export AR='~> 8.0.3'; rm Gemfile.lock; bin/setup; rake
+export AR='~> 8.1.0'; rm Gemfile.lock; bin/setup; rake
 export AR='main'; rm Gemfile.lock; bin/setup; rake
 ```
 

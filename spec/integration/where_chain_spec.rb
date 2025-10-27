@@ -48,7 +48,7 @@ describe '#where.has' do
       author.posts.id.gt(0)
     }
 
-    expect(relation).to match_sql_snapshot(variants: ['8.1'])
+    expect(relation).to match_sql_snapshot(variants: ['8.1', '8.2'])
   end
 
   it 'wheres on an aliased association with through' do
@@ -56,7 +56,7 @@ describe '#where.has' do
       author_comments.id.gt(0)
     }
 
-    expect(relation).to match_sql_snapshot(variants: ['8.1'])
+    expect(relation).to match_sql_snapshot(variants: ['8.1', '8.2'])
   end
 
   it 'wheres on polymorphic associations' do
