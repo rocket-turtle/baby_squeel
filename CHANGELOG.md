@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Drop support for ActiveRecord 7.1
+
 ## [3.0.0.internal3] - 2025-11-27
 
 - Add support for ActiveRecord 8.1
