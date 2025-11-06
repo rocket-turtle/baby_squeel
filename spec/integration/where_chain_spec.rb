@@ -91,14 +91,6 @@ describe '#where.has' do
     expect(relation).to match_sql_snapshot
   end
 
-  it 'wheres with a subquery' do
-    relation = Post.joins(:author).where.has {
-      author.id.in Author.selecting { id }.limit(3)
-    }
-
-    expect(relation).to match_sql_snapshot
-  end
-
   it 'wheres with an empty subquery' do
     relation = Post.where.has {
       author_id.in Author.none.select(:id)

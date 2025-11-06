@@ -89,14 +89,6 @@ class Comment < ActiveRecord::Base
 end
 ```
 
-##### Selects
-
-```ruby
-Post.joins(:author).selecting { [id, author.id] }
-# SELECT "posts"."id", "authors"."id" FROM "posts"
-# INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-```
-
 ##### Wheres
 
 ```ruby
@@ -205,9 +197,7 @@ has_many :pictures, as: :imageable
 The query might look like this:
 
 ```ruby
-Picture.
-  joining { imageable.of(Post) }.
-  selecting { imageable.of(Post).id }
+Picture.joining { imageable.of(Post) }
 ```
 
 ##### Helpers
@@ -218,7 +208,6 @@ The following methods give you access to BabySqueel's DSL:
 
 | BabySqueel    | Active Record Equivalent |
 | ------------- | ------------------------ |
-| `selecting`   | `select`                 |
 | `joining`     | `joins`                  |
 | `where.has`   | `where`                  |
 

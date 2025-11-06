@@ -4,7 +4,6 @@ module BabySqueel
   module ActiveRecord
     module Base
       delegate :joining,
-               :selecting,
                to: :all
     end
   end

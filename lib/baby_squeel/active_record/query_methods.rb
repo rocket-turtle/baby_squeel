@@ -25,11 +25,6 @@ module BabySqueel
         joins DSL.evaluate(self, &block)
       end
 
-      # Constructs Arel for ActiveRecord::QueryMethods#select using the DSL.
-      def selecting(&block)
-        select DSL.evaluate(self, &block)
-      end
-
       def construct_join_dependency(associations, join_type)
         result = super(associations, join_type)
         if associations.any? { |assoc| assoc.is_a?(BabySqueel::Join) }
