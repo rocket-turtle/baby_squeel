@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove selecting
 - Drop support for ActiveRecord 7.1
 
 ## [3.0.0.internal3] - 2025-11-27

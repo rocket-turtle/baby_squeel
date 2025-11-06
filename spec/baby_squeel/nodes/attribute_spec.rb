@@ -15,26 +15,6 @@ describe BabySqueel::Nodes::Attribute do
       expect(attribute.in([1, 2])).to produce_sql('"posts"."id" IN (1, 2)')
     end
 
-    it 'accepts an ActiveRecord relation' do
-      relation = Post.selecting { id }.where.has { title.eq(nil) }
-
-      expect(attribute.in(relation)).to produce_sql(<<-EOSQL)
-        "posts"."id" IN (
-          SELECT "posts"."id"
-          FROM "posts"
-          WHERE "posts"."title" IS NULL
-        )
-      EOSQL
-    end
-
-    it 'accepts an ActiveRecord relation with limit' do
-      relation = Post.selecting { id }.limit(3)
-
-      expect(attribute.in(relation)).to produce_sql(<<-EOSQL)
-        "posts"."id" IN (SELECT "posts"."id" FROM "posts" LIMIT 3)
-      EOSQL
-    end
-
     it 'returns a BabySqueel node' do
       relation = Post.select(:id)
       expect(attribute.in(relation)).to respond_to(:_arel)
@@ -46,24 +26,9 @@ describe BabySqueel::Nodes::Attribute do
       expect(attribute.not_in([1, 2])).to produce_sql('"posts"."id" NOT IN (1, 2)')
     end
 
-    it 'accepts an ActiveRecord relation' do
-      relation = Post.selecting { id }.where.has { title.eq(nil) }
-
-      expect(attribute.not_in(relation)).to produce_sql(<<-EOSQL)
-        "posts"."id" NOT IN (
-          SELECT "posts"."id"
-          FROM "posts"
-          WHERE "posts"."title" IS NULL
-        )
-      EOSQL
-    end
-
-    it 'accepts an ActiveRecord relation with limit' do
-      relation = Post.selecting { id }.limit(3)
-
-      expect(attribute.not_in(relation)).to produce_sql(<<-EOSQL)
-        "posts"."id" NOT IN (SELECT "posts"."id" FROM "posts" LIMIT 3)
-      EOSQL
+    it 'returns a BabySqueel node' do
+      relation = Post.select(:id)
+      expect(attribute.not_in(relation)).to respond_to(:_arel)
     end
   end
 end
