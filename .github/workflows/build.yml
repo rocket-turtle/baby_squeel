@@ -35,8 +35,8 @@ jobs:
       - name: Install packages
         run: sudo apt-get install libsqlite3-dev
 
-      - name: Install bundler
-        run: gem install bundler
+      - name: Install Bundler 4.x
+        run: gem install bundler -v '~> 4.0'
 
       - name: Install dependencies
         run: bundle install
