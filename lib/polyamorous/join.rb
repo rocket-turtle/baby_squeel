@@ -25,9 +25,9 @@ module Polyamorous
 
     def eql?(other)
       self.class == other.class &&
-      self.name  == other.name &&
-      self.type  == other.type &&
-      self.klass == other.klass
+        self.name  == other.name &&
+        self.type  == other.type &&
+        self.klass == other.klass
     end
 
     alias :== :eql?
@@ -65,6 +65,5 @@ module Polyamorous
         raise ArgumentError, "#{value} cannot be converted to a Class"
       end
     end
-
   end
 end

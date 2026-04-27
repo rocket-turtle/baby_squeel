@@ -1,6 +1,7 @@
 module Polyamorous
   module JoinAssociationExtensions
     include SwappingReflectionClass
+
     def self.prepended(base)
       base.class_eval { attr_reader :join_type }
     end

@@ -7,6 +7,12 @@ AllCops:
     - 'bin/**/*'
     - 'exe/**/*'
 
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+Gemspec/RequireMFA:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
@@ -16,6 +22,10 @@ Style/FrozenStringLiteralComment:
 # kind_of? is used intentionally in several places
 Style/ClassCheck:
   Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
 
 # Existing code uses alias in class bodies
 Style/Alias:

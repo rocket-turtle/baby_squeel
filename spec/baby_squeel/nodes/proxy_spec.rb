@@ -14,7 +14,7 @@ describe BabySqueel::Nodes::Proxy do
 
   describe "#inspect" do
     it "includes BabySqueel" do
-      expect(proxy.inspect).to match(%r(BabySqueel{"FakeNode"}))
+      expect(proxy.inspect).to match(/BabySqueel{"FakeNode"}/)
     end
   end
 

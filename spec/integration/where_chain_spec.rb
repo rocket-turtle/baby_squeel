@@ -14,9 +14,9 @@ describe "#where.has" do
   end
 
   it "wheres on associations" do
-    relation = Post.joins(:author).where.has {
+    relation = Post.joins(:author).where.has do
       author.name.eq("Yo Gotti")
-    }
+    end
 
     expect(relation).to match_sql_snapshot
   end
@@ -28,49 +28,49 @@ describe "#where.has" do
   end
 
   it "wheres using complex conditions" do
-    relation = Post.joins(:author).where.has {
+    relation = Post.joins(:author).where.has do
       title.matches("Simp%").or(author.name.eq("meatloaf"))
-    }
+    end
 
     expect(relation).to match_sql_snapshot
   end
 
   it "wheres on deep associations" do
-    relation = Post.joins(author: :comments).where.has {
+    relation = Post.joins(author: :comments).where.has do
       author.comments.id.gt(0)
-    }
+    end
 
     expect(relation).to match_sql_snapshot
   end
 
   it "wheres on an aliased association" do
-    relation = Post.joins(author: :posts).where.has {
+    relation = Post.joins(author: :posts).where.has do
       author.posts.id.gt(0)
-    }
+    end
 
     expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
   end
 
   it "wheres on an aliased association with through" do
-    relation = Post.joins(:comments, :author_comments).where.has {
+    relation = Post.joins(:comments, :author_comments).where.has do
       author_comments.id.gt(0)
-    }
+    end
 
     expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
   end
 
   it "wheres on polymorphic associations" do
-    relation = Picture.joining { imageable.of(Post) }.where.has {
+    relation = Picture.joining { imageable.of(Post) }.where.has do
       imageable.of(Post).title.matches("meatloaf")
-    }
+    end
 
     expect(relation).to match_sql_snapshot
   end
 
   it "wheres on polymorphic associations outer join" do
-    relation = Picture.joining { imageable.of(Post).outer }.where.has {
+    relation = Picture.joining { imageable.of(Post).outer }.where.has do
       imageable.of(Post).title.matches("meatloaf")
-    }
+    end
 
     expect(relation).to match_sql_snapshot
   end
@@ -78,7 +78,7 @@ describe "#where.has" do
   it "wheres and correctly aliases" do
     relation = Post.joining { author.comments }
                    .where.has { author.comments.id.in [1, 2] }
-                   .where.has { author.name.eq("Joe") }
+                         .where.has { author.name.eq("Joe") }
 
     expect(relation).to match_sql_snapshot
   end
@@ -86,15 +86,15 @@ describe "#where.has" do
   it "wheres on an alias with outer join" do
     relation = Post.joining { author.comments.outer }
                    .where.has { author.comments.id.in [1, 2] }
-                   .where.has { author.name.eq("Joe") }
+                         .where.has { author.name.eq("Joe") }
 
     expect(relation).to match_sql_snapshot
   end
 
   it "wheres with an empty subquery" do
-    relation = Post.where.has {
+    relation = Post.where.has do
       author_id.in Author.none.select(:id)
-    }
+    end
 
     expect(relation).to match_sql_snapshot
   end
@@ -111,9 +111,9 @@ describe "#where.has" do
   end
 
   it "wheres with a not in subquery" do
-    relation = Post.where.has {
+    relation = Post.where.has do
       author_id.not_in Author.none.select(:id)
-    }
+    end
 
     expect(relation).to match_sql_snapshot
   end

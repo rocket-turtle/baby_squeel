@@ -16,9 +16,9 @@ shared_examples_for "a relation" do
     end
 
     it "raises an error for non-existant associations" do
-      expect {
+      expect do
         table.association :non_existent
-      }.to raise_error(
+      end.to raise_error(
         BabySqueel::AssociationNotFoundError,
         /named 'non_existent'(.+)for Post/
       )

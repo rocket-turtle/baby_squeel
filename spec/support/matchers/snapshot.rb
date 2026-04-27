@@ -32,9 +32,7 @@ module Matchers
 
       data[name] = value
 
-      File.open path, "w" do |f|
-        f.write data.to_yaml
-      end
+      File.write(path, data.to_yaml)
 
       value
     end

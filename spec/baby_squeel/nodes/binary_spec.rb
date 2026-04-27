@@ -3,12 +3,12 @@ require "baby_squeel/nodes"
 require "baby_squeel/table"
 
 describe BabySqueel::Nodes::Binary do
-  let(:attribute) {
+  let(:attribute) do
     BabySqueel::Nodes::Attribute.new(
       create_relation(Post),
       :id
     )
-  }
+  end
 
   subject(:node) { attribute.eq(1) }
 

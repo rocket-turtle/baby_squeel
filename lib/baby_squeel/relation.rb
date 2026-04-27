@@ -12,7 +12,8 @@ module BabySqueel
     # Constructs a new BabySqueel::Association. Raises
     # an exception if the association is not found.
     def association(name)
-      if reflection = _scope.reflect_on_association(name)
+      reflection = _scope.reflect_on_association(name)
+      if reflection
         Association.new(self, reflection)
       else
         raise AssociationNotFoundError.new(_scope.model_name, name)
@@ -22,7 +23,7 @@ module BabySqueel
     private
 
     def resolver
-      @resolver ||= Resolver.new(self, [:column, :association])
+      @resolver ||= Resolver.new(self, %i[column association])
     end
   end
 end

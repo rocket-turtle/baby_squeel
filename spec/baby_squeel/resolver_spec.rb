@@ -14,7 +14,7 @@ RSpec.describe BabySqueel::Resolver do
       [association, :column,      :name,     []],
       [association, :association, :posts,    []],
       [dsl,         :column,      :title,    []],
-      [dsl,         :association, :author,   []],
+      [dsl,         :association, :author,   []]
     ]
   end
 
@@ -26,7 +26,7 @@ RSpec.describe BabySqueel::Resolver do
       [association, :column,      :name,     [1]],
       [association, :association, :posts,    [1]],
       [dsl,         :column,      :title,    [1]],
-      [dsl,         :association, :author,   [1]],
+      [dsl,         :association, :author,   [1]]
     ]
   end
 
@@ -60,11 +60,10 @@ RSpec.describe BabySqueel::Resolver do
 
     it "raises for the correct number of arguments, but invalid name" do
       invalid_name_cases.each do |node, strategy, name, args|
-        msg = "raises NotFoundError for #{name} using #{strategy}"
         resolver = described_class.new(node, [strategy])
-        expect {
+        expect do
           resolver.resolve!(name, *args)
-        }.to raise_error(BabySqueel::NotFoundError)
+        end.to raise_error(BabySqueel::NotFoundError)
       end
     end
   end

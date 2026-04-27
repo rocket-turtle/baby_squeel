@@ -10,7 +10,7 @@ module Matchers
       actual = @formatter.normalize(actual)
 
       if @snapshot.read && !ENV["UPDATE_SNAPSHOTS"]
-        super(actual)
+        super
       else
         @snapshot.write(actual)
         true

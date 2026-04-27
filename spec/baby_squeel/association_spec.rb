@@ -28,7 +28,7 @@ describe BabySqueel::Association do
     end
 
     it "throws a fit when the reflection is not polymorphic" do
-      expect{ association.of(Post) }.to raise_error(BabySqueel::PolymorphicSpecificationError)
+      expect { association.of(Post) }.to raise_error(BabySqueel::PolymorphicSpecificationError)
     end
   end
 
@@ -41,9 +41,9 @@ describe BabySqueel::Association do
     end
 
     it "throws for an invalid comparison" do
-      expect {
+      expect do
         association == "foo"
-      }.to raise_error(BabySqueel::AssociationComparisonError)
+      end.to raise_error(BabySqueel::AssociationComparisonError)
     end
   end
 
@@ -106,9 +106,9 @@ describe BabySqueel::Association do
         end
 
         it "throws a fit when an alias is attempted" do
-          expect {
+          expect do
             association.alias("naughty")._arel
-          }.to raise_error(BabySqueel::AssociationAliasingError)
+          end.to raise_error(BabySqueel::AssociationAliasingError)
         end
       end
 
@@ -118,9 +118,9 @@ describe BabySqueel::Association do
         end
 
         it "throws a fit when an alias is attempted" do
-          expect {
+          expect do
             association.alias("naughty")._arel
-          }.to raise_error(BabySqueel::AssociationAliasingError)
+          end.to raise_error(BabySqueel::AssociationAliasingError)
         end
       end
 

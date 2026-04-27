@@ -225,6 +225,8 @@ export AR='~> 7.2.3'; rm Gemfile.lock; bin/setup; rake
 export AR='~> 8.0.5'; rm Gemfile.lock; bin/setup; rake
 export AR='~> 8.1.3'; rm Gemfile.lock; bin/setup; rake
 export AR='main'; rm Gemfile.lock; bin/setup; rake
+
+bundle exec rubocop
 ```
 
 You can also run `bin/console` to open up a prompt where you'll have access to some models to experiment with.

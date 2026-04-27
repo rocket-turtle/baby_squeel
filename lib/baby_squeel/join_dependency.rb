@@ -29,9 +29,10 @@ module BabySqueel
     # rails way would be to call left_outer_joins so the join_type gets set to Arel::Nodes::OuterJoin
     # Maybe this could be fixed in joining but I do not know how.
     module Injector6_1 # :nodoc:
-      def make_constraints(parent, child, join_type) # :nodoc:
+      def make_constraints(parent, child, join_type)
+        # :nodoc:
         join_type = child.join_type if child.join_type == Arel::Nodes::OuterJoin
-        super(parent, child, join_type)
+        super
       end
     end
 
@@ -101,17 +102,17 @@ module BabySqueel
           when BabySqueel::Join
             :association_join
           else
-            raise("unknown class: %s" % join.class.name)
+            raise("unknown class: #{join.class.name}")
           end
         end
       end
 
       def build(relation, buckets)
         buckets.default = []
-        association_joins         = buckets[:association_join]
-        stashed_association_joins = buckets[:stashed_join]
-        join_nodes                = buckets[:join_node].uniq
-        string_joins              = buckets[:string_join].map(&:strip).uniq
+        association_joins = buckets[:association_join]
+        _stashed_association_joins = buckets[:stashed_join]
+        join_nodes = buckets[:join_node].uniq
+        string_joins = buckets[:string_join].map(&:strip).uniq
 
         joins = string_joins.map do |join|
           relation.table.create_string_join(Arel.sql(join)) unless join.blank?
@@ -119,8 +120,10 @@ module BabySqueel
 
         join_list = join_nodes + joins
 
-        alias_tracker = Associations::AliasTracker.create(relation.klass.connection_pool, relation.table.name, join_list)
-        join_dependency = Associations::JoinDependency.new(relation.klass, relation.table, association_joins, Arel::Nodes::InnerJoin)
+        alias_tracker = Associations::AliasTracker
+                        .create(relation.klass.connection_pool, relation.table.name, join_list)
+        join_dependency = Associations::JoinDependency
+                          .new(relation.klass, relation.table, association_joins, Arel::Nodes::InnerJoin)
         join_dependency.instance_variable_set(:@alias_tracker, alias_tracker)
 
         join_nodes.each do |join|

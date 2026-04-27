@@ -16,7 +16,7 @@ module BabySqueel
       # In the case of a polymorphic reflection these
       # attributes will be set after calling #of
       unless @_reflection.polymorphic?
-        super @_reflection.klass
+        super(@_reflection.klass)
       end
     end
 

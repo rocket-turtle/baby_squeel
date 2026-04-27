@@ -13,7 +13,7 @@ module BabySqueel
     private
 
     def resolver
-      @resolver ||= Resolver.new(self, [:column, :association])
+      @resolver ||= Resolver.new(self, %i[column association])
     end
   end
 end

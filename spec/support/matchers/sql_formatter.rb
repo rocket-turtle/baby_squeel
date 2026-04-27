@@ -1,16 +1,16 @@
 module Matchers
   module SQLFormatter
-    INDENT = "\n        "
+    INDENT = "\n        ".freeze
 
-    KEYWORDS = %w(
-      WHERE
-      ORDER\ BY
-      GROUP\ BY
-      HAVING
-      INNER\ JOIN
-      LEFT\ OUTER\ JOIN
-      LIMIT
-    )
+    KEYWORDS = [
+      "WHERE",
+      "ORDER BY",
+      "GROUP BY",
+      "HAVING",
+      "INNER JOIN",
+      "LEFT OUTER JOIN",
+      "LIMIT"
+    ].freeze
 
     def self.call(value)
       normalize(value)
@@ -22,7 +22,7 @@ module Matchers
       if value.kind_of? Regexp
         value
       elsif value.kind_of? String
-        value.squish.gsub(/\( /, "(").gsub(/ \)/, ")")
+        value.squish.gsub("( ", "(").gsub(" )", ")")
       elsif value.respond_to?(:to_sql)
         normalize(value.to_sql)
       end

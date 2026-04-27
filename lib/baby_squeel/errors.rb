@@ -1,8 +1,7 @@
 module BabySqueel
   class NotFoundError < StandardError # :nodoc:
     def initialize(model_name, name, strategies)
-      super "There is no #{sentence(strategies)} " \
-            "named '#{name}' for #{model_name}."
+      super("There is no #{sentence(strategies)} named '#{name}' for #{model_name}.")
     end
 
     private
@@ -18,7 +17,7 @@ module BabySqueel
 
   class AssociationNotFoundError < StandardError  # :nodoc:
     def initialize(model_name, name)
-      super "Association named '#{name}' was not found for #{model_name}."
+      super("Association named '#{name}' was not found for #{model_name}.")
     end
   end
 
@@ -31,7 +30,7 @@ module BabySqueel
       "\n  Post.joining { author.on(author_id.eq(author.id)) }\n\n"
 
     def initialize(association, alias_name)
-      super format(MESSAGE, association: association, alias_name: alias_name)
+      super(format(MESSAGE, association: association, alias_name: alias_name))
     end
   end
 
@@ -42,7 +41,7 @@ module BabySqueel
       "\n\n  %{association}.of(%{klass})\n\n"
 
     def initialize(association, klass)
-      super format(MESSAGE, association: association, klass: klass)
+      super(format(MESSAGE, association: association, klass: klass))
     end
   end
 
@@ -53,13 +52,13 @@ module BabySqueel
       "\n\n  %{association}.of(SomeModel)\n\n"
 
     def initialize(association)
-      super format(MESSAGE, association: association)
+      super(format(MESSAGE, association: association))
     end
   end
 
   class AssociationComparisonError < StandardError # :nodoc:
     def initialize(name, other)
-      super "You can't compare association '#{name}' to #{other}."
+      super("You can't compare association '#{name}' to #{other}.")
     end
   end
 end

@@ -4,8 +4,7 @@ require_relative "matchers/match_formatted"
 require_relative "matchers/match_snapshot"
 
 module Matchers
-  def self.version(value)
-  end
+  def self.version(value); end
 
   def self.suffix(variants: [])
     variant = variants.find do |variant|
@@ -20,13 +19,13 @@ module Matchers
     @snapshot_indexes[key] += 1
   end
 
-  def match_sql_snapshot(**opts)
+  def match_sql_snapshot(...)
     example = RSpec.current_example
 
     snapshot = Snapshot.new(
       example.metadata,
       snapshot_index(example.id),
-      suffix: Matchers.suffix(**opts)
+      suffix: Matchers.suffix(...)
     )
 
     MatchSnapshot.new(snapshot, SQLFormatter)

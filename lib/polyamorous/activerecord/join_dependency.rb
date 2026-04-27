@@ -9,10 +9,10 @@ module Polyamorous
           reflection.check_eager_loadable!
 
           klass = if reflection.polymorphic?
-            name.klass || base_klass
-          else
-            reflection.klass
-          end
+                    name.klass || base_klass
+                  else
+                    reflection.klass
+                  end
           JoinAssociation.new(reflection, build(right, klass), name.klass, name.type)
         else
           reflection = find_reflection base_klass, name
@@ -22,6 +22,7 @@ module Polyamorous
           if reflection.polymorphic?
             raise ActiveRecord::EagerLoadPolymorphicError.new(reflection)
           end
+
           JoinAssociation.new(reflection, build(right, reflection.klass))
         end
       end
@@ -38,13 +39,13 @@ module Polyamorous
 
       joins = make_join_constraints(join_root, join_type)
 
-      joins.concat joins_to_add.flat_map { |oj|
+      joins.concat(joins_to_add.flat_map do |oj|
         if join_root.match?(oj.join_root) && join_root.table.name == oj.join_root.table.name
           walk join_root, oj.join_root, oj.join_type
         else
           make_join_constraints(oj.join_root, oj.join_type)
         end
-      }
+      end)
     end
 
     def construct_tables_for_association!(join_root, association)
@@ -57,7 +58,7 @@ module Polyamorous
 
     def table_aliases_for(parent, node)
       @joined_tables ||= {}
-      node.reflection.chain.map { |reflection|
+      node.reflection.chain.map do |reflection|
         table, terminated = @joined_tables[reflection]
         root = reflection == node.reflection
 
@@ -72,7 +73,7 @@ module Polyamorous
           @joined_tables[reflection] ||= [table, root] if join_type == Arel::Nodes::OuterJoin
           table
         end
-      }
+      end
     end
 
     module ClassMethods
@@ -93,10 +94,9 @@ module Polyamorous
             walk_tree(v, cache)
           end
         else
-          super(associations, hash)
+          super
         end
       end
     end
-
   end
 end

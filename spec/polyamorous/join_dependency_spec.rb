@@ -36,8 +36,10 @@ module Polyamorous
       subject { new_join_dependency Author, new_join(:posts, :outer) => new_join(:comments, :outer) }
 
       it { expect(subject.send(:join_root).drop(1).size).to be(2) }
-      it { expect(subject.send(:join_root).drop(1).map(&:join_type))
-             .to eq([Polyamorous::OuterJoin, Polyamorous::OuterJoin]) }
+      it {
+        expect(subject.send(:join_root).drop(1).map(&:join_type))
+          .to eq([Polyamorous::OuterJoin, Polyamorous::OuterJoin])
+      }
       it { expect(subject.send(:join_root).drop(1).map(&:join_type).uniq).to eq([Polyamorous::OuterJoin]) }
     end
 
@@ -62,8 +64,10 @@ module Polyamorous
       subject { new_join_dependency Picture, new_join(:imageable, :outer, Author) => :comments }
 
       it { expect(subject.send(:join_root).drop(1).size).to be(2) }
-      it { expect(subject.send(:join_root).drop(1).map(&:join_type))
-             .to eq([Polyamorous::OuterJoin, Polyamorous::InnerJoin]) }
+      it {
+        expect(subject.send(:join_root).drop(1).map(&:join_type))
+          .to eq([Polyamorous::OuterJoin, Polyamorous::InnerJoin])
+      }
       it { expect(subject.send(:join_root).drop(1).first.table_name).to eq("authors") }
       it { expect(subject.send(:join_root).drop(1)[1].table_name).to eq("comments") }
     end

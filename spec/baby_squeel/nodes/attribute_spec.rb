@@ -3,12 +3,12 @@ require "baby_squeel/nodes"
 require "baby_squeel/table"
 
 describe BabySqueel::Nodes::Attribute do
-  subject(:attribute) {
+  subject(:attribute) do
     described_class.new(
       create_relation(Post),
       :id
     )
-  }
+  end
 
   describe "#in" do
     it "doesnt break existing in behavior" do
