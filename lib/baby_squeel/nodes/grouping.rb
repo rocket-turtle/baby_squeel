@@ -1,4 +1,4 @@
-require 'baby_squeel/nodes/proxy'
+require "baby_squeel/nodes/proxy"
 
 module BabySqueel
   module Nodes

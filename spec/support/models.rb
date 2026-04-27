@@ -18,8 +18,8 @@ class Post < ActiveRecord::Base
 
   has_many :pictures, as: :imageable
 
-  belongs_to :parent, class_name: 'Post'
-  belongs_to :child, class_name: 'Post'
+  belongs_to :parent, class_name: "Post"
+  belongs_to :child, class_name: "Post"
 end
 
 class Comment < ActiveRecord::Base

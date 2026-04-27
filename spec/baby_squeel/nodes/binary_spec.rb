@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'baby_squeel/nodes'
-require 'baby_squeel/table'
+require "spec_helper"
+require "baby_squeel/nodes"
+require "baby_squeel/table"
 
 describe BabySqueel::Nodes::Binary do
   let(:attribute) {
@@ -12,15 +12,15 @@ describe BabySqueel::Nodes::Binary do
 
   subject(:node) { attribute.eq(1) }
 
-  describe '#to_sql' do
-    it 'creates the right SQL' do
+  describe "#to_sql" do
+    it "creates the right SQL" do
       is_expected.to produce_sql('"posts"."id" = 1')
     end
   end
 
-  describe '#as' do
-    it 'can be aliased' do
-      expect(node.as('jawn')).to produce_sql('"posts"."id" = 1 AS jawn')
+  describe "#as" do
+    it "can be aliased" do
+      expect(node.as("jawn")).to produce_sql('"posts"."id" = 1 AS jawn')
     end
   end
 end

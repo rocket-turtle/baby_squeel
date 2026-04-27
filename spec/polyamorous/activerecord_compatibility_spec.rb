@@ -1,8 +1,8 @@
-require 'spec_helper'
+require "spec_helper"
 
 module Polyamorous
   describe "ActiveRecord Compatibility", :polyamorous do
-    it 'works with self joins and includes' do
+    it "works with self joins and includes" do
       parent_post = Post.create!
       post = Post.create!(parent: parent_post)
 

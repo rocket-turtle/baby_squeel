@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 module Polyamorous
   describe JoinAssociation, :polyamorous do
@@ -9,7 +9,7 @@ module Polyamorous
 
     subject { new_join_association(reflection, parent.children, Author) }
 
-    it 'leaves the original reflection intact for thread safety' do
+    it "leaves the original reflection intact for thread safety" do
       reflection.instance_variable_set(:@klass, Post)
       join_association
         .swapping_reflection_klass(reflection, Author) do |new_reflection|
@@ -20,7 +20,7 @@ module Polyamorous
       end
     end
 
-    it 'sets the polymorphic option to true after initializing' do
+    it "sets the polymorphic option to true after initializing" do
       expect(join_association.reflection.options[:polymorphic]).to be(true)
     end
   end

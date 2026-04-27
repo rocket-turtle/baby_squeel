@@ -7,13 +7,13 @@ ActiveSupport.on_load(:active_record) do
     JoinAssociation = ::ActiveRecord::Associations::JoinDependency::JoinAssociation
   end
 
-  require 'polyamorous/tree_node'
-  require 'polyamorous/join'
-  require 'polyamorous/swapping_reflection_class'
+  require "polyamorous/tree_node"
+  require "polyamorous/join"
+  require "polyamorous/swapping_reflection_class"
 
-  require 'polyamorous/activerecord/join_association'
-  require 'polyamorous/activerecord/join_dependency'
-  require 'polyamorous/activerecord/reflection'
+  require "polyamorous/activerecord/join_association"
+  require "polyamorous/activerecord/join_dependency"
+  require "polyamorous/activerecord/reflection"
 
   ActiveRecord::Reflection::AbstractReflection.send(:prepend, Polyamorous::ReflectionExtensions)
 

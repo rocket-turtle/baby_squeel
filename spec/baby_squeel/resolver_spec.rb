@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe BabySqueel::Resolver do
   let(:table)       { create_table Post.arel_table }
@@ -41,8 +41,8 @@ RSpec.describe BabySqueel::Resolver do
     ]
   end
 
-  describe '#resolve!' do
-    it 'handles valid resolutions' do
+  describe "#resolve!" do
+    it "handles valid resolutions" do
       valid_cases.each do |node, strategy, name, args|
         msg = "resolve! #{name} using #{strategy}"
         resolver = described_class.new(node, [strategy])
@@ -50,7 +50,7 @@ RSpec.describe BabySqueel::Resolver do
       end
     end
 
-    it 'is nil for the wrong number of arguments' do
+    it "is nil for the wrong number of arguments" do
       wrong_args_cases.each do |node, strategy, name, args|
         msg = "does not resovle! #{name} using #{strategy}"
         resolver = described_class.new(node, [strategy])
@@ -58,7 +58,7 @@ RSpec.describe BabySqueel::Resolver do
       end
     end
 
-    it 'raises for the correct number of arguments, but invalid name' do
+    it "raises for the correct number of arguments, but invalid name" do
       invalid_name_cases.each do |node, strategy, name, args|
         msg = "raises NotFoundError for #{name} using #{strategy}"
         resolver = described_class.new(node, [strategy])
@@ -69,8 +69,8 @@ RSpec.describe BabySqueel::Resolver do
     end
   end
 
-  describe '#resolves?' do
-    it 'is true for valid name' do
+  describe "#resolves?" do
+    it "is true for valid name" do
       cases = valid_cases + wrong_args_cases
 
       cases.each do |node, strategy, name, _args|
@@ -80,7 +80,7 @@ RSpec.describe BabySqueel::Resolver do
       end
     end
 
-    it 'is false for invalid names' do
+    it "is false for invalid names" do
       invalid_name_cases.each do |node, strategy, name, _args|
         msg = "Should not have resolves? #{name} using #{strategy}"
         resolver = described_class.new(node, [strategy])

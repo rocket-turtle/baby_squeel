@@ -22,7 +22,7 @@ module Matchers
       if value.kind_of? Regexp
         value
       elsif value.kind_of? String
-        value.squish.gsub(/\( /, '(').gsub(/ \)/, ')')
+        value.squish.gsub(/\( /, "(").gsub(/ \)/, ")")
       elsif value.respond_to?(:to_sql)
         normalize(value.to_sql)
       end

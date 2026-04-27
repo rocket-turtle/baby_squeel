@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe BabySqueel::ActiveRecord::QueryMethods::Injector6_1 do
   let(:join_path) {
@@ -11,8 +11,8 @@ describe BabySqueel::ActiveRecord::QueryMethods::Injector6_1 do
 
   subject(:injector) { Array.new(joins_values).extend(described_class) }
 
-  describe '#each' do
-    it 'do not blow up without a result' do
+  describe "#each" do
+    it "do not blow up without a result" do
       test_each = []
       injector.each do |join|
         test_each << join
@@ -20,7 +20,7 @@ describe BabySqueel::ActiveRecord::QueryMethods::Injector6_1 do
       expect(test_each).to eq([:something, {a: :b}])
     end
 
-    it 'adds join_path into result' do
+    it "adds join_path into result" do
       result = []
       other = []
       injector.each { |join| other << join }
@@ -28,7 +28,7 @@ describe BabySqueel::ActiveRecord::QueryMethods::Injector6_1 do
       expect(result).to eq([join_path])
     end
 
-    it 'can accompany other result' do
+    it "can accompany other result" do
       result = []
       injector.each { |join| result << join }
       expect(result).to eq(joins_values)

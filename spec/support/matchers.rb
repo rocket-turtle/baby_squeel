@@ -1,7 +1,7 @@
-require_relative 'matchers/snapshot'
-require_relative 'matchers/sql_formatter'
-require_relative 'matchers/match_formatted'
-require_relative 'matchers/match_snapshot'
+require_relative "matchers/snapshot"
+require_relative "matchers/sql_formatter"
+require_relative "matchers/match_formatted"
+require_relative "matchers/match_snapshot"
 
 module Matchers
   def self.version(value)

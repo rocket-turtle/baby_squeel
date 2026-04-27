@@ -1,4 +1,4 @@
-require 'baby_squeel/relation'
+require "baby_squeel/relation"
 
 module BabySqueel
   class Association < Relation

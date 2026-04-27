@@ -1,4 +1,4 @@
-require 'yaml'
+require "yaml"
 
 module Matchers
   class Snapshot
@@ -19,7 +19,7 @@ module Matchers
     def path
       spec = meta[:absolute_file_path]
       file = "#{File.basename(spec, '.*')}.yaml"
-      relative = File.join('..', '__snapshots__', file)
+      relative = File.join("..", "__snapshots__", file)
       File.expand_path(relative, spec)
     end
 
@@ -32,7 +32,7 @@ module Matchers
 
       data[name] = value
 
-      File.open path, 'w' do |f|
+      File.open path, "w" do |f|
         f.write data.to_yaml
       end
 

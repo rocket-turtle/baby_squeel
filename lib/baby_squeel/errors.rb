@@ -9,9 +9,9 @@ module BabySqueel
 
     def sentence(*words)
       if words.length < 3
-        words.join ' or '
+        words.join " or "
       else
-        sentence words[0..-2].join(', '), words.last
+        sentence words[0..-2].join(", "), words.last
       end
     end
   end

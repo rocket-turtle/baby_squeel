@@ -1,4 +1,4 @@
-require 'baby_squeel/table'
+require "baby_squeel/table"
 
 module BabySqueel
   class Relation < Table

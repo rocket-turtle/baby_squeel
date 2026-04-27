@@ -1,6 +1,6 @@
-require 'baby_squeel/resolver'
-require 'baby_squeel/join'
-require 'baby_squeel/join_dependency'
+require "baby_squeel/resolver"
+require "baby_squeel/join"
+require "baby_squeel/join_dependency"
 
 module BabySqueel
   class Table

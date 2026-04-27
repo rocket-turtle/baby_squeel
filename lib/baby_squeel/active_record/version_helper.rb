@@ -1,4 +1,4 @@
-require 'baby_squeel/dsl'
+require "baby_squeel/dsl"
 
 module BabySqueel
   module ActiveRecord

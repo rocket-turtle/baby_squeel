@@ -1,7 +1,7 @@
-require 'baby_squeel/nodes/proxy'
-require 'baby_squeel/nodes/attribute'
-require 'baby_squeel/nodes/grouping'
-require 'baby_squeel/nodes/binary'
+require "baby_squeel/nodes/proxy"
+require "baby_squeel/nodes/attribute"
+require "baby_squeel/nodes/grouping"
+require "baby_squeel/nodes/binary"
 
 module BabySqueel
   module Nodes

@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 # Specify your gem's dependencies in baby_squeel.gemspec
 gemspec
@@ -9,10 +9,10 @@ else
   gem "activerecord", ENV["AR"]
 end
 
-gem 'sqlite3', '>= 1.4'
+gem "sqlite3", ">= 1.4"
 
 group :test do
-  gem 'pry'
-  gem 'simplecov'
-  gem 'byebug'
+  gem "pry"
+  gem "simplecov"
+  gem "byebug"
 end

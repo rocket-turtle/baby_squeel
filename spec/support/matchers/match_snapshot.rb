@@ -9,7 +9,7 @@ module Matchers
     def matches?(actual)
       actual = @formatter.normalize(actual)
 
-      if @snapshot.read && !ENV['UPDATE_SNAPSHOTS']
+      if @snapshot.read && !ENV["UPDATE_SNAPSHOTS"]
         super(actual)
       else
         @snapshot.write(actual)

@@ -40,9 +40,9 @@ module Polyamorous
 
     def convert_to_arel_join_type(type)
       case type
-      when 'inner', :inner
+      when "inner", :inner
         InnerJoin
-      when 'outer', :outer
+      when "outer", :outer
         OuterJoin
       when Class
         if [InnerJoin, OuterJoin].include? type
