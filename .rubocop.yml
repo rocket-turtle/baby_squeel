@@ -1,0 +1,19 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 3.3
+  NewCops: enable
+  Exclude:
+    - 'bin/**/*'
+    - 'exe/**/*'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# kind_of? is used intentionally in several places
+Style/ClassCheck:
+  Enabled: false
+
+# Existing code uses alias in class bodies
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
