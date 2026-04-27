@@ -17,6 +17,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.require_paths = ['lib']
 
+  spec.required_ruby_version = '>= 3.3'
+
   spec.files = Dir.glob('{lib/**/*,*.{md,txt,gemspec}}')
 
   spec.add_dependency 'activerecord', '>= 7.2.3', '< 8.2'
