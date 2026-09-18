@@ -1,5 +1,11 @@
 inherit_from: .rubocop_todo.yml
 
+# Keep RuboCop's default excludes (vendor, node_modules, tmp, .git) instead of
+# replacing them; CI installs the bundle into vendor/bundle.
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
   TargetRubyVersion: 3.3
   NewCops: enable
