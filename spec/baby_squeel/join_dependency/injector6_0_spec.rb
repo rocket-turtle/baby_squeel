@@ -6,7 +6,7 @@ describe BabySqueel::JoinDependency::Injector6_0 do
 
   subject(:injector) { described_class.new(joins_values) }
 
-  # rubocop:disable Style/MapIntoArray
+  # rubocop:disable-next Style/MapIntoArray
   describe "#each" do
     it "do not blow up without a buckets hash" do
       test_each = []
@@ -36,5 +36,4 @@ describe BabySqueel::JoinDependency::Injector6_0 do
       expect(buckets[:association_join]).to eq(joins_values)
     end
   end
-  # rubocop:enable Style/MapIntoArray
 end

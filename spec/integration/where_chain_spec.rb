@@ -78,7 +78,7 @@ describe "#where.has" do
   it "wheres and correctly aliases" do
     relation = Post.joining { author.comments }
                    .where.has { author.comments.id.in [1, 2] }
-                         .where.has { author.name.eq("Joe") }
+                   .where.has { author.name.eq("Joe") }
 
     expect(relation).to match_sql_snapshot
   end
@@ -86,7 +86,7 @@ describe "#where.has" do
   it "wheres on an alias with outer join" do
     relation = Post.joining { author.comments.outer }
                    .where.has { author.comments.id.in [1, 2] }
-                         .where.has { author.name.eq("Joe") }
+                   .where.has { author.name.eq("Joe") }
 
     expect(relation).to match_sql_snapshot
   end

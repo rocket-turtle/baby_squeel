@@ -6,7 +6,7 @@ describe BabySqueel::ActiveRecord::QueryMethods::Injector6_1 do
 
   subject(:injector) { Array.new(joins_values).extend(described_class) }
 
-  # rubocop:disable Style/MapIntoArray
+  # rubocop:disable-next Style/MapIntoArray
   describe "#each" do
     it "do not blow up without a result" do
       test_each = []
@@ -30,5 +30,4 @@ describe BabySqueel::ActiveRecord::QueryMethods::Injector6_1 do
       expect(result).to eq(joins_values)
     end
   end
-  # rubocop:enable Style/MapIntoArray
 end
