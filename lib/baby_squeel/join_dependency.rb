@@ -1,4 +1,4 @@
-require "baby_squeel/active_record/version_helper"
+require "baby_squeel/join"
 
 module BabySqueel
   module JoinDependency

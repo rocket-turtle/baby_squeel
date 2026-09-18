@@ -1,5 +1,3 @@
-require "baby_squeel/dsl"
-
 module BabySqueel
   module ActiveRecord
     class VersionHelper

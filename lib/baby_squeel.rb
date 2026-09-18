@@ -9,6 +9,7 @@ end
 
 ActiveSupport.on_load :active_record do
   require "baby_squeel/active_record/base"
+  require "baby_squeel/active_record/version_helper"
   require "baby_squeel/active_record/query_methods"
   require "baby_squeel/active_record/where_chain"
 
