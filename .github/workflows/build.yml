@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        activerecord: ["~> 7.2.3", "~> 8.0.4", "~> 8.1.1"]
+        activerecord: ["~> 8.0.4", "~> 8.1.1"]
         ruby: ["3.3", "3.4", "4.0"]
         allow_failure: [false]
         include:

@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Drop support for ActiveRecord 7.2
 - remove selecting
 - Drop support for ActiveRecord 7.1
 

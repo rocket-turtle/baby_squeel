@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ray Zane"]
   spec.email         = ["ray@promptworks.com"]
 
-  spec.summary       = "An expressive query DSL for Active Record 7.1+"
+  spec.summary       = "An expressive query DSL for Active Record 8.0+"
   spec.description   = spec.summary
   spec.homepage      = "https://github.com/rzane/baby_squeel"
   spec.license       = "MIT"
@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir.glob("{lib/**/*,*.{md,txt,gemspec}}")
 
-  spec.add_dependency "activerecord", ">= 7.2.3", "< 8.2"
+  spec.add_dependency "activerecord", ">= 8.0.4", "< 8.2"
 
   spec.add_development_dependency "bundler", "~> 4.0"
   spec.add_development_dependency "rake", "~> 13.0"

@@ -213,7 +213,7 @@ The following methods give you access to BabySqueel's DSL:
 
 ## Development
 
-1. Pick an Active Record version to develop against, then export it: `export AR=7.2.2`.
+1. Pick an Active Record version to develop against, then export it: `export AR='~> 8.0.4'`.
 2. Run `bin/setup` to install dependencies.
 3. Run `rake` to run the specs.
 
@@ -221,9 +221,8 @@ Onliner to run the specs with different rails versions
 ```
 gem install bundler:4.0.8
 
-export AR='~> 7.2.3'; rm Gemfile.lock; bin/setup; rake
-export AR='~> 8.0.5'; rm Gemfile.lock; bin/setup; rake
-export AR='~> 8.1.3'; rm Gemfile.lock; bin/setup; rake
+export AR='~> 8.0.4'; rm Gemfile.lock; bin/setup; rake
+export AR='~> 8.1.1'; rm Gemfile.lock; bin/setup; rake
 export AR='main'; rm Gemfile.lock; bin/setup; rake
 
 bundle exec rubocop
