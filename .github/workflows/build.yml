@@ -6,60 +6,53 @@ on:
     branches: [main]
   schedule:
     - cron: '0 0 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
-
-      - name: Install Bundler 4.x
-        run: gem install bundler -v '~> 4.0'
-
-      - name: Install dependencies
-        run: bundle install
+          bundler: "4"
+          bundler-cache: true
 
       - name: Lint
         run: bundle exec rubocop
 
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     name: Active Record ${{ matrix.activerecord }} on ruby ${{ matrix.ruby }}
     strategy:
       fail-fast: false
       matrix:
-        activerecord: ["~> 8.0.4", "~> 8.1.1"]
+        activerecord: ["~> 8.0.4", "~> 8.1.1", "main"]
         ruby: ["3.3", "3.4", "4.0"]
-        allow_failure: [false]
-        include:
-          - activerecord: "main"
-            ruby: "3.4"
-            allow_failure: true
     env:
       AR: ${{ matrix.activerecord }}
-    continue-on-error: ${{ matrix.allow_failure }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-
-      - name: Install packages
-        run: sudo apt-get install libsqlite3-dev
-
-      - name: Install Bundler 4.x
-        run: gem install bundler -v '~> 4.0'
-
-      - name: Install dependencies
-        run: bundle install
+          bundler: "4"
+          bundler-cache: true
 
       - name: Test
         run: bundle exec rspec
