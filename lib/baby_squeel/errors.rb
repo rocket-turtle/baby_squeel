@@ -27,7 +27,7 @@ module BabySqueel
       "association was implicitly joined. Either join the association " \
       "with `on` or remove the alias. For example:" \
       "\n\n  Post.joining { author }" \
-      "\n  Post.joining { author.on(author_id.eq(author.id)) }\n\n"
+      "\n  Post.joining { author.on(author_id.eq(author.id)) }\n\n".freeze
 
     def initialize(association, alias_name)
       super(format(MESSAGE, association: association, alias_name: alias_name))
@@ -38,7 +38,7 @@ module BabySqueel
     MESSAGE =
       "'%{association}' is not a polymorphic association, therefore " \
       "the following expression is invalid:" \
-      "\n\n  %{association}.of(%{klass})\n\n"
+      "\n\n  %{association}.of(%{klass})\n\n".freeze
 
     def initialize(association, klass)
       super(format(MESSAGE, association: association, klass: klass))
@@ -49,7 +49,7 @@ module BabySqueel
     MESSAGE =
       "'%{association}' is a polymorphic association, therefore " \
       "you must call #of when referencing the association. For example:" \
-      "\n\n  %{association}.of(SomeModel)\n\n"
+      "\n\n  %{association}.of(SomeModel)\n\n".freeze
 
     def initialize(association)
       super(format(MESSAGE, association: association))

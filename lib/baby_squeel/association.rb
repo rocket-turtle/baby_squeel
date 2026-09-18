@@ -88,7 +88,7 @@ module BabySqueel
       elsif alias?
         raise AssociationAliasingError.new(_reflection.name, _table.right)
       elsif _reflection.polymorphic? && _polymorphic_klass.nil?
-        raise PolymorphicNotSpecifiedError.new(_reflection.name)
+        raise PolymorphicNotSpecifiedError, _reflection.name
       else
         @parent._arel([self, *associations])
       end

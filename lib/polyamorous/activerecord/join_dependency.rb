@@ -20,7 +20,7 @@ module Polyamorous
           reflection.check_eager_loadable!
 
           if reflection.polymorphic?
-            raise ActiveRecord::EagerLoadPolymorphicError.new(reflection)
+            raise ActiveRecord::EagerLoadPolymorphicError, reflection
           end
 
           JoinAssociation.new(reflection, build(right, reflection.klass))
@@ -64,15 +64,14 @@ module Polyamorous
 
         if table && (!root || !terminated)
           @joined_tables[reflection] = [table, true] if root
-          table
         else
           table = alias_tracker.aliased_table_for(reflection.klass.arel_table) do
             name = reflection.alias_candidate(parent.table_name)
             root ? name : "#{name}_join"
           end
           @joined_tables[reflection] ||= [table, root] if join_type == Arel::Nodes::OuterJoin
-          table
         end
+        table
       end
     end
 

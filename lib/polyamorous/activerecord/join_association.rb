@@ -8,7 +8,7 @@ module Polyamorous
 
     def initialize(reflection, children, polymorphic_class = nil, join_type = Arel::Nodes::InnerJoin)
       @join_type = join_type
-      if polymorphic_class && ::ActiveRecord::Base > polymorphic_class
+      if polymorphic_class && polymorphic_class < ::ActiveRecord::Base
         swapping_reflection_klass(reflection, polymorphic_class) do |reflection|
           super(reflection, children)
           self.reflection.options[:polymorphic] = true

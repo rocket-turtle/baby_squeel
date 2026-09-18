@@ -27,9 +27,7 @@ module BabySqueel
 
       def construct_join_dependency(associations, join_type)
         result = super
-        if associations.any? { |assoc| assoc.is_a?(BabySqueel::Join) }
-          result.extend(BabySqueel::JoinDependency::Injector6_1)
-        end
+        result.extend(BabySqueel::JoinDependency::Injector6_1) if associations.any?(BabySqueel::Join)
         result
       end
 
@@ -37,9 +35,7 @@ module BabySqueel
 
       # https://github.com/rails/rails/commit/c0c53ee9d28134757cf1418521cb97c4a135f140
       def select_association_list(*args)
-        if args[0].any? { |join| join.is_a?(BabySqueel::Join) }
-          args[0].extend(BabySqueel::ActiveRecord::QueryMethods::Injector6_1)
-        end
+        args[0].extend(BabySqueel::ActiveRecord::QueryMethods::Injector6_1) if args[0].any?(BabySqueel::Join)
         super
       end
     end
