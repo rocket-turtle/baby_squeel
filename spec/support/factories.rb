@@ -1,6 +1,9 @@
 module Factories
+  # Active Record 8.2 turned Arel::Table's positional name into a keyword argument.
+  TABLE_NAME_AS_KEYWORD = Arel::Table.instance_method(:initialize).parameters.include?(%i[key name])
+
   def create_table(name)
-    table = Arel::Table.new(name)
+    table = TABLE_NAME_AS_KEYWORD ? Arel::Table.new(name: name) : Arel::Table.new(name)
     BabySqueel::Table.new(table)
   end
 
