@@ -200,8 +200,6 @@ The query might look like this:
 Picture.joining { imageable.of(Post) }
 ```
 
-##### Helpers
-
 ## What's what?
 
 The following methods give you access to BabySqueel's DSL:
