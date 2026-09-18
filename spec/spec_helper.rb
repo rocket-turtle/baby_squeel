@@ -2,7 +2,7 @@ require "bundler/setup"
 require "simplecov"
 require "byebug"
 
-SimpleCov.start { add_filter "spec/" }
+SimpleCov.start { skip "spec/" }
 
 require "baby_squeel"
 require "support/schema"
