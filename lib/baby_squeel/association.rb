@@ -15,9 +15,9 @@ module BabySqueel
 
       # In the case of a polymorphic reflection these
       # attributes will be set after calling #of
-      unless @_reflection.polymorphic?
-        super(@_reflection.klass)
-      end
+      return if @_reflection.polymorphic?
+
+      super(@_reflection.klass)
     end
 
     def ==(other)
@@ -29,9 +29,7 @@ module BabySqueel
     end
 
     def of(klass)
-      unless _reflection.polymorphic?
-        raise PolymorphicSpecificationError.new(_reflection.name, klass)
-      end
+      raise PolymorphicSpecificationError.new(_reflection.name, klass) unless _reflection.polymorphic?
 
       clone.of! klass
     end
@@ -97,12 +95,10 @@ module BabySqueel
     private
 
     def build_where_clause(other)
-      if valid_where_clause?(other)
-        relation = @parent._scope.all
-        relation.send(:build_where_clause, { _reflection.name => other }, [])
-      else
-        raise AssociationComparisonError.new(_reflection.name, other)
-      end
+      raise AssociationComparisonError.new(_reflection.name, other) unless valid_where_clause?(other)
+
+      relation = @parent._scope.all
+      relation.send(:build_where_clause, { _reflection.name => other }, [])
     end
 
     def valid_where_clause?(other)

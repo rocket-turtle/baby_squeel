@@ -19,9 +19,7 @@ module BabySqueel
       return nil if block_given? || args.present?
 
       strategy = @strategies.find { |strategy| valid_name?(strategy, name) }
-      if strategy.nil?
-        raise NotFoundError.new(@table._scope.model_name, name, @strategies)
-      end
+      raise NotFoundError.new(@table._scope.model_name, name, @strategies) if strategy.nil?
 
       build(strategy, name)
     end

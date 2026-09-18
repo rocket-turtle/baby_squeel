@@ -96,23 +96,6 @@ Style/Documentation:
 Style/FormatStringToken:
   EnforcedStyle: template
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
-Style/GuardClause:
-  Exclude:
-    - 'lib/baby_squeel/association.rb'
-    - 'lib/baby_squeel/relation.rb'
-    - 'lib/polyamorous/join.rb'
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-Style/IfUnlessModifier:
-  Exclude:
-    - 'lib/baby_squeel/association.rb'
-    - 'lib/baby_squeel/resolver.rb'
-    - 'lib/polyamorous/activerecord/join_dependency.rb'
-
 # Offense count: 1
 Style/MissingRespondToMissing:
   Exclude:
@@ -124,3 +107,4 @@ Style/MissingRespondToMissing:
 Style/OptionalBooleanParameter:
   Exclude:
     - 'lib/baby_squeel/nodes/proxy.rb'
+

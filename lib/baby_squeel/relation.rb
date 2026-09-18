@@ -13,11 +13,9 @@ module BabySqueel
     # an exception if the association is not found.
     def association(name)
       reflection = _scope.reflect_on_association(name)
-      if reflection
-        Association.new(self, reflection)
-      else
-        raise AssociationNotFoundError.new(_scope.model_name, name)
-      end
+      raise AssociationNotFoundError.new(_scope.model_name, name) unless reflection
+
+      Association.new(self, reflection)
     end
 
     private

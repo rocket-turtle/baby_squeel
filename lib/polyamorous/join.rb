@@ -45,11 +45,11 @@ module Polyamorous
       when "outer", :outer
         OuterJoin
       when Class
-        if [InnerJoin, OuterJoin].include? type
-          type
-        else
+        unless [InnerJoin, OuterJoin].include? type
           raise ArgumentError, "#{type} cannot be converted to an ARel join type"
         end
+
+        type
       else
         raise ArgumentError, "#{type} cannot be converted to an ARel join type"
       end
