@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe BabySqueel::ActiveRecord::QueryMethods::Injector6_1 do
+describe BabySqueel::ActiveRecord::QueryMethods::JoinsInjector do
   let(:join_path) { BabySqueel::Join.new([]) }
   let(:joins_values) { [:something, join_path, { a: :b }] }
 

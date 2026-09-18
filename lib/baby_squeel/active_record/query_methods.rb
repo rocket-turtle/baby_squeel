@@ -6,7 +6,7 @@ module BabySqueel
     module QueryMethods
       # This class allows BabySqueel to slip custom
       # joins_values into Active Record's JoinDependency
-      module Injector6_1
+      module JoinsInjector
         def each(&block)
           super do |join|
             if join.is_a?(BabySqueel::Join)
@@ -27,7 +27,7 @@ module BabySqueel
 
       def construct_join_dependency(associations, join_type)
         result = super
-        result.extend(BabySqueel::JoinDependency::Injector6_1) if associations.any?(BabySqueel::Join)
+        result.extend(BabySqueel::JoinDependency::OuterJoinConstraints) if associations.any?(BabySqueel::Join)
         result
       end
 
@@ -35,7 +35,7 @@ module BabySqueel
 
       # https://github.com/rails/rails/commit/c0c53ee9d28134757cf1418521cb97c4a135f140
       def select_association_list(*args)
-        args[0].extend(BabySqueel::ActiveRecord::QueryMethods::Injector6_1) if args[0].any?(BabySqueel::Join)
+        args[0].extend(BabySqueel::ActiveRecord::QueryMethods::JoinsInjector) if args[0].any?(BabySqueel::Join)
         super
       end
     end

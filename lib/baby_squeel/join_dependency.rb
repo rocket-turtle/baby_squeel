@@ -2,33 +2,10 @@ require "baby_squeel/join"
 
 module BabySqueel
   module JoinDependency
-    # This class allows BabySqueel to slip custom
-    # joins_values into Active Record's JoinDependency
-    class Injector6_0 < Array # :nodoc:
-      # https://github.com/rails/rails/pull/36805/files
-      # This commit changed group_by to each
-      def each(&block)
-        super do |join|
-          if block.binding.local_variables.include?(:buckets)
-            buckets = block.binding.local_variable_get(:buckets)
-
-            case join
-            when BabySqueel::Join
-              buckets[:association_join] << join
-            else
-              block.call(join)
-            end
-          else
-            block.call(join)
-          end
-        end
-      end
-    end
-
     # This is a 'fix' for the left outer joins
     # rails way would be to call left_outer_joins so the join_type gets set to Arel::Nodes::OuterJoin
     # Maybe this could be fixed in joining but I do not know how.
-    module Injector6_1 # :nodoc:
+    module OuterJoinConstraints # :nodoc:
       def make_constraints(parent, child, join_type)
         # :nodoc:
         join_type = child.join_type if child.join_type == Arel::Nodes::OuterJoin

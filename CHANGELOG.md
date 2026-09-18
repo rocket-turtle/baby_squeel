@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- remove BabySqueel::JoinDependency::Injector6_0
+- rename Injector6_1 to JoinDependency::OuterJoinConstraints and QueryMethods::JoinsInjector
 - Fix specs for ActiveRecord 8.2
 - Drop support for ActiveRecord 7.2
 - remove selecting
