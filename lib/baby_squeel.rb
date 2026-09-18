@@ -12,7 +12,7 @@ ActiveSupport.on_load :active_record do
   require "baby_squeel/active_record/query_methods"
   require "baby_squeel/active_record/where_chain"
 
-  ::ActiveRecord::Base.extend BabySqueel::ActiveRecord::Base
-  ::ActiveRecord::Relation.prepend BabySqueel::ActiveRecord::QueryMethods
-  ::ActiveRecord::QueryMethods::WhereChain.prepend BabySqueel::ActiveRecord::WhereChain
+  ActiveRecord::Base.extend BabySqueel::ActiveRecord::Base
+  ActiveRecord::Relation.prepend BabySqueel::ActiveRecord::QueryMethods
+  ActiveRecord::QueryMethods::WhereChain.prepend BabySqueel::ActiveRecord::WhereChain
 end

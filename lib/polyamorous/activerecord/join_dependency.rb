@@ -86,7 +86,7 @@ module Polyamorous
         when Hash
           associations.each do |k, v|
             cache =
-              if TreeNode === k
+              if k.is_a?(TreeNode)
                 k.add_to_tree(hash)
               else
                 hash[k] ||= {}

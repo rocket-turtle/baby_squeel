@@ -25,12 +25,12 @@ module Polyamorous
 
     def eql?(other)
       self.class == other.class &&
-        self.name  == other.name &&
-        self.type  == other.type &&
-        self.klass == other.klass
+        name  == other.name &&
+        type  == other.type &&
+        klass == other.klass
     end
 
-    alias :== :eql?
+    alias_method :==, :eql?
 
     def add_to_tree(hash)
       hash[self] ||= {}

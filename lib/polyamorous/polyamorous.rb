@@ -15,9 +15,9 @@ ActiveSupport.on_load(:active_record) do
   require "polyamorous/activerecord/join_dependency"
   require "polyamorous/activerecord/reflection"
 
-  ActiveRecord::Reflection::AbstractReflection.send(:prepend, Polyamorous::ReflectionExtensions)
+  ActiveRecord::Reflection::AbstractReflection.prepend Polyamorous::ReflectionExtensions
 
-  Polyamorous::JoinDependency.send(:prepend, Polyamorous::JoinDependencyExtensions)
-  Polyamorous::JoinDependency.singleton_class.send(:prepend, Polyamorous::JoinDependencyExtensions::ClassMethods)
-  Polyamorous::JoinAssociation.send(:prepend, Polyamorous::JoinAssociationExtensions)
+  Polyamorous::JoinDependency.prepend Polyamorous::JoinDependencyExtensions
+  Polyamorous::JoinDependency.singleton_class.prepend Polyamorous::JoinDependencyExtensions::ClassMethods
+  Polyamorous::JoinAssociation.prepend Polyamorous::JoinAssociationExtensions
 end
