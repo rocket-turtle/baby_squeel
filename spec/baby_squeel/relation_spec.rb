@@ -1,5 +1,3 @@
-require "spec_helper"
-require "baby_squeel/relation"
 require "shared_examples/table"
 require "shared_examples/relation"
 

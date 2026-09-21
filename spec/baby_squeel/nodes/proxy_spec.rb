@@ -1,6 +1,3 @@
-require "spec_helper"
-require "baby_squeel/nodes"
-
 describe BabySqueel::Nodes::Proxy do
   let(:fake_node) { "FakeNode" }
   subject(:proxy) { described_class.new(fake_node) }

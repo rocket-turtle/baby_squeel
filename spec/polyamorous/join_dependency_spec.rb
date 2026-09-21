@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module Polyamorous
   describe JoinDependency, :polyamorous do
     context "with symbol joins" do

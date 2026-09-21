@@ -1,7 +1,3 @@
-require "spec_helper"
-require "baby_squeel/nodes"
-require "baby_squeel/table"
-
 describe BabySqueel::Nodes::Binary do
   let(:attribute) do
     BabySqueel::Nodes::Attribute.new(

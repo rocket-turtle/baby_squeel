@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe BabySqueel::Resolver do
   let(:table)       { create_table Post.arel_table }
   let(:dsl)         { create_dsl Post }

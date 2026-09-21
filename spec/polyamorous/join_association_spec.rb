@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module Polyamorous
   describe JoinAssociation, :polyamorous do
     let(:join_dependency) { new_join_dependency(Picture, {}) }

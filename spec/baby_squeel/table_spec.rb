@@ -1,5 +1,3 @@
-require "spec_helper"
-require "baby_squeel/table"
 require "shared_examples/table"
 
 describe BabySqueel::Table do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module Polyamorous
   describe Join, :polyamorous do
     it "is a tree node" do

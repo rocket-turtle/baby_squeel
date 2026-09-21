@@ -1,7 +1,3 @@
-require "spec_helper"
-require "baby_squeel/nodes"
-require "baby_squeel/table"
-
 describe BabySqueel::Nodes::Attribute do
   subject(:attribute) do
     described_class.new(

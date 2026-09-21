@@ -1,8 +1,10 @@
 require "bundler/setup"
-require "simplecov"
 require "byebug"
 
-SimpleCov.start { skip "spec/" }
+if ENV["COVERAGE"]
+  require "simplecov"
+  SimpleCov.start { skip "spec/" }
+end
 
 require "baby_squeel"
 require "support/schema"

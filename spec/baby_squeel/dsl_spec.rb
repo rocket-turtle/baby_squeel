@@ -1,7 +1,5 @@
-require "spec_helper"
 require "shared_examples/table"
 require "shared_examples/relation"
-require "baby_squeel/dsl"
 
 describe BabySqueel::DSL do
   subject(:dsl) { create_dsl Post }

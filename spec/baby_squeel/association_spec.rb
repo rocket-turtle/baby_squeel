@@ -1,5 +1,3 @@
-require "spec_helper"
-require "baby_squeel/association"
 require "shared_examples/table"
 
 describe BabySqueel::Association do

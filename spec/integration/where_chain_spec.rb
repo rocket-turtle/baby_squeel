@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "#where.has" do
   it "wheres on an attribute" do
     relation = Post.where.has { title.eq("OJ Simpson") }

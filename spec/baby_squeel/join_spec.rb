@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe BabySqueel::Join do
   let(:association1) { create_association Author, :posts }
   let(:association2) { create_association Post, :comments }

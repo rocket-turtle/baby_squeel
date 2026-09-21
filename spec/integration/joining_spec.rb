@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "#joining" do
   context "when joining explicitly" do
     it "inner joins" do
