@@ -1,17 +1,7 @@
 module BabySqueel
   class NotFoundError < StandardError # :nodoc:
     def initialize(model_name, name, strategies)
-      super("There is no #{sentence(strategies)} named '#{name}' for #{model_name}.")
-    end
-
-    private
-
-    def sentence(*words)
-      if words.length < 3
-        words.join " or "
-      else
-        sentence words[0..-2].join(", "), words.last
-      end
+      super("There is no #{strategies.join(' or ')} named '#{name}' for #{model_name}.")
     end
   end
 

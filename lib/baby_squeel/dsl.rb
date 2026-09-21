@@ -9,11 +9,5 @@ module BabySqueel
         Nodes.unwrap new(scope).evaluate(&)
       end
     end
-
-    private
-
-    def resolver
-      @resolver ||= Resolver.new(self, %i[column association])
-    end
   end
 end
