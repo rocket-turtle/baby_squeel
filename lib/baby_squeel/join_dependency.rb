@@ -37,9 +37,9 @@ module BabySqueel
         join_association.table
       end
 
-      private
-
       Associations = ::ActiveRecord::Associations
+
+      private
 
       def find_join_association(associations)
         current = join_dependency.send(:join_root)
@@ -70,14 +70,12 @@ module BabySqueel
           case join
           when String
             :string_join
-          when Hash, Symbol, Array
+          when Hash, Symbol, Array, BabySqueel::Join
             :association_join
           when Associations::JoinDependency
             :stashed_join
           when Arel::Nodes::Join
             :join_node
-          when BabySqueel::Join
-            :association_join
           else
             raise("unknown class: #{join.class.name}")
           end

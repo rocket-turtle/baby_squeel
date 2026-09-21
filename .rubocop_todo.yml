@@ -14,21 +14,10 @@ Lint/ConstantDefinitionInBlock:
     - 'lib/polyamorous/polyamorous.rb'
 
 # Offense count: 1
-# Configuration parameters: IgnoreLiteralBranches, IgnoreConstantBranches, IgnoreDuplicateElseBranch.
-Lint/DuplicateBranch:
-  Exclude:
-    - 'lib/baby_squeel/join_dependency.rb'
-
-# Offense count: 1
 # Configuration parameters: AllowComments.
 Lint/EmptyClass:
   Exclude:
     - 'lib/baby_squeel/active_record/version_helper.rb'
-
-# Offense count: 1
-Lint/UselessConstantScoping:
-  Exclude:
-    - 'lib/baby_squeel/join_dependency.rb'
 
 # Offense count: 4
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
@@ -73,4 +62,3 @@ Style/MissingRespondToMissing:
 Style/OptionalBooleanParameter:
   Exclude:
     - 'lib/baby_squeel/nodes/proxy.rb'
-
