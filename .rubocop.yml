@@ -1,3 +1,8 @@
+# Ten of the thirteen Metrics offenses left in the todo are in the vendored
+# Active Record patches under lib/polyamorous, where the complexity is inherent
+# to overriding the join builder. The other three are in
+# lib/baby_squeel/join_dependency.rb, and Builder#build is what pins AbcSize at
+# 34 - so rewriting Builder clears those, cleaning up polyamorous does not.
 inherit_from: .rubocop_todo.yml
 
 # Keep RuboCop's default excludes (vendor, node_modules, tmp, .git) instead of
@@ -36,3 +41,36 @@ Metrics/BlockLength:
 # Existing code uses alias in class bodies
 Style/Alias:
   EnforcedStyle: prefer_alias_method
+
+# Documentation comments are not maintained for this fork
+Style/Documentation:
+  Enabled: false
+
+# Error messages interpolate named values
+Style/FormatStringToken:
+  EnforcedStyle: template
+
+# The class is deliberately empty. It is the single place for Active Record
+# version branches: keeping them together makes them easy to find and drop
+# once support for that version ends.
+Lint/EmptyClass:
+  Exclude:
+    - 'lib/baby_squeel/active_record/version_helper.rb'
+
+# on_load defers the block until Active Record is loaded, which is exactly
+# when the aliased constants become available
+Lint/ConstantDefinitionInBlock:
+  AllowedMethods:
+    - enums
+    - on_load
+
+# Proxy inherits from BasicObject, which has no respond_to? for Ruby to hook
+# respond_to_missing? into, so respond_to? is defined directly instead
+Style/MissingRespondToMissing:
+  Exclude:
+    - 'lib/baby_squeel/nodes/proxy.rb'
+
+# respond_to?'s second parameter is positional by Ruby's calling convention
+Style/OptionalBooleanParameter:
+  Exclude:
+    - 'lib/baby_squeel/nodes/proxy.rb'

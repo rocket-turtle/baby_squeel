@@ -233,7 +233,7 @@ You can also run `bin/console` to open up a prompt where you'll have access to s
 1. Update [baby_squeel.gemspec](baby_squeel.gemspec)
 2. Add the version to test matrix [build.yml](.github/workflows/build.yml)
 3. Update development section in the [README.md](README.md)
-4. If you need to change the code consider to add a version check methode in [version_helper.rb](lib/baby_squeel/active_record/version_helper.rb)
+4. If the code has to branch on the Active Record version, put the check in [version_helper.rb](lib/baby_squeel/active_record/version_helper.rb) instead of inlining it. Collecting every version branch in one file makes them easy to find and drop once support for that version ends.
 5. Run the specs with all supported versions
 6. Add comment to the unreleased section in [CHANGELOG.md](CHANGELOG.md)
 
