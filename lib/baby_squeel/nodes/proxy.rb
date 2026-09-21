@@ -24,9 +24,9 @@ module BabySqueel
 
       private
 
-      def method_missing(meth, *args, &block)
+      def method_missing(meth, *args, &)
         if _arel.respond_to?(meth)
-          Nodes.wrap _arel.send(meth, *Nodes.unwrap(args), &block)
+          Nodes.wrap _arel.send(meth, *Nodes.unwrap(args), &)
         else
           super
         end

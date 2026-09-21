@@ -60,12 +60,12 @@ module BabySqueel
     end
 
     # Specify an explicit join.
-    def on(node = nil, &block)
-      clone.on!(node, &block)
+    def on(node = nil, &)
+      clone.on!(node, &)
     end
 
-    def on!(node = nil, &block) # :nodoc:
-      self._on = node || evaluate(&block)
+    def on!(node = nil, &) # :nodoc:
+      self._on = node || evaluate(&)
       self
     end
 
@@ -120,8 +120,8 @@ module BabySqueel
       resolver.resolves?(name) || super
     end
 
-    def method_missing(*args, &block)
-      resolver.resolve!(*args, &block) || super
+    def method_missing(*, &)
+      resolver.resolve!(*, &) || super
     end
   end
 end

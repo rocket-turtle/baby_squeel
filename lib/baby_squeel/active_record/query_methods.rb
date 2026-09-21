@@ -21,8 +21,8 @@ module BabySqueel
       end
 
       # Constructs Arel for ActiveRecord::QueryMethods#joins using the DSL.
-      def joining(&block)
-        joins DSL.evaluate(self, &block)
+      def joining(&)
+        joins DSL.evaluate(self, &)
       end
 
       def construct_join_dependency(associations, join_type)

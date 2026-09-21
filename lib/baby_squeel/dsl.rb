@@ -5,8 +5,8 @@ require "baby_squeel/association"
 module BabySqueel
   class DSL < Relation
     class << self
-      def evaluate(scope, &block) # :nodoc:
-        Nodes.unwrap new(scope).evaluate(&block)
+      def evaluate(scope, &) # :nodoc:
+        Nodes.unwrap new(scope).evaluate(&)
       end
     end
 
