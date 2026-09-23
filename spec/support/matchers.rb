@@ -4,8 +4,6 @@ require_relative "matchers/match_formatted"
 require_relative "matchers/match_snapshot"
 
 module Matchers
-  def self.version(value); end
-
   def self.suffix(variants: [])
     variant = variants.find do |variant|
       ActiveRecord::VERSION::STRING.start_with?(variant)
