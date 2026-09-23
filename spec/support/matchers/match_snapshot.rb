@@ -9,11 +9,15 @@ module Matchers
     def matches?(actual)
       actual = @formatter.normalize(actual)
 
-      if @snapshot.read && !ENV["UPDATE_SNAPSHOTS"]
-        super
-      else
+      if ENV["UPDATE_SNAPSHOTS"]
         @snapshot.write(actual)
         true
+      elsif @snapshot.read.nil?
+        # Recording on the fly would let a renamed example assert nothing and
+        # still report green in every run from then on.
+        raise "No snapshot for #{@snapshot.name.inspect}. Record it with UPDATE_SNAPSHOTS=1."
+      else
+        super
       end
     end
 

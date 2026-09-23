@@ -226,6 +226,11 @@ export AR='main'; bin/setup; rake
 bundle exec rubocop
 ```
 
+Two environment variables the specs read:
+
+- `COVERAGE=1` writes a coverage report to `coverage/`. Off by default, so a plain run does not produce one.
+- `UPDATE_SNAPSHOTS=1` records SQL snapshots. A missing snapshot fails the run instead of being recorded silently, so a renamed or new example needs this once.
+
 You can also run `bin/console` to open up a prompt where you'll have access to some models to experiment with.
 
 ## Rails update

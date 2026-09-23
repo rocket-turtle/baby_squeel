@@ -1,3 +1,2 @@
 ---
 BabySqueel::Association#== generates SQL 1: '"posts"."author_id" = ?'
-BabySqueel::Association#!= generates SQL 1: '"posts"."author_id" != ?'
