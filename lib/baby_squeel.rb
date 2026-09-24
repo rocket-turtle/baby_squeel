@@ -1,5 +1,4 @@
 require "active_record"
-require "active_record/relation"
 require "polyamorous/polyamorous"
 require "baby_squeel/version"
 require "baby_squeel/errors"

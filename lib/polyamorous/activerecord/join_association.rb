@@ -2,9 +2,7 @@ module Polyamorous
   module JoinAssociationExtensions
     include SwappingReflectionClass
 
-    def self.prepended(base)
-      base.class_eval { attr_reader :join_type }
-    end
+    attr_reader :join_type
 
     def initialize(reflection, children, polymorphic_class = nil, join_type = Arel::Nodes::InnerJoin)
       @join_type = join_type
