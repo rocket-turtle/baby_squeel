@@ -53,6 +53,15 @@ module Polyamorous
       end
     end
 
+    # A child built from a Polyamorous::Join carries its own join type. An
+    # outer one takes precedence over the join type of the surrounding
+    # dependency, which is InnerJoin for joins_values, so that child is a LEFT
+    # OUTER JOIN inside an otherwise inner join tree.
+    def make_constraints(parent, child, join_type)
+      join_type = child.join_type if child.join_type == Arel::Nodes::OuterJoin
+      super
+    end
+
     module ClassMethods
       # TreeNode covers both Polyamorous::Join and BabySqueel::Join, whose
       # #add_to_tree expands a whole chain instead of adding one key. Every
