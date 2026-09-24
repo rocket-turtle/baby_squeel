@@ -20,4 +20,11 @@ describe "test that plain rails still works" do
   it "joins an association with a nil value" do
     expect(Post.joins(author: nil).to_sql).to include("INNER JOIN")
   end
+
+  it "does not alias a table named by references" do
+    sql = Post.eager_load(:author).references("author").to_sql
+
+    expect(sql).to include('LEFT OUTER JOIN "authors" ON')
+    expect(sql).not_to include('AS "author"')
+  end
 end
