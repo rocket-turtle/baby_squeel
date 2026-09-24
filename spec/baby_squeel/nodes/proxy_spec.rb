@@ -1,4 +1,20 @@
 describe BabySqueel::Nodes::Proxy do
+  describe "comparison operators" do
+    let(:attribute) { BabySqueel::Nodes::Attribute.new(create_relation(Post), :id) }
+
+    it "rejects == with a hint to eq" do
+      expect { attribute == 1 }.to raise_error(NoMethodError, /use #eq/)
+    end
+
+    it "rejects != with a hint to not_eq" do
+      expect { attribute != 1 }.to raise_error(NoMethodError, /use #not_eq/)
+    end
+
+    it "rejects ! with a hint to not" do
+      expect { !attribute }.to raise_error(NoMethodError, /use #not/)
+    end
+  end
+
   let(:fake_node) { "FakeNode" }
   subject(:proxy) { described_class.new(fake_node) }
 
