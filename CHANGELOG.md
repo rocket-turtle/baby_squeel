@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Fix joins with a nil value raising ConfigurationError
+
 ## [3.0.0.internal4] - 2026-09-24
 
 - remove BabySqueel::JoinDependency::Injector6_0

@@ -16,4 +16,8 @@ describe "test that plain rails still works" do
 
     expect(relation).to match_sql_snapshot
   end
+
+  it "joins an association with a nil value" do
+    expect(Post.joins(author: nil).to_sql).to include("INNER JOIN")
+  end
 end

@@ -74,25 +74,11 @@ module Polyamorous
     end
 
     module ClassMethods
-      # Prepended before ActiveRecord::Associations::JoinDependency#walk_tree
-      #
+      # TreeNode covers both Polyamorous::Join and BabySqueel::Join, whose
+      # #add_to_tree expands a whole chain instead of adding one key. Every
+      # other shape is Active Record's own, including its nil-value guard.
       def walk_tree(associations, hash)
-        case associations
-        when TreeNode
-          associations.add_to_tree(hash)
-        when Hash
-          associations.each do |k, v|
-            cache =
-              if k.is_a?(TreeNode)
-                k.add_to_tree(hash)
-              else
-                hash[k] ||= {}
-              end
-            walk_tree(v, cache)
-          end
-        else
-          super
-        end
+        associations.is_a?(TreeNode) ? associations.add_to_tree(hash) : super
       end
     end
   end
