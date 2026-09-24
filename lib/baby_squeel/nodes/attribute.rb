@@ -10,19 +10,14 @@ module BabySqueel
       end
 
       def in(rel)
-        if rel.is_a? ::ActiveRecord::Relation
-          Nodes.wrap ::Arel::Nodes::In.new(self, sanitize_relation(rel))
-        else
-          super
-        end
+        rel.is_a?(::ActiveRecord::Relation) ? Nodes.wrap(subquery(rel)) : super
       end
 
       def not_in(rel)
-        if rel.is_a? ::ActiveRecord::Relation
-          Nodes.wrap ::Arel::Nodes::NotIn.new(self, sanitize_relation(rel))
-        else
-          super
-        end
+        return super unless rel.is_a?(::ActiveRecord::Relation)
+
+        node = subquery(rel)
+        Nodes.wrap ::Arel::Nodes::NotIn.new(node.left, node.right)
       end
 
       def _arel
@@ -35,8 +30,13 @@ module BabySqueel
 
       private
 
-      def sanitize_relation(rel)
-        Arel.sql(rel.to_sql)
+      # Builds the IN node for a relation with the handler Active Record uses
+      # for where(column: relation). It applies eager loading so the joins it
+      # implies end up in the subquery, selects the primary key when the
+      # relation selects nothing, rejects composite primary keys and keeps
+      # the bind parameters.
+      def subquery(rel)
+        ::ActiveRecord::PredicateBuilder::RelationHandler.new.call(_arel, rel)
       end
     end
   end
