@@ -1,24 +1,15 @@
 require "baby_squeel/nodes/proxy"
 require "baby_squeel/nodes/attribute"
-require "baby_squeel/nodes/grouping"
-require "baby_squeel/nodes/binary"
 
 module BabySqueel
   module Nodes
     class << self
-      # Wraps an Arel node in a Proxy so that it can
-      # be extended.
+      # Wraps an Arel node in a Proxy so that methods called on it return
+      # wrapped nodes again. Proxy covers every node type: Arel::Nodes::Binary
+      # and Arel::Nodes::Grouping bring the alias, order and math predications
+      # with them through Arel::Nodes::NodeExpression.
       def wrap(arel)
-        case arel
-        when Arel::Nodes::Grouping
-          Grouping.new(arel)
-        when Arel::Nodes::Binary
-          Binary.new(arel)
-        when Arel::Nodes::Node
-          Proxy.new(arel)
-        else
-          arel
-        end
+        arel.is_a?(Arel::Nodes::Node) ? Proxy.new(arel) : arel
       end
 
       # Unwraps a BabySqueel::Proxy before being passed to
