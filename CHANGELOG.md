@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Raise PolymorphicNotSpecifiedError instead of a NoMethodError when an attribute of a polymorphic association is used without #of
 - Fix an outer join below an inner join of the same association joining that association twice
 - Fix outer, inner, as and on being ignored on an association that had resolved an attribute before
 - Fix merging a relation with an outer joining into a relation of another model joining the association of the wrong model
