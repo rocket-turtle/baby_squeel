@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Document that an implicit join below an outer join is an outer join, as in Active Record; the spec that expected an inner join there was pending since 2021
 - Raise PolymorphicNotSpecifiedError instead of a NoMethodError when an attribute of a polymorphic association is used without #of
 - Fix an outer join below an inner join of the same association joining that association twice
 - Fix outer, inner, as and on being ignored on an association that had resolved an attribute before

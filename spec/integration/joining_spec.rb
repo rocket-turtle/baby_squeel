@@ -183,12 +183,11 @@ describe "#joining" do
         expect(relation).to produce_sql(Post.joins(author: :comments))
       end
 
-      it "outer joins" do
-        pending "This feature is known to be broken"
-
+      it "outer joins everything below an outer join, like Active Record" do
         relation = Post.joining { author.outer.comments }
 
         expect(relation).to match_sql_snapshot
+        expect(relation).to produce_sql(Post.left_joins(author: :comments))
       end
 
       it "handles polymorphism" do

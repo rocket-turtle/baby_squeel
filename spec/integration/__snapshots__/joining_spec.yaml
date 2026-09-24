@@ -1,7 +1,4 @@
 ---
-"#joining when joining implicitly nested joins outer joins 1": SELECT "posts".* FROM
-  "posts" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id" INNER
-  JOIN "comments" ON "comments"."author_id" = "authors"."id"
 "#joining when joining implicitly nested joins joins a through association and then back again 1": SELECT
   "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
@@ -193,4 +190,7 @@
   an Active Record join dedupes incremental outer joins (in any order) 1 (Active Record:
   v8.2)"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
+"#joining when joining implicitly nested joins outer joins everything below an outer join, like Active Record 1": SELECT
+  "posts".* FROM "posts" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
