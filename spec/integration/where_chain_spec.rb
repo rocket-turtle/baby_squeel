@@ -5,6 +5,13 @@ describe "#where.has" do
     expect(relation).to match_sql_snapshot
   end
 
+  it "ands an array of conditions" do
+    relation = Post.where.has { [title.eq("x"), nil, id.gt(1)] }
+
+    expect(relation).to produce_sql(Post.where.has { title.eq("x") }.where.has { id.gt(1) })
+    expect(relation.to_sql).to include(%(WHERE "posts"."title" = 'x' AND "posts"."id" > 1))
+  end
+
   it "accepts nil" do
     relation = Post.where.has { nil }
 

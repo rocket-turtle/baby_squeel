@@ -114,7 +114,13 @@ Post.joins(author: :posts).where.has { author.posts.title.matches('%fun%') }
 # INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
 # INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
 # WHERE ("posts_authors"."title" LIKE '%fun%')
+
+Post.where.has { [title.eq('My Post'), id.gt(5)] }
+# SELECT "posts".* FROM "posts"
+# WHERE "posts"."title" = 'My Post' AND "posts"."id" > 5
 ```
+
+A referenced association has to be joined, as in the examples above. `includes` does not join on its own: like any Arel condition, `where.has` leaves `references_values` alone, so `Post.includes(:author).where.has { author.name.eq('Ray') }` needs `.references(:authors)` to make Active Record eager load with a join.
 
 ##### Joins
 
