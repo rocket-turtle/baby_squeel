@@ -2,17 +2,6 @@ require "baby_squeel/join"
 
 module BabySqueel
   module JoinDependency
-    # This is a 'fix' for the left outer joins
-    # rails way would be to call left_outer_joins so the join_type gets set to Arel::Nodes::OuterJoin
-    # Maybe this could be fixed in joining but I do not know how.
-    module OuterJoinConstraints # :nodoc:
-      def make_constraints(parent, child, join_type)
-        # :nodoc:
-        join_type = child.join_type if child.join_type == Arel::Nodes::OuterJoin
-        super
-      end
-    end
-
     class Builder # :nodoc:
       attr_reader :join_dependency
 

@@ -3,6 +3,7 @@
 - Fix joins with a nil value raising ConfigurationError
 - Fix references with a String renaming the joined table
 - remove BabySqueel::Nodes::Grouping and BabySqueel::Nodes::Binary
+- move BabySqueel::JoinDependency::OuterJoinConstraints into Polyamorous::JoinDependencyExtensions
 
 ## [3.0.0.internal4] - 2026-09-24
 

@@ -25,12 +25,6 @@ module BabySqueel
         joins DSL.evaluate(self, &)
       end
 
-      def construct_join_dependency(associations, join_type)
-        result = super
-        result.extend(BabySqueel::JoinDependency::OuterJoinConstraints) if associations.any?(BabySqueel::Join)
-        result
-      end
-
       private
 
       # https://github.com/rails/rails/commit/c0c53ee9d28134757cf1418521cb97c4a135f140
