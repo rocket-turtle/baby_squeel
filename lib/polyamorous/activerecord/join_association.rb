@@ -11,7 +11,6 @@ module Polyamorous
       if polymorphic_class && polymorphic_class < ::ActiveRecord::Base
         swapping_reflection_klass(reflection, polymorphic_class) do |reflection|
           super(reflection, children)
-          self.reflection.options[:polymorphic] = true
         end
       else
         super(reflection, children)
