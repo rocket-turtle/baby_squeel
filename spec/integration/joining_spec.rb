@@ -289,8 +289,23 @@ describe "#joining" do
           relation = Post.joins(author: { posts: :author_comments })
                          .joining { author.posts.author_comments.outer }
 
-          # There are duplicate inner joins in here, but that'll have to do...
+          # author and posts merge with the Active Record joins. author_comments
+          # does not: Active Record joins it inner, the DSL outer, and those are
+          # different keys in the join tree. So the through association and the
+          # authors table it goes through are joined a second time, as outer
+          # joins. The pending example below states what Active Record does.
           expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
+        end
+
+        it "dedupes an outer join against the inner join Active Record made" do
+          pending "an outer join of an association that is already inner joined is added instead of merged"
+
+          relation = Post.joins(author: { posts: :author_comments })
+                         .joining { author.posts.author_comments.outer }
+          active_record = Post.joins(author: { posts: :author_comments })
+                              .left_joins(author: { posts: :author_comments })
+
+          expect(relation).to produce_sql(active_record)
         end
 
         it "dedupes incremental outer joins" do
