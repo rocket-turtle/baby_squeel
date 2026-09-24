@@ -23,7 +23,7 @@ Style/StringLiterals:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-# kind_of? is used intentionally in several places
+# Table#alias? and Nodes::Attribute#_arel use kind_of?
 Style/ClassCheck:
   Enabled: false
 
