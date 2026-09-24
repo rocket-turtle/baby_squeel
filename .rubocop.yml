@@ -1,8 +1,3 @@
-# The two Metrics offenses in the todo are in
-# Polyamorous::JoinDependencyExtensions#build, the vendored override of Active
-# Record's join builder.
-inherit_from: .rubocop_todo.yml
-
 # Keep RuboCop's default excludes (vendor, node_modules, tmp, .git) instead of
 # replacing them; CI installs the bundle into vendor/bundle.
 inherit_mode:
@@ -47,13 +42,6 @@ Style/Documentation:
 # Error messages interpolate named values
 Style/FormatStringToken:
   EnforcedStyle: template
-
-# The class is deliberately empty. It is the single place for Active Record
-# version branches: keeping them together makes them easy to find and drop
-# once support for that version ends.
-Lint/EmptyClass:
-  Exclude:
-    - 'lib/baby_squeel/active_record/version_helper.rb'
 
 # on_load defers the block until Active Record is loaded, which is exactly
 # when the aliased constants become available
