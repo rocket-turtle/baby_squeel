@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Fix joins of an association declared with deprecated: true not being reported (Active Record 8.1)
+- remove .rubocop_todo.yml, no offenses are left
 - Fix joining a polymorphic association with an STI subclass comparing the type column with the subclass name
 - build the subquery for a relation passed to Attribute#in or #not_in with the handler where(column: relation) uses: eager loading is applied, the primary key is selected when the relation selects nothing and bind parameters are kept
 - Fix joins with a nil value raising ConfigurationError
