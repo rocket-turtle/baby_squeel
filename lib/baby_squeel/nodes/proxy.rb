@@ -22,6 +22,13 @@ module BabySqueel
         meth.to_s == "_arel" || _arel.respond_to?(meth, include_private)
       end
 
+      # BasicObject defines == and != as identity and ! as negation. On a
+      # node they would turn `title == "x"` into a silently dropped
+      # condition. Arel spells these eq, not_eq and not.
+      def ==(_other) = ::Kernel.raise(::NoMethodError, "use #eq instead of == on #{inspect}")
+      def !=(_other) = ::Kernel.raise(::NoMethodError, "use #not_eq instead of != on #{inspect}")
+      def ! = ::Kernel.raise(::NoMethodError, "use #not instead of ! on #{inspect}")
+
       private
 
       def method_missing(meth, *args, &)
