@@ -6,6 +6,7 @@
 - move BabySqueel::JoinDependency::OuterJoinConstraints into Polyamorous::JoinDependencyExtensions
 - let Active Record build the join dependency BabySqueel::JoinDependency::Builder resolves aliases from; remove Polyamorous construct_tables_for_association! and table_aliases_for
 - simplify Polyamorous::SwappingReflectionClass: only swap the memoized klass
+- remove the unused setters and String/Symbol conversion from Polyamorous::Join
 
 ## [3.0.0.internal4] - 2026-09-24
 

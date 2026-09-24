@@ -1,12 +1,12 @@
 module Polyamorous
   describe Join, :polyamorous do
     it "is a tree node" do
-      join = new_join(:articles, :outer)
+      join = new_join(:articles, OuterJoin)
       expect(join).to be_kind_of(TreeNode)
     end
 
     it "can be added to a tree" do
-      join = new_join(:articles, :outer)
+      join = new_join(:articles, OuterJoin)
 
       tree_hash = {}
       join.add_to_tree(tree_hash)

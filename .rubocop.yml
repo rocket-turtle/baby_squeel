@@ -1,6 +1,6 @@
-# The three Metrics offenses in the todo are in the vendored Active Record
-# patches under lib/polyamorous: JoinDependencyExtensions#build, which
-# overrides the join builder, and Polyamorous::Join#convert_to_arel_join_type.
+# The two Metrics offenses in the todo are in
+# Polyamorous::JoinDependencyExtensions#build, the vendored override of Active
+# Record's join builder.
 inherit_from: .rubocop_todo.yml
 
 # Keep RuboCop's default excludes (vendor, node_modules, tmp, .git) instead of

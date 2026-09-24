@@ -24,14 +24,14 @@ module Polyamorous
     end
 
     context "with outer join" do
-      subject { new_join_dependency Post, new_join(:comments, :outer) }
+      subject { new_join_dependency Post, new_join(:comments, OuterJoin) }
 
       it { expect(subject.send(:join_root).drop(1).size).to be(1) }
       it { expect(subject.send(:join_root).drop(1).first.join_type).to eq(Polyamorous::OuterJoin) }
     end
 
     context "with nested outer joins" do
-      subject { new_join_dependency Author, new_join(:posts, :outer) => new_join(:comments, :outer) }
+      subject { new_join_dependency Author, new_join(:posts, OuterJoin) => new_join(:comments, OuterJoin) }
 
       it { expect(subject.send(:join_root).drop(1).size).to be(2) }
       it {
@@ -42,7 +42,7 @@ module Polyamorous
     end
 
     context "with polymorphic belongs_to join" do
-      subject { new_join_dependency Picture, new_join(:imageable, :inner, Author) }
+      subject { new_join_dependency Picture, new_join(:imageable, InnerJoin, Author) }
 
       it { expect(subject.send(:join_root).drop(1).size).to be(1) }
       it { expect(subject.send(:join_root).drop(1).first.join_type).to be(Polyamorous::InnerJoin) }
@@ -50,7 +50,7 @@ module Polyamorous
     end
 
     context "with polymorphic belongs_to join and nested symbol join" do
-      subject { new_join_dependency Picture, new_join(:imageable, :inner, Author) => :comments }
+      subject { new_join_dependency Picture, new_join(:imageable, InnerJoin, Author) => :comments }
 
       it { expect(subject.send(:join_root).drop(1).size).to be(2) }
       it { expect(subject.send(:join_root).drop(1).map(&:join_type).uniq).to eq([Polyamorous::InnerJoin]) }
@@ -59,7 +59,7 @@ module Polyamorous
     end
 
     context "with polymorphic belongs_to join and nested join" do
-      subject { new_join_dependency Picture, new_join(:imageable, :outer, Author) => :comments }
+      subject { new_join_dependency Picture, new_join(:imageable, OuterJoin, Author) => :comments }
 
       it { expect(subject.send(:join_root).drop(1).size).to be(2) }
       it {
