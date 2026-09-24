@@ -35,14 +35,5 @@ module Polyamorous
       join_type = child.join_type if child.join_type == Arel::Nodes::OuterJoin
       super
     end
-
-    module ClassMethods
-      # TreeNode covers both Polyamorous::Join and BabySqueel::Join, whose
-      # #add_to_tree expands a whole chain instead of adding one key. Every
-      # other shape is Active Record's own, including its nil-value guard.
-      def walk_tree(associations, hash)
-        associations.is_a?(TreeNode) ? associations.add_to_tree(hash) : super
-      end
-    end
   end
 end

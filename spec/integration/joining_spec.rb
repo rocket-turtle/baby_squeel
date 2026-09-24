@@ -313,6 +313,13 @@ describe "#joining" do
       end
     end
 
+    it "joins the association of the merged model when merged into another model" do
+      relation = Comment.joins(:post).merge(Post.joining { author.outer })
+
+      expect(relation.to_sql).to eq(Comment.joins(:post).merge(Post.left_outer_joins(:author)).to_sql)
+      expect(relation.to_sql).to include('LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"')
+    end
+
     it "raises an error when attempting to alias an inner join" do
       expect do
         Post.joining { author.alias("a") }.to_sql

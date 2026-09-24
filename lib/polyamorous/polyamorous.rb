@@ -7,7 +7,6 @@ ActiveSupport.on_load(:active_record) do
     JoinAssociation = ::ActiveRecord::Associations::JoinDependency::JoinAssociation
   end
 
-  require "polyamorous/tree_node"
   require "polyamorous/join"
   require "polyamorous/swapping_reflection_class"
 
@@ -18,6 +17,5 @@ ActiveSupport.on_load(:active_record) do
   ActiveRecord::Reflection::AbstractReflection.prepend Polyamorous::ReflectionExtensions
 
   Polyamorous::JoinDependency.prepend Polyamorous::JoinDependencyExtensions
-  Polyamorous::JoinDependency.singleton_class.prepend Polyamorous::JoinDependencyExtensions::ClassMethods
   Polyamorous::JoinAssociation.prepend Polyamorous::JoinAssociationExtensions
 end

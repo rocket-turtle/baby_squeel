@@ -1,7 +1,9 @@
 module Polyamorous
+  # A key in the association tree Active Record's JoinDependency walks. Where
+  # a plain key is the association name, a Join also carries the join type
+  # and the class a polymorphic association is joined with. Equal joins are
+  # equal hash keys, so Active Record dedupes them like names.
   class Join
-    include TreeNode
-
     attr_reader :name, :type, :klass
 
     # type is Arel::Nodes::InnerJoin or Arel::Nodes::OuterJoin, klass the
@@ -24,9 +26,5 @@ module Polyamorous
     end
 
     alias_method :==, :eql?
-
-    def add_to_tree(hash)
-      hash[self] ||= {}
-    end
   end
 end

@@ -45,15 +45,10 @@ module BabySqueel
       _join == Arel::Nodes::OuterJoin || _reflection.polymorphic?
     end
 
-    # See Join#add_to_tree.
-    def add_to_tree(hash)
-      polyamorous = Polyamorous::Join.new(
-        _reflection.name,
-        _join,
-        _polymorphic_klass
-      )
-
-      hash[polyamorous] ||= {}
+    # The key BabySqueel::Table#_arel uses for this association when the
+    # chain needs Polyamorous.
+    def polyamorous_join
+      Polyamorous::Join.new(_reflection.name, _join, _polymorphic_klass)
     end
 
     # See BabySqueel::Table#find_alias.
