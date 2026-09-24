@@ -11,15 +11,13 @@ module Polyamorous
       reflection.instance_variable_set(:@klass, Post)
       join_association
         .swapping_reflection_klass(reflection, Author) do |new_reflection|
-        expect(new_reflection.options).not_to equal reflection.options
-        expect(new_reflection.options).not_to have_key(:polymorphic)
         expect(new_reflection.klass).to eq(Author)
         expect(reflection.klass).to eq(Post)
       end
     end
 
-    it "sets the polymorphic option to true after initializing" do
-      expect(join_association.reflection.options[:polymorphic]).to be(true)
+    it "keeps the reflection polymorphic" do
+      expect(join_association.reflection).to be_polymorphic
     end
   end
 end
