@@ -298,12 +298,14 @@ describe "#joining" do
           relation = Post.joins(:author).joining { author.comments.outer }
 
           expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
+          expect(relation).to produce_sql(Post.joins(:author).left_joins(author: :comments))
         end
 
         it "dedupes incremental outer joins (in any order)" do
           relation = Post.joining { author.comments.outer }.joins(:author)
 
           expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
+          expect(relation).to produce_sql(Post.left_joins(author: :comments).joins(:author))
         end
       end
 
