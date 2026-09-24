@@ -111,8 +111,11 @@ module BabySqueel
 
     private
 
+    # Built per call: outer, inner, alias and on work on clones, and a
+    # resolver kept in an instance variable would still point at the
+    # original table.
     def resolver
-      @resolver ||= Resolver.new(self, [:attribute])
+      Resolver.new(self, [:attribute])
     end
 
     def respond_to_missing?(name, *)

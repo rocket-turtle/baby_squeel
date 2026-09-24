@@ -210,6 +210,26 @@ describe "#joining" do
         expect(relation).to match_sql_snapshot
       end
 
+      it "keeps the outer join when the association was used before" do
+        relation = Post.joining do |post|
+          author = post.author
+          author.name
+          author.outer.comments
+        end
+
+        expect(relation).to produce_sql(Post.joining { author.outer.comments })
+      end
+
+      it "keeps the alias when the association was used before" do
+        relation = Post.joining do |post|
+          author = post.author
+          author.id
+          author.as("a").on { |a| a.id.eq(post.author_id) }
+        end
+
+        expect(relation).to produce_sql(Post.joining { |post| post.author.as("a").on { |a| a.id.eq(post.author_id) } })
+      end
+
       it "joins back with a new alias" do
         baby_squeel = Post.joining { author.posts }
         active_record = Post.joins(author: :posts)
