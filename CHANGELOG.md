@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - Fix joining a polymorphic association with an STI subclass comparing the type column with the subclass name
+- build the subquery for a relation passed to Attribute#in or #not_in with the handler where(column: relation) uses: eager loading is applied, the primary key is selected when the relation selects nothing and bind parameters are kept
 - Fix joins with a nil value raising ConfigurationError
 - Fix references with a String renaming the joined table
 - remove BabySqueel::Nodes::Grouping and BabySqueel::Nodes::Binary
