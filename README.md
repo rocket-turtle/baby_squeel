@@ -149,7 +149,10 @@ Post.joining { author.comments.outer }
 Post.joining { author.outer.posts }
 # SELECT "posts".* FROM "posts"
 # LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-# INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
+# LEFT OUTER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
+#
+# Everything joined below an outer join is an outer join, as with
+# Post.left_joins(author: :posts).
 
 Post.joining { author.on(author.id.eq(author_id).or(author.name.eq(title))) }
 # SELECT "posts".* FROM "posts"
