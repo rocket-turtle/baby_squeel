@@ -15,7 +15,7 @@ describe BabySqueel::Table do
 
     context "when outer joining" do
       let(:association) { create_association(Author, :posts).outer }
-      specify { is_expected.to be_a(BabySqueel::Join) }
+      specify { is_expected.to eq(Polyamorous::Join.new(:posts, Arel::Nodes::OuterJoin) => {}) }
     end
 
     context "when not joining" do

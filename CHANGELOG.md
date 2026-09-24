@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Fix merging a relation with an outer joining into a relation of another model joining the association of the wrong model
+- remove BabySqueel::Join, BabySqueel::ActiveRecord::QueryMethods::JoinsInjector and Polyamorous::TreeNode; outer and polymorphic joins are passed to Active Record as a hash of Polyamorous::Join keys
 - Fix joins of an association declared with deprecated: true not being reported (Active Record 8.1)
 - remove .rubocop_todo.yml, no offenses are left
 - Fix joining a polymorphic association with an STI subclass comparing the type column with the subclass name

@@ -45,29 +45,23 @@ describe BabySqueel::Association do
     end
   end
 
-  describe "#add_to_tree" do
-    def make_tree(tree_node)
-      hash = {}
-      tree_node.add_to_tree(hash)
-      hash.keys.first
-    end
-
+  describe "#polyamorous_join" do
     it "builds a Polyamorous::Join" do
-      join = make_tree(association)
+      join = association.polyamorous_join
       expect(join.name).to eq(:posts)
       expect(join.type).to eq(Arel::Nodes::InnerJoin)
       expect(join.klass).to be_nil
     end
 
     it "builds a Polyamorous::Join (for outer)" do
-      join = make_tree(association.outer)
+      join = association.outer.polyamorous_join
       expect(join.name).to eq(:posts)
       expect(join.type).to eq(Arel::Nodes::OuterJoin)
       expect(join.klass).to be_nil
     end
 
     it "includes the _polymorphic_klass for polymorphic associations" do
-      join = make_tree(polymorph.of(Post))
+      join = polymorph.of(Post).polyamorous_join
       expect(join.name).to eq(:imageable)
       expect(join.klass).not_to be_nil
     end
@@ -112,7 +106,7 @@ describe BabySqueel::Association do
 
       context "when outer joining" do
         it "resolves to a Join" do
-          expect(association.outer._arel).to be_a(BabySqueel::Join)
+          expect(association.outer._arel).to eq(Polyamorous::Join.new(:posts, Arel::Nodes::OuterJoin) => {})
         end
 
         it "throws a fit when an alias is attempted" do

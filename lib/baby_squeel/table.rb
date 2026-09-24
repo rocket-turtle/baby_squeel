@@ -1,5 +1,4 @@
 require "baby_squeel/resolver"
-require "baby_squeel/join"
 require "baby_squeel/join_dependency"
 
 module BabySqueel
@@ -93,19 +92,19 @@ module BabySqueel
     # there are three possible outcomes:
     #
     # 1. Join explicitly using an on clause. Just return Arel.
-    # 2. Implicit join without using an outer join. In this case, we'll just
-    #    give a hash to Active Record, and join the normal way.
-    # 3. Implicit join using an outer join. In this case, we need to use
-    #    Polyamorous to build the join. We'll return a Join.
+    # 2. Implicit join with inner joins only. Active Record gets a hash of
+    #    association names and joins the normal way.
+    # 3. Implicit join with an outer join or a polymorphic association. Active
+    #    Record gets a hash of Polyamorous::Join keys, which carry the join
+    #    type and the class of a polymorphic association.
     #
     def _arel(associations = [])
       if _on
         _join.new(_table, Arel::Nodes::On.new(_on))
-      elsif associations.any?(&:needs_polyamorous?)
-        Join.new(associations)
       elsif associations.any?
-        associations.reverse.inject({}) do |names, assoc|
-          { assoc._reflection.name => names }
+        polyamorous = associations.any?(&:needs_polyamorous?)
+        associations.reverse.inject({}) do |children, assoc|
+          { (polyamorous ? assoc.polyamorous_join : assoc._reflection.name) => children }
         end
       end
     end

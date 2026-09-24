@@ -1,5 +1,3 @@
-require "baby_squeel/join"
-
 module BabySqueel
   module JoinDependency
     class Builder # :nodoc:
