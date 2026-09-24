@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Fix joining a polymorphic association with an STI subclass comparing the type column with the subclass name
 - Fix joins with a nil value raising ConfigurationError
 - Fix references with a String renaming the joined table
 - remove BabySqueel::Nodes::Grouping and BabySqueel::Nodes::Binary

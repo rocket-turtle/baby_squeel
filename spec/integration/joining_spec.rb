@@ -149,6 +149,14 @@ describe "#joining" do
         expect(relation).to match_sql_snapshot
       end
 
+      it "compares the type column with the polymorphic name of a subclass" do
+        relation = Picture.joining { imageable.of(UglyAuthor) }
+
+        expect(relation.to_sql).to include(%("pictures"."imageable_type" = 'Author'))
+        # Active Record 8.0 quotes a SQLite boolean as 1, 8.1 as TRUE
+        expect(relation.to_sql).to match(/"authors"\."ugly" = (TRUE|1) AND/)
+      end
+
       it "double polymorphic joining" do
         join_scope = Picture.joining { [imageable.of(Author), imageable.of(Post)] }
         relation = join_scope.where.has do
