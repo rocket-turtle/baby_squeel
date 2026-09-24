@@ -1,5 +1,8 @@
 module Matchers
-  class MatchFormatted < RSpec::Matchers::BuiltIn::Match
+  # Compares normalized SQL for equality. RSpec's Match matcher would fall
+  # back to String#match, which reads the expected SQL as a regular
+  # expression and accepts any SQL that merely contains it.
+  class MatchFormatted < RSpec::Matchers::BuiltIn::Eq
     def initialize(expected, formatter)
       @formatter = formatter
       super(@formatter.normalize(expected))
