@@ -75,22 +75,18 @@
   "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
   INNER JOIN "authors" "authors_posts_join" ON "authors_posts_join"."id" = "posts_authors"."author_id"
-  INNER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id" INNER
-  JOIN "authors" "authors_posts" ON "authors_posts"."id" = "posts"."author_id" INNER
-  JOIN "posts" "posts_authors_2" ON "posts_authors_2"."author_id" = "authors_posts"."id"
-  LEFT OUTER JOIN "authors" "authors_posts_join_2" ON "authors_posts_join_2"."id"
-  = "posts_authors_2"."author_id" LEFT OUTER JOIN "comments" "author_comments_posts"
-  ON "author_comments_posts"."author_id" = "authors_posts_join_2"."id"
+  INNER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id" LEFT
+  OUTER JOIN "authors" "authors_posts_join_2" ON "authors_posts_join_2"."id" = "posts_authors"."author_id"
+  LEFT OUTER JOIN "comments" "author_comments_posts" ON "author_comments_posts"."author_id"
+  = "authors_posts_join_2"."id"
 ? "#joining when joining implicitly duplicate prevention when given a DSL join with
   an Active Record join dedupes incremental outer joins 1"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "authors" "authors_posts" ON "authors_posts"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors_posts"."id"
+  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
 ? "#joining when joining implicitly duplicate prevention when given a DSL join with
   an Active Record join dedupes incremental outer joins (in any order) 1"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id" INNER JOIN
-  "authors" "authors_posts" ON "authors_posts"."id" = "posts"."author_id"
+  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
 "#joining when joining implicitly polymorphism double polymorphic joining 1": SELECT
   "pictures".* FROM "pictures" INNER JOIN "authors" ON "authors"."id" = "pictures"."imageable_id"
   AND "pictures"."imageable_type" = 'Author' INNER JOIN "posts" ON "posts"."id" =
@@ -114,23 +110,19 @@
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
   INNER JOIN "authors" AS "authors_posts_join" ON "authors_posts_join"."id" = "posts_authors"."author_id"
-  INNER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id" INNER
-  JOIN "authors" AS "authors_posts" ON "authors_posts"."id" = "posts"."author_id"
-  INNER JOIN "posts" AS "posts_authors_2" ON "posts_authors_2"."author_id" = "authors_posts"."id"
-  LEFT OUTER JOIN "authors" AS "authors_posts_join_2" ON "authors_posts_join_2"."id"
-  = "posts_authors_2"."author_id" LEFT OUTER JOIN "comments" AS "author_comments_posts"
+  INNER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id" LEFT
+  OUTER JOIN "authors" AS "authors_posts_join_2" ON "authors_posts_join_2"."id" =
+  "posts_authors"."author_id" LEFT OUTER JOIN "comments" AS "author_comments_posts"
   ON "author_comments_posts"."author_id" = "authors_posts_join_2"."id"
 ? "#joining when joining implicitly duplicate prevention when given a DSL join with
   an Active Record join dedupes incremental outer joins 1 (Active Record: v8.1)"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "authors" AS "authors_posts" ON "authors_posts"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors_posts"."id"
+  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
 ? "#joining when joining implicitly duplicate prevention when given a DSL join with
   an Active Record join dedupes incremental outer joins (in any order) 1 (Active Record:
   v8.1)"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id" INNER JOIN
-  "authors" AS "authors_posts" ON "authors_posts"."id" = "posts"."author_id"
+  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
 "#joining when joining implicitly outer joins multi 1 (Active Record: v8.1)": SELECT
   "posts".* FROM "posts" LEFT OUTER JOIN "posts" AS "parents_posts" ON "parents_posts"."id"
   = "posts"."parent_id" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
@@ -189,20 +181,16 @@
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
   INNER JOIN "authors" AS "authors_posts_join" ON "authors_posts_join"."id" = "posts_authors"."author_id"
-  INNER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id" INNER
-  JOIN "authors" AS "authors_posts" ON "authors_posts"."id" = "posts"."author_id"
-  INNER JOIN "posts" AS "posts_authors_2" ON "posts_authors_2"."author_id" = "authors_posts"."id"
-  LEFT OUTER JOIN "authors" AS "authors_posts_join_2" ON "authors_posts_join_2"."id"
-  = "posts_authors_2"."author_id" LEFT OUTER JOIN "comments" AS "author_comments_posts"
+  INNER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id" LEFT
+  OUTER JOIN "authors" AS "authors_posts_join_2" ON "authors_posts_join_2"."id" =
+  "posts_authors"."author_id" LEFT OUTER JOIN "comments" AS "author_comments_posts"
   ON "author_comments_posts"."author_id" = "authors_posts_join_2"."id"
 ? "#joining when joining implicitly duplicate prevention when given a DSL join with
   an Active Record join dedupes incremental outer joins 1 (Active Record: v8.2)"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "authors" AS "authors_posts" ON "authors_posts"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors_posts"."id"
+  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
 ? "#joining when joining implicitly duplicate prevention when given a DSL join with
   an Active Record join dedupes incremental outer joins (in any order) 1 (Active Record:
   v8.2)"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id" INNER JOIN
-  "authors" AS "authors_posts" ON "authors_posts"."id" = "posts"."author_id"
+  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"

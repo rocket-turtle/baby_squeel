@@ -18,6 +18,11 @@ describe BabySqueel::Table do
       specify { is_expected.to eq(Polyamorous::Join.new(:posts, Arel::Nodes::OuterJoin) => {}) }
     end
 
+    context "when outer joining below an inner join" do
+      subject { table._arel([create_association(Author, :posts), create_association(Post, :comments).outer]) }
+      specify { is_expected.to eq(posts: { Polyamorous::Join.new(:comments, Arel::Nodes::OuterJoin) => {} }) }
+    end
+
     context "when not joining" do
       subject { table._arel }
       specify { is_expected.to eq(nil) }
