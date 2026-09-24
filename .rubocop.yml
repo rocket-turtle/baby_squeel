@@ -1,8 +1,6 @@
-# Ten of the thirteen Metrics offenses left in the todo are in the vendored
-# Active Record patches under lib/polyamorous, where the complexity is inherent
-# to overriding the join builder. The other three are in
-# lib/baby_squeel/join_dependency.rb, and Builder#build is what pins AbcSize at
-# 34 - so rewriting Builder clears those, cleaning up polyamorous does not.
+# The three Metrics offenses in the todo are in the vendored Active Record
+# patches under lib/polyamorous: JoinDependencyExtensions#build, which
+# overrides the join builder, and Polyamorous::Join#convert_to_arel_join_type.
 inherit_from: .rubocop_todo.yml
 
 # Keep RuboCop's default excludes (vendor, node_modules, tmp, .git) instead of

@@ -3,36 +3,30 @@ require "baby_squeel/join"
 module BabySqueel
   module JoinDependency
     class Builder # :nodoc:
-      attr_reader :join_dependency
-
       def initialize(relation)
-        @join_dependency = build(relation, collect_joins(relation))
+        @relation = relation
       end
 
-      # Find the alias of a BabySqueel::Association, by passing
-      # a list (in order of chaining) of associations and finding
-      # the respective JoinAssociation at each level.
+      # Find the alias of a BabySqueel::Association, by passing a list (in
+      # order of chaining) of associations and finding the respective
+      # JoinAssociation at each level.
+      #
+      # The join dependency is built the same way Active Record builds it for
+      # relation.arel (see ActiveRecord::QueryMethods#build_joins), so the
+      # table each JoinAssociation ends up with is the one the final query
+      # will use.
       def find_alias(associations)
-        # construct_tables! got removed by rails
-        # https://github.com/rails/rails/commit/590b045ee2c0906ff162e6658a184afb201865d7
-        #
-        # construct_tables_for_association! is a method from Polyamorous::JoinDependencyExtensions
-        join_root = join_dependency.send(:join_root)
-        join_root.each_children do |parent, child|
-          join_dependency.construct_tables_for_association!(parent, child)
-        end
+        buckets, join_type = @relation.send(:build_join_buckets)
+        alias_tracker = @relation.send(:alias_tracker, buckets[:leading_join] + buckets[:join_node])
+        join_dependency = @relation.construct_join_dependency(buckets[:named_join], join_type)
+        join_dependency.join_constraints(buckets[:stashed_join], alias_tracker, @relation.references_values)
 
-        join_association = find_join_association(associations)
-        join_association.table
+        find_join_association(join_dependency.send(:join_root), associations).table
       end
-
-      Associations = ::ActiveRecord::Associations
 
       private
 
-      def find_join_association(associations)
-        current = join_dependency.send(:join_root)
-
+      def find_join_association(current, associations)
         associations.each do |association|
           name = association._reflection.name
           current = current.children.find { |c| c.reflection.name == name && klass_equal?(association, c) }
@@ -48,53 +42,6 @@ module BabySqueel
         return true unless assoc._reflection.polymorphic?
 
         assoc._polymorphic_klass == join_association.base_klass
-      end
-
-      def collect_joins(relation)
-        joins = []
-        joins += relation.joins_values
-        joins += relation.left_outer_joins_values
-
-        _buckets = joins.group_by do |join|
-          case join
-          when String
-            :string_join
-          when Hash, Symbol, Array, BabySqueel::Join
-            :association_join
-          when Associations::JoinDependency
-            :stashed_join
-          when Arel::Nodes::Join
-            :join_node
-          else
-            raise("unknown class: #{join.class.name}")
-          end
-        end
-      end
-
-      def build(relation, buckets)
-        buckets.default = []
-        association_joins = buckets[:association_join]
-        _stashed_association_joins = buckets[:stashed_join]
-        join_nodes = buckets[:join_node].uniq
-        string_joins = buckets[:string_join].map(&:strip).uniq
-
-        joins = string_joins.map do |join|
-          relation.table.create_string_join(Arel.sql(join)) unless join.blank?
-        end.compact
-
-        join_list = join_nodes + joins
-
-        alias_tracker = Associations::AliasTracker
-                        .create(relation.klass.connection_pool, relation.table.name, join_list)
-        join_dependency = Associations::JoinDependency
-                          .new(relation.klass, relation.table, association_joins, Arel::Nodes::InnerJoin)
-        join_dependency.instance_variable_set(:@alias_tracker, alias_tracker)
-
-        join_nodes.each do |join|
-          join_dependency.send(:alias_tracker).aliases[join.left.name.downcase] = 1
-        end
-
-        join_dependency
       end
     end
   end
