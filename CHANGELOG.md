@@ -4,6 +4,7 @@
 - Fix references with a String renaming the joined table
 - remove BabySqueel::Nodes::Grouping and BabySqueel::Nodes::Binary
 - move BabySqueel::JoinDependency::OuterJoinConstraints into Polyamorous::JoinDependencyExtensions
+- let Active Record build the join dependency BabySqueel::JoinDependency::Builder resolves aliases from; remove Polyamorous construct_tables_for_association! and table_aliases_for
 
 ## [3.0.0.internal4] - 2026-09-24
 

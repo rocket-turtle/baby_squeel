@@ -26,32 +26,7 @@ module Polyamorous
       end
     end
 
-    def construct_tables_for_association!(join_root, association)
-      tables = table_aliases_for(join_root, association)
-      association.table = tables.first
-      tables
-    end
-
     private
-
-    def table_aliases_for(parent, node)
-      @joined_tables ||= {}
-      node.reflection.chain.map do |reflection|
-        table, terminated = @joined_tables[reflection]
-        root = reflection == node.reflection
-
-        if table && (!root || !terminated)
-          @joined_tables[reflection] = [table, true] if root
-        else
-          table = alias_tracker.aliased_table_for(reflection.klass.arel_table) do
-            name = reflection.alias_candidate(parent.table_name)
-            root ? name : "#{name}_join"
-          end
-          @joined_tables[reflection] ||= [table, root] if join_type == Arel::Nodes::OuterJoin
-        end
-        table
-      end
-    end
 
     # A child built from a Polyamorous::Join carries its own join type. An
     # outer one takes precedence over the join type of the surrounding
