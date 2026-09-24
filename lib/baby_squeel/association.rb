@@ -89,6 +89,18 @@ module BabySqueel
 
     private
 
+    # A polymorphic association has no scope until #of names the class, so
+    # there is nothing to resolve attributes or associations against.
+    def respond_to_missing?(name, *)
+      !_scope.nil? && super
+    end
+
+    def method_missing(*, &)
+      raise PolymorphicNotSpecifiedError, _reflection.name if _scope.nil?
+
+      super
+    end
+
     def build_where_clause(other)
       raise AssociationComparisonError.new(_reflection.name, other) unless valid_where_clause?(other)
 

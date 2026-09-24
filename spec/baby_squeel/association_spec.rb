@@ -71,6 +71,21 @@ describe BabySqueel::Association do
     it "raises a NoMethodError when the wrong number of args are given" do
       expect { association.author(1) }.to raise_error(NoMethodError)
     end
+
+    it "raises when a polymorphic association is used without #of" do
+      expect { polymorph.name }.to raise_error(BabySqueel::PolymorphicNotSpecifiedError)
+    end
+
+    it "resolves once #of has named the class" do
+      expect(polymorph.of(Author).name).to be_an(Arel::Attributes::Attribute)
+    end
+  end
+
+  describe "#respond_to?" do
+    it "does not resolve on a polymorphic association without #of" do
+      expect(polymorph).not_to respond_to(:name)
+      expect(polymorph.of(Author)).to respond_to(:name)
+    end
   end
 
   describe "#_arel" do
