@@ -1,14 +1,12 @@
 RSpec.describe BabySqueel::Resolver do
-  let(:table)       { create_table Post.arel_table }
   let(:dsl)         { create_dsl Post }
-  let(:relation)    { create_relation Post }
+  let(:table)       { create_table Post }
   let(:association) { create_association Post, :author }
 
   let :valid_cases do
     [
-      [table,       :attribute,   :foo,      []],
-      [relation,    :column,      :title,    []],
-      [relation,    :association, :author,   []],
+      [table,       :column,      :title,    []],
+      [table,       :association, :author,   []],
       [association, :column,      :name,     []],
       [association, :association, :posts,    []],
       [dsl,         :column,      :title,    []],
@@ -18,9 +16,8 @@ RSpec.describe BabySqueel::Resolver do
 
   let :wrong_args_cases do
     [
-      [table,       :attribute,   :foo,      [1]],
-      [relation,    :column,      :title,    [1]],
-      [relation,    :association, :author,   [1]],
+      [table,       :column,      :title,    [1]],
+      [table,       :association, :author,   [1]],
       [association, :column,      :name,     [1]],
       [association, :association, :posts,    [1]],
       [dsl,         :column,      :title,    [1]],
@@ -30,8 +27,8 @@ RSpec.describe BabySqueel::Resolver do
 
   let :invalid_name_cases do
     [
-      [relation,    :column,      :missing,  []],
-      [relation,    :association, :missing,  []],
+      [table,       :column,      :missing,  []],
+      [table,       :association, :missing,  []],
       [association, :column,      :missing,  []],
       [association, :association, :missing,  []],
       [dsl,         :column,      :missing,  []],

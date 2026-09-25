@@ -1,7 +1,7 @@
 require "shared_examples/table"
 
 describe BabySqueel::Table do
-  subject(:table) { create_table :posts }
+  subject(:table) { create_table Post }
 
   include_examples "a table"
 

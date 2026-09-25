@@ -1,7 +1,7 @@
-require "baby_squeel/relation"
+require "baby_squeel/table"
 
 module BabySqueel
-  class Association < Relation
+  class Association < Table
     # An Active Record association reflection
     attr_reader :_reflection
 
