@@ -59,10 +59,16 @@ module BabySqueel
     # attributes reference can change (due to aliasing).
     # This method allows BabySqueel::Nodes::Attribute
     # instances to find what their alias will be.
+    #
+    # Resolving means building the join dependency of the scope, so the
+    # result is kept per chain for the lifetime of this table, which is one
+    # DSL block. The scope does not change within it.
     def find_alias(associations = [])
-      rel = _scope.joins _arel(associations)
-      builder = JoinDependency::Builder.new(rel)
-      builder.find_alias(associations)
+      @aliases ||= {}
+      @aliases[associations.map(&:join_key)] ||= begin
+        rel = _scope.joins _arel(associations)
+        JoinDependency::Builder.new(rel).find_alias(associations)
+      end
     end
 
     # This method will be invoked by BabySqueel::Nodes::unwrap. Active
