@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove BabySqueel::Resolver; Table resolves columns and associations itself
 - BabySqueel::Join is a Data value
 - Gemfile: AR is optional; without it the gemspec's Active Record range applies
 - gemspec: own description, bounded sqlite3 development dependency, explicit file list without ISSUE_TEMPLATE.md; built gems are git-ignored
