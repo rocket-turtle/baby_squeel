@@ -1,12 +1,7 @@
 require "shared_examples/table"
-require "shared_examples/relation"
 
 describe BabySqueel::DSL do
   subject(:dsl) { create_dsl Post }
-
-  it_behaves_like "a relation" do
-    subject(:table) { dsl }
-  end
 
   it_behaves_like "a table" do
     subject(:table) { dsl }

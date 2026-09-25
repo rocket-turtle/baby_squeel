@@ -3,11 +3,23 @@ require "baby_squeel/join_dependency"
 
 module BabySqueel
   class Table
-    attr_accessor :_on, :_table
+    attr_accessor :_on, :_table, :_scope
     attr_writer :_join
 
-    def initialize(arel_table)
-      @_table = arel_table
+    # scope is a model class or a relation; both answer arel_table,
+    # column_names and reflect_on_association.
+    def initialize(scope)
+      @_scope = scope
+      @_table = scope.arel_table
+    end
+
+    # Constructs a new BabySqueel::Association. Raises
+    # an exception if the association is not found.
+    def association(name)
+      reflection = _scope.reflect_on_association(name)
+      raise AssociationNotFoundError.new(_scope.model_name, name) unless reflection
+
+      Association.new(self, reflection)
     end
 
     # See Arel::Table#[]
@@ -115,7 +127,7 @@ module BabySqueel
     # resolver kept in an instance variable would still point at the
     # original table.
     def resolver
-      Resolver.new(self, [:attribute])
+      Resolver.new(self, %i[column association])
     end
 
     def respond_to_missing?(name, *)

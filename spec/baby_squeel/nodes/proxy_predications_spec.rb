@@ -1,7 +1,7 @@
 describe BabySqueel::Nodes::Proxy do
   let(:attribute) do
     BabySqueel::Nodes::Attribute.new(
-      create_relation(Post),
+      create_table(Post),
       :id
     )
   end

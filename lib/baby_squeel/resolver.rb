@@ -35,7 +35,7 @@ module BabySqueel
       case strategy
       when :association
         @table.association(name)
-      when :column, :attribute
+      when :column
         @table[name]
       end
     end
@@ -46,8 +46,6 @@ module BabySqueel
         @table._scope.column_names.include?(name.to_s)
       when :association
         !@table._scope.reflect_on_association(name).nil?
-      when :attribute
-        true
       end
     end
   end

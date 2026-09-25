@@ -1,6 +1,6 @@
 describe BabySqueel::Nodes::Proxy do
   describe "comparison operators" do
-    let(:attribute) { BabySqueel::Nodes::Attribute.new(create_relation(Post), :id) }
+    let(:attribute) { BabySqueel::Nodes::Attribute.new(create_table(Post), :id) }
 
     it "rejects == with a hint to eq" do
       expect { attribute == 1 }.to raise_error(NoMethodError, /use #eq/)

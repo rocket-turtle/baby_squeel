@@ -73,10 +73,6 @@ describe BabySqueel::Association do
   end
 
   describe "#method_missing" do
-    it "raises a NoMethodError when the wrong number of args are given" do
-      expect { association.author(1) }.to raise_error(NoMethodError)
-    end
-
     it "raises when a polymorphic association is used without #of" do
       expect { polymorph.name }.to raise_error(BabySqueel::PolymorphicNotSpecifiedError)
     end

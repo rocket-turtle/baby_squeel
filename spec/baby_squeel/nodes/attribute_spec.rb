@@ -1,7 +1,7 @@
 describe BabySqueel::Nodes::Attribute do
   subject(:attribute) do
     described_class.new(
-      create_relation(Post),
+      create_table(Post),
       :id
     )
   end
