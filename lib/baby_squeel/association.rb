@@ -1,4 +1,5 @@
 require "baby_squeel/table"
+require "baby_squeel/join"
 
 module BabySqueel
   class Association < Table
@@ -34,14 +35,15 @@ module BabySqueel
       self
     end
 
-    def needs_polyamorous?
-      _join == Arel::Nodes::OuterJoin || _reflection.polymorphic?
-    end
-
-    # The key BabySqueel::Table#_arel uses for this association when the
-    # chain needs Polyamorous.
-    def polyamorous_join
-      Polyamorous::Join.new(_reflection.name, _join, _polymorphic_klass)
+    # The key for this association in the hash Table#_arel hands to Active
+    # Record: the name for an inner join, a Join carrying the join type and
+    # the class for an outer join or a polymorphic association.
+    def join_key
+      if _join == Arel::Nodes::OuterJoin || _reflection.polymorphic?
+        Join.new(_reflection.name, _join, _polymorphic_klass)
+      else
+        _reflection.name
+      end
     end
 
     # See BabySqueel::Table#find_alias.

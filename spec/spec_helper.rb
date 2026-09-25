@@ -11,14 +11,14 @@ require "support/schema"
 require "support/models"
 require "support/matchers"
 require "support/factories"
-require "support/polyamorous_helper"
+require "support/join_dependency_helper"
 
 ActiveSupport.deprecator.behavior = :raise
 ActiveRecord.deprecator.behavior = :raise
 
 RSpec.configure do |config|
   config.include Factories
-  config.include PolyamorousHelper, :polyamorous
+  config.include JoinDependencyHelper, :join_dependency
 
   config.filter_run focus: true
   config.default_formatter = config.files_to_run.one? ? :doc : :progress

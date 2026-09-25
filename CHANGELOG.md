@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- fold lib/polyamorous into BabySqueel: Polyamorous::Join is BabySqueel::Join, the Active Record prepends live in BabySqueel::ActiveRecord next to QueryMethods and WhereChain
 - remove explicit joins with #on, table aliasing with #as and #alias, #inner and comparing an association with #== and #!=
 - the through-and-back join chain matches Active Record; its spec was pending since 2021
 - keep Polyamorous' build override private like Active Record's build

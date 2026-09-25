@@ -66,16 +66,14 @@ module BabySqueel
     end
 
     # This method will be invoked by BabySqueel::Nodes::unwrap. Active
-    # Record gets a nested hash, one key per association in the chain. The
-    # key is the association name, or a Polyamorous::Join for an outer join
-    # and for a polymorphic association, which carries the join type and the
-    # class to join. Names as keys let Active Record merge the chain with its
-    # own joins of the same association.
+    # Record gets a nested hash, one key per association in the chain (see
+    # Association#join_key). Names as keys let Active Record merge the chain
+    # with its own joins of the same association.
     def _arel(associations = [])
       return unless associations.any?
 
       associations.reverse.inject({}) do |children, assoc|
-        { (assoc.needs_polyamorous? ? assoc.polyamorous_join : assoc._reflection.name) => children }
+        { assoc.join_key => children }
       end
     end
 

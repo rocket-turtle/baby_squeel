@@ -43,13 +43,6 @@ Style/Documentation:
 Style/FormatStringToken:
   EnforcedStyle: template
 
-# on_load defers the block until Active Record is loaded, which is exactly
-# when the aliased constants become available
-Lint/ConstantDefinitionInBlock:
-  AllowedMethods:
-    - enums
-    - on_load
-
 # Proxy inherits from BasicObject, which has no respond_to? for Ruby to hook
 # respond_to_missing? into, so respond_to? is defined directly instead
 Style/MissingRespondToMissing:

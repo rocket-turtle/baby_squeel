@@ -1,0 +1,71 @@
+describe ActiveRecord::Associations::JoinDependency, :join_dependency do
+  context "with symbol joins" do
+    context "post" do
+      subject { new_join_dependency Post, author: :comments }
+
+      it { expect(subject.send(:join_root).drop(1).size).to be(2) }
+      it { expect(subject.send(:join_root).drop(1).map(&:join_type).uniq).to eq([Arel::Nodes::InnerJoin]) }
+    end
+
+    context "author" do
+      subject { new_join_dependency Author, posts: :comments }
+
+      it { expect(subject.send(:join_root).drop(1).size).to be(2) }
+      it { expect(subject.send(:join_root).drop(1).map(&:join_type).uniq).to eq([Arel::Nodes::InnerJoin]) }
+    end
+  end
+
+  context "with has_many :through association" do
+    subject { new_join_dependency Post, :author_comments }
+
+    it { expect(subject.send(:join_root).drop(1).size).to be(1) }
+    it { expect(subject.send(:join_root).drop(1).first.table_name).to eq("comments") }
+  end
+
+  context "with outer join" do
+    subject { new_join_dependency Post, new_join(:comments, Arel::Nodes::OuterJoin) => {} }
+
+    it { expect(subject.send(:join_root).drop(1).size).to be(1) }
+    it { expect(subject.send(:join_root).drop(1).first.join_type).to eq(Arel::Nodes::OuterJoin) }
+  end
+
+  context "with nested outer joins" do
+    subject { new_join_dependency Author, new_join(:posts, Arel::Nodes::OuterJoin) => { new_join(:comments, Arel::Nodes::OuterJoin) => {} } }
+
+    it { expect(subject.send(:join_root).drop(1).size).to be(2) }
+    it {
+      expect(subject.send(:join_root).drop(1).map(&:join_type))
+        .to eq([Arel::Nodes::OuterJoin, Arel::Nodes::OuterJoin])
+    }
+    it { expect(subject.send(:join_root).drop(1).map(&:join_type).uniq).to eq([Arel::Nodes::OuterJoin]) }
+  end
+
+  context "with polymorphic belongs_to join" do
+    subject { new_join_dependency Picture, new_join(:imageable, Arel::Nodes::InnerJoin, Author) => {} }
+
+    it { expect(subject.send(:join_root).drop(1).size).to be(1) }
+    it { expect(subject.send(:join_root).drop(1).first.join_type).to be(Arel::Nodes::InnerJoin) }
+    it { expect(subject.send(:join_root).drop(1).first.table_name).to eq("authors") }
+  end
+
+  context "with polymorphic belongs_to join and nested symbol join" do
+    subject { new_join_dependency Picture, new_join(:imageable, Arel::Nodes::InnerJoin, Author) => :comments }
+
+    it { expect(subject.send(:join_root).drop(1).size).to be(2) }
+    it { expect(subject.send(:join_root).drop(1).map(&:join_type).uniq).to eq([Arel::Nodes::InnerJoin]) }
+    it { expect(subject.send(:join_root).drop(1).first.table_name).to eq("authors") }
+    it { expect(subject.send(:join_root).drop(1)[1].table_name).to eq("comments") }
+  end
+
+  context "with polymorphic belongs_to join and nested join" do
+    subject { new_join_dependency Picture, new_join(:imageable, Arel::Nodes::OuterJoin, Author) => :comments }
+
+    it { expect(subject.send(:join_root).drop(1).size).to be(2) }
+    it {
+      expect(subject.send(:join_root).drop(1).map(&:join_type))
+        .to eq([Arel::Nodes::OuterJoin, Arel::Nodes::InnerJoin])
+    }
+    it { expect(subject.send(:join_root).drop(1).first.table_name).to eq("authors") }
+    it { expect(subject.send(:join_root).drop(1)[1].table_name).to eq("comments") }
+  end
+end
