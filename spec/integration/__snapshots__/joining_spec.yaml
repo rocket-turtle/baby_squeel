@@ -1,13 +1,4 @@
 ---
-"#joining when joining implicitly nested joins joins a through association and then back again 1": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
-  LEFT OUTER JOIN "authors" "authors_posts_join" ON "authors_posts_join"."id" = "posts_authors"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id"
-  INNER JOIN "posts" "posts_comments" ON "posts_comments"."id" = "comments"."post_id"
-  INNER JOIN "authors" "authors_posts_join_2" ON "authors_posts_join_2"."id" = "posts_comments"."author_id"
-  INNER JOIN "comments" "author_comments_posts" ON "author_comments_posts"."author_id"
-  = "authors_posts_join_2"."id"
 "#joining when joining explicitly inner joins 1": SELECT "posts".* FROM "posts" INNER
   JOIN "authors" ON "authors"."id" = "posts"."author_id"
 "#joining when joining explicitly inner joins explicitly 1": SELECT "posts".* FROM
@@ -194,3 +185,27 @@
 "#joining when joining implicitly nested joins outer joins everything below an outer join, like Active Record 1": SELECT
   "posts".* FROM "posts" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
+"#joining when joining implicitly nested joins joins a through association and then back again 1 (Active Record: v8.1)": SELECT
+  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+  INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
+  LEFT OUTER JOIN "authors" AS "authors_posts_join" ON "authors_posts_join"."id" =
+  "posts_authors"."author_id" LEFT OUTER JOIN "comments" ON "comments"."author_id"
+  = "authors_posts_join"."id" LEFT OUTER JOIN "posts" AS "posts_comments" ON "posts_comments"."id"
+  = "comments"."post_id" LEFT OUTER JOIN "comments" AS "author_comments_posts" ON
+  "author_comments_posts"."author_id" = "authors_posts_join"."id"
+"#joining when joining implicitly nested joins joins a through association and then back again 1": SELECT
+  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+  INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
+  LEFT OUTER JOIN "authors" "authors_posts_join" ON "authors_posts_join"."id" = "posts_authors"."author_id"
+  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id"
+  LEFT OUTER JOIN "posts" "posts_comments" ON "posts_comments"."id" = "comments"."post_id"
+  LEFT OUTER JOIN "comments" "author_comments_posts" ON "author_comments_posts"."author_id"
+  = "authors_posts_join"."id"
+"#joining when joining implicitly nested joins joins a through association and then back again 1 (Active Record: v8.2)": SELECT
+  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+  INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
+  LEFT OUTER JOIN "authors" AS "authors_posts_join" ON "authors_posts_join"."id" =
+  "posts_authors"."author_id" LEFT OUTER JOIN "comments" ON "comments"."author_id"
+  = "authors_posts_join"."id" LEFT OUTER JOIN "posts" AS "posts_comments" ON "posts_comments"."id"
+  = "comments"."post_id" LEFT OUTER JOIN "comments" AS "author_comments_posts" ON
+  "author_comments_posts"."author_id" = "authors_posts_join"."id"
