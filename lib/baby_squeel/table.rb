@@ -1,5 +1,3 @@
-require "baby_squeel/join_dependency"
-
 module BabySqueel
   class Table
     attr_accessor :_table, :_scope
@@ -66,7 +64,7 @@ module BabySqueel
       @aliases ||= {}
       @aliases[associations.map(&:join_key)] ||= begin
         rel = _scope.joins _arel(associations)
-        JoinDependency::Builder.new(rel).find_alias(associations)
+        find_join_association(join_root(rel), associations).table
       end
     end
 
@@ -83,6 +81,31 @@ module BabySqueel
     end
 
     private
+
+    # The join root of the join dependency Active Record would build for
+    # relation.arel (see ActiveRecord::QueryMethods#build_joins), so each
+    # JoinAssociation carries the table the final query will use.
+    def join_root(relation)
+      buckets, join_type = relation.send(:build_join_buckets)
+      alias_tracker = relation.alias_tracker(buckets[:leading_join] + buckets[:join_node])
+      join_dependency = relation.construct_join_dependency(buckets[:named_join], join_type)
+      join_dependency.join_constraints(buckets[:stashed_join], alias_tracker, relation.references_values)
+      join_dependency.send(:join_root)
+    end
+
+    # Walks the chain of associations down the join tree. A polymorphic
+    # association is matched by the class it was joined with.
+    def find_join_association(current, associations)
+      associations.each do |association|
+        current = current.children.find do |child|
+          child.reflection.name == association._reflection.name &&
+            (!association._reflection.polymorphic? || association._polymorphic_klass == child.base_klass)
+        end
+        break if current.nil?
+      end
+
+      current
+    end
 
     def column?(name)
       _scope.column_names.include?(name.to_s)
