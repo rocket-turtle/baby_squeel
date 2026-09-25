@@ -98,7 +98,7 @@ Post.where.has { title.eq('My Post') }
 
 Post.where.has { title.matches('My P%') }
 # SELECT "posts".* FROM "posts"
-# WHERE ("posts"."title" LIKE 'My P%')
+# WHERE "posts"."title" LIKE 'My P%'
 
 Author.where.has { name.matches('Ray%').and(id.lt(5)).or(name.lower.matches('zane%').and(id.gt(100))) }
 # SELECT "authors".* FROM "authors"
@@ -113,7 +113,7 @@ Post.joins(author: :posts).where.has { author.posts.title.matches('%fun%') }
 # SELECT "posts".* FROM "posts"
 # INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
 # INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
-# WHERE ("posts_authors"."title" LIKE '%fun%')
+# WHERE "posts_authors"."title" LIKE '%fun%'
 
 Post.where.has { [title.eq('My Post'), id.gt(5)] }
 # SELECT "posts".* FROM "posts"
