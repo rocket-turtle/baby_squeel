@@ -1,5 +1,7 @@
 module Polyamorous
   module JoinDependencyExtensions
+    private
+
     # Builds the JoinAssociations for one level of the association tree.
     # Polyamorous::Join keys carry a join type and, for a polymorphic
     # association, the class to join; every other key is Active Record's own
@@ -18,8 +20,6 @@ module Polyamorous
         JoinAssociation.new(reflection, build(right, klass), name.klass, name.type)
       end
     end
-
-    private
 
     def guard_deprecation(reflection)
       return unless BabySqueel::ActiveRecord::VersionHelper.deprecated_associations?
