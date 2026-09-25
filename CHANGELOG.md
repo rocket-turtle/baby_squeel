@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove explicit joins with #on, table aliasing with #as and #alias, #inner and comparing an association with #== and #!=
 - the through-and-back join chain matches Active Record; its spec was pending since 2021
 - keep Polyamorous' build override private like Active Record's build
 - Raise ArgumentError when where.has returns an association instead of a condition; it produced WHERE (1=0)

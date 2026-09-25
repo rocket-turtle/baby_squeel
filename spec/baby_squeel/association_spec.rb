@@ -35,21 +35,6 @@ describe BabySqueel::Association do
     end
   end
 
-  describe "#==" do
-    subject(:association) { create_association Post, :author }
-
-    it "generates SQL" do
-      node = association == Author.new(id: 42)
-      expect(node._arel.to_sql).to match_sql_snapshot
-    end
-
-    it "throws for an invalid comparison" do
-      expect do
-        association == "foo"
-      end.to raise_error(BabySqueel::AssociationComparisonError)
-    end
-  end
-
   describe "#polyamorous_join" do
     it "builds a Polyamorous::Join" do
       join = association.polyamorous_join
@@ -90,45 +75,16 @@ describe BabySqueel::Association do
   end
 
   describe "#_arel" do
-    context "when explicitly joining" do
-      let(:condition) { association.author_id.eq(association.author.id) }
-      let(:assoc)     { association.author.on(condition) }
-
-      it "resolves to an Arel join node" do
-        expect(assoc._arel).to be_an(Arel::Nodes::InnerJoin)
-      end
-
-      it "sets an on clause on the Join" do
-        expect(assoc._on).not_to be_nil
-      end
-
-      it "lets you alias" do
-        expect(assoc.alias("fun")._arel.left).to be_an(Arel::Nodes::TableAlias)
-      end
-    end
-
     context "when implicitly joining" do
       context "when inner joining" do
         it "resolves to a hash" do
           expect(association._arel).to eq(posts: {})
-        end
-
-        it "throws a fit when an alias is attempted" do
-          expect do
-            association.alias("naughty")._arel
-          end.to raise_error(BabySqueel::AssociationAliasingError)
         end
       end
 
       context "when outer joining" do
         it "resolves to a Join" do
           expect(association.outer._arel).to eq(Polyamorous::Join.new(:posts, Arel::Nodes::OuterJoin) => {})
-        end
-
-        it "throws a fit when an alias is attempted" do
-          expect do
-            association.alias("naughty")._arel
-          end.to raise_error(BabySqueel::AssociationAliasingError)
         end
       end
 

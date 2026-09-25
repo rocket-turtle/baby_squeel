@@ -1,103 +1,11 @@
 describe "#joining" do
-  context "when joining explicitly" do
-    it "inner joins" do
-      relation = Post.joining do
-        author.on(author.id.eq(author_id))
-      end
-
-      expect(relation).to match_sql_snapshot
-    end
-
-    it "inner joins explicitly" do
-      relation = Post.joining do
-        author.inner.on(author.id.eq(author_id))
-      end
-
-      expect(relation).to match_sql_snapshot
-    end
-
-    it "inner joins explicitly with alias" do
-      relation = Post.joining do |post|
-        post.author.as("a").on { id.eq(post.author_id) }
-      end
-
-      expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
-    end
-
-    it "outer joins" do
-      relation = Post.joining do
-        author.outer.on(author.id.eq(author_id))
-      end
-
-      expect(relation).to match_sql_snapshot
-    end
-
-    it "self joins" do
-      relation = Post.joining { on(id.eq(1)) }
-
-      expect(relation).to match_sql_snapshot
-    end
-
-    it "self outer joins" do
-      relation = Post.joining { outer.on(id.eq(1)) }
-
-      expect(relation).to match_sql_snapshot
-    end
-
-    it "self joins with alias" do
-      relation = Post.joining do
-        on(id.eq(1)).alias("meatloaf")
-      end
-
-      expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
-    end
-
-    it "aliases" do
-      relation = Post.joining do
-        author.alias("a").on(author.id.eq(author_id))
-      end
-
-      expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
-    end
-
-    it "aliases after the on clause" do
-      relation = Post.joining do
-        author.on(author.id.eq(author_id)).alias("a")
-      end
-
-      expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
-    end
-
+  context "when joining implicitly" do
     it "merges bind values" do
       relation = Post.joining { ugly_author_comments }
 
       expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
     end
 
-    context "with complex conditions" do
-      it "inner joins" do
-        relation = Post.joining do
-          author.on(
-            author_id.eq(author.id).and(author.id.not_eq(5)).or(author.name.eq(nil))
-          )
-        end
-
-        expect(relation).to match_sql_snapshot
-      end
-
-      it "outer joins" do
-        relation = Post.joining do
-          author.outer.on(
-            author_id.eq(author.id).and(author.id.not_eq(5)).or(author.name.eq(nil))
-          )
-        end
-
-        expect(relation).to match_sql_snapshot
-      end
-    end
-  end
-
-  context "when joining implicitly" do
     it "inner joins" do
       relation = Post.joining { author }
 
@@ -217,16 +125,6 @@ describe "#joining" do
         end
 
         expect(relation).to produce_sql(Post.joining { author.outer.comments })
-      end
-
-      it "keeps the alias when the association was used before" do
-        relation = Post.joining do |post|
-          author = post.author
-          author.id
-          author.as("a").on { |a| a.id.eq(post.author_id) }
-        end
-
-        expect(relation).to produce_sql(Post.joining { |post| post.author.as("a").on { |a| a.id.eq(post.author_id) } })
       end
 
       it "joins back with a new alias" do
@@ -355,18 +253,6 @@ describe "#joining" do
 
       expect(relation.to_sql).to eq(Comment.joins(:post).merge(Post.left_outer_joins(:author)).to_sql)
       expect(relation.to_sql).to include('LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"')
-    end
-
-    it "raises an error when attempting to alias an inner join" do
-      expect do
-        Post.joining { author.alias("a") }.to_sql
-      end.to raise_error(BabySqueel::AssociationAliasingError, /'author' as 'a'/)
-    end
-
-    it "raises an error when attempting to alias an outer join" do
-      expect do
-        Post.joining { author.outer.alias("a") }.to_sql
-      end.to raise_error(BabySqueel::AssociationAliasingError, /'author' as 'a'/)
     end
 
     it "correctly identifies a table independenty joined via separate associations" do

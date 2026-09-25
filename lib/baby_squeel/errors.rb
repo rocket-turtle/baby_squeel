@@ -5,22 +5,9 @@ module BabySqueel
     end
   end
 
-  class AssociationNotFoundError < StandardError  # :nodoc:
+  class AssociationNotFoundError < StandardError # :nodoc:
     def initialize(model_name, name)
       super("Association named '#{name}' was not found for #{model_name}.")
-    end
-  end
-
-  class AssociationAliasingError < StandardError  # :nodoc:
-    MESSAGE =
-      "Attempted to alias '%{association}' as '%{alias_name}', but the " \
-      "association was implicitly joined. Either join the association " \
-      "with `on` or remove the alias. For example:" \
-      "\n\n  Post.joining { author }" \
-      "\n  Post.joining { author.on(author_id.eq(author.id)) }\n\n".freeze
-
-    def initialize(association, alias_name)
-      super(format(MESSAGE, association: association, alias_name: alias_name))
     end
   end
 
@@ -43,12 +30,6 @@ module BabySqueel
 
     def initialize(association)
       super(format(MESSAGE, association: association))
-    end
-  end
-
-  class AssociationComparisonError < StandardError # :nodoc:
-    def initialize(name, other)
-      super("You can't compare association '#{name}' to #{other}.")
     end
   end
 end

@@ -7,28 +7,6 @@ shared_examples_for "a table" do
     end
   end
 
-  describe "#on" do
-    let(:expr) { table.id.eq(1) }
-
-    it "sets the on clause" do
-      expect(table.on(expr)._on._arel).to eq(expr)
-    end
-
-    it "does not mutate the original instance" do
-      expect(table.on(expr).object_id).not_to eq(table.object_id)
-    end
-  end
-
-  describe "#inner" do
-    it "flags the inner join" do
-      expect(table.outer.inner._join).to eq(Arel::Nodes::InnerJoin)
-    end
-
-    it "does not mutate the original instance" do
-      expect(table.inner.object_id).not_to eq(table.object_id)
-    end
-  end
-
   describe "#outer" do
     it "flags the outer join" do
       expect(table.outer._join).to eq(Arel::Nodes::OuterJoin)

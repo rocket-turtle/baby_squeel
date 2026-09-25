@@ -20,14 +20,6 @@ module BabySqueel
       super(@_reflection.klass)
     end
 
-    def ==(other)
-      Nodes.wrap build_where_clause(other).ast
-    end
-
-    def !=(other)
-      Nodes.wrap build_where_clause(other).invert.ast
-    end
-
     def of(klass)
       raise PolymorphicSpecificationError.new(_reflection.name, klass) unless _reflection.polymorphic?
       raise ArgumentError, "#{klass.inspect} is not an Active Record model" unless model?(klass)
@@ -57,35 +49,15 @@ module BabySqueel
       @parent.find_alias([self, *associations])
     end
 
-    # Intelligently constructs Arel nodes. There are three outcomes:
-    #
-    # 1. The user explicitly constructed their join using #on.
-    #    See BabySqueel::Table#_arel.
-    #
-    #        Post.joining { author.on(author_id == author.id) }
-    #
-    # 2. The user aliased an implicitly joined association. ActiveRecord's
-    #    join dependency gives us no way of handling this, so we have to
-    #    throw an error.
-    #
-    #        Post.joining { author.as('some_alias') }
-    #
-    # 3. The user implicitly joined this association, so we pass this
-    #    association up the tree until it hits the top-level BabySqueel::Table.
-    #    Once it gets there, Arel join nodes will be constructed.
+    # Passes this association up the tree until it hits the top-level
+    # BabySqueel::Table, which builds the hash Active Record joins from.
     #
     #        Post.joining { author }
     #
     def _arel(associations = [])
-      if _on
-        super
-      elsif alias?
-        raise AssociationAliasingError.new(_reflection.name, _table.right)
-      elsif _reflection.polymorphic? && _polymorphic_klass.nil?
-        raise PolymorphicNotSpecifiedError, _reflection.name
-      else
-        @parent._arel([self, *associations])
-      end
+      raise PolymorphicNotSpecifiedError, _reflection.name if _reflection.polymorphic? && _polymorphic_klass.nil?
+
+      @parent._arel([self, *associations])
     end
 
     private
@@ -104,21 +76,6 @@ module BabySqueel
       raise PolymorphicNotSpecifiedError, _reflection.name if _scope.nil?
 
       super
-    end
-
-    def build_where_clause(other)
-      raise AssociationComparisonError.new(_reflection.name, other) unless valid_where_clause?(other)
-
-      relation = @parent._scope.all
-      relation.send(:build_where_clause, { _reflection.name => other }, [])
-    end
-
-    def valid_where_clause?(other)
-      if other.respond_to? :all?
-        other.all? { |o| valid_where_clause? o }
-      else
-        other.nil? || other.respond_to?(:model_name)
-      end
     end
   end
 end

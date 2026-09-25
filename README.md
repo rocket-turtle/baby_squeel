@@ -167,14 +167,6 @@ Post.joining { author.outer.posts }
 # Everything joined below an outer join is an outer join, as with
 # Post.left_joins(author: :posts).
 
-Post.joining { author.on(author.id.eq(author_id).or(author.name.eq(title))) }
-# SELECT "posts".* FROM "posts"
-# INNER JOIN "authors" ON ("authors"."id" = "posts"."author_id" OR "authors"."name" = "posts"."title")
-
-Post.joining { |post| post.author.as('a').on { id.eq(post.author_id).or(name.eq(post.title)) } }
-# SELECT "posts".* FROM "posts"
-# INNER JOIN "authors" "a" ON ("a"."id" = "posts"."author_id" OR "a"."name" = "posts"."title")
-
 Picture.joining { imageable.of(Post) }
 # SELECT "pictures".* FROM "pictures"
 # INNER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'

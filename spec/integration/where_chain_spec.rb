@@ -130,24 +130,6 @@ describe "#where.has" do
     expect(relation).to match_sql_snapshot
   end
 
-  it "wheres an association using #==" do
-    author = Author.new(id: 42)
-    relation = Post.where.has do |post|
-      post.author == author
-    end
-
-    expect(relation).to match_sql_snapshot
-  end
-
-  it "wheres an association using #!=" do
-    author = Author.new(id: 42)
-    relation = Post.where.has do |post|
-      post.author != author
-    end
-
-    expect(relation).to match_sql_snapshot
-  end
-
   it "handles a hash" do
     bs = Post.where.has { { id: 1 } }
     ar = Post.where(id: 1)
