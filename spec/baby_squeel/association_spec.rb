@@ -25,6 +25,11 @@ describe BabySqueel::Association do
       expect(polymorph.of(Post)._polymorphic_klass).to eq(Post)
     end
 
+    it "rejects anything but a model class" do
+      expect { polymorph.of("Post") }.to raise_error(ArgumentError, /"Post" is not an Active Record model/)
+      expect { polymorph.of(Post.new) }.to raise_error(ArgumentError)
+    end
+
     it "throws a fit when the reflection is not polymorphic" do
       expect { association.of(Post) }.to raise_error(BabySqueel::PolymorphicSpecificationError)
     end

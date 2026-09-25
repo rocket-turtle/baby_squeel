@@ -30,6 +30,7 @@ module BabySqueel
 
     def of(klass)
       raise PolymorphicSpecificationError.new(_reflection.name, klass) unless _reflection.polymorphic?
+      raise ArgumentError, "#{klass.inspect} is not an Active Record model" unless model?(klass)
 
       clone.of! klass
     end
@@ -88,6 +89,10 @@ module BabySqueel
     end
 
     private
+
+    def model?(klass)
+      klass.is_a?(Class) && klass < ::ActiveRecord::Base
+    end
 
     # A polymorphic association has no scope until #of names the class, so
     # there is nothing to resolve attributes or associations against.

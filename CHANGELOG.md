@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Raise ArgumentError when #of is given something other than a model class
 - where.has ANDs an array of conditions instead of passing it to Active Record as a SQL template with bind values
 - Raise NoMethodError for ==, != and ! on a node instead of silently dropping the condition
 - Document that an implicit join below an outer join is an outer join, as in Active Record; the spec that expected an inner join there was pending since 2021
