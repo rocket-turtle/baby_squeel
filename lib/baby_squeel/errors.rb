@@ -1,7 +1,7 @@
 module BabySqueel
   class NotFoundError < StandardError # :nodoc:
-    def initialize(model_name, name, strategies)
-      super("There is no #{strategies.join(' or ')} named '#{name}' for #{model_name}.")
+    def initialize(model_name, name)
+      super("There is no column or association named '#{name}' for #{model_name}.")
     end
   end
 

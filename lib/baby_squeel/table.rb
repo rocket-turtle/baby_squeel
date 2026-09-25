@@ -1,4 +1,3 @@
-require "baby_squeel/resolver"
 require "baby_squeel/join_dependency"
 
 module BabySqueel
@@ -85,18 +84,30 @@ module BabySqueel
 
     private
 
-    # Built per call: outer works on a clone, and a resolver kept in an
-    # instance variable would still point at the original table.
-    def resolver
-      Resolver.new(self, %i[column association])
+    def column?(name)
+      _scope.column_names.include?(name.to_s)
+    end
+
+    def association?(name)
+      !_scope.reflect_on_association(name).nil?
     end
 
     def respond_to_missing?(name, *)
-      resolver.resolves?(name) || super
+      column?(name) || association?(name) || super
     end
 
-    def method_missing(*, &)
-      resolver.resolve!(*, &) || super
+    # A column or association name without arguments resolves; anything else
+    # is a NoMethodError as usual.
+    def method_missing(name, *args, &block)
+      return super if args.any? || block
+
+      if column?(name)
+        self[name]
+      elsif association?(name)
+        association(name)
+      else
+        raise NotFoundError.new(_scope.model_name, name)
+      end
     end
   end
 end
