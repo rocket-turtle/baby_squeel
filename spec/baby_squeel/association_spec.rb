@@ -35,25 +35,17 @@ describe BabySqueel::Association do
     end
   end
 
-  describe "#polyamorous_join" do
-    it "builds a Polyamorous::Join" do
-      join = association.polyamorous_join
-      expect(join.name).to eq(:posts)
-      expect(join.type).to eq(Arel::Nodes::InnerJoin)
-      expect(join.klass).to be_nil
+  describe "#join_key" do
+    it "is the name for an inner join" do
+      expect(association.join_key).to eq(:posts)
     end
 
-    it "builds a Polyamorous::Join (for outer)" do
-      join = association.outer.polyamorous_join
-      expect(join.name).to eq(:posts)
-      expect(join.type).to eq(Arel::Nodes::OuterJoin)
-      expect(join.klass).to be_nil
+    it "is a Join for an outer join" do
+      expect(association.outer.join_key).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin))
     end
 
-    it "includes the _polymorphic_klass for polymorphic associations" do
-      join = polymorph.of(Post).polyamorous_join
-      expect(join.name).to eq(:imageable)
-      expect(join.klass).not_to be_nil
+    it "is a Join with the class for a polymorphic association" do
+      expect(polymorph.of(Post).join_key).to eq(BabySqueel::Join.new(:imageable, Arel::Nodes::InnerJoin, Post))
     end
   end
 
@@ -84,7 +76,7 @@ describe BabySqueel::Association do
 
       context "when outer joining" do
         it "resolves to a Join" do
-          expect(association.outer._arel).to eq(Polyamorous::Join.new(:posts, Arel::Nodes::OuterJoin) => {})
+          expect(association.outer._arel).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin) => {})
         end
       end
 
