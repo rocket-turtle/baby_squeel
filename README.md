@@ -219,7 +219,7 @@ The following methods give you access to BabySqueel's DSL:
 
 ## Development
 
-1. Pick an Active Record version to develop against, then export it: `export AR='~> 8.0.4'`.
+1. Pick an Active Record version to develop against, then export it: `export AR='~> 8.0.4'`. Unset, the newest version the gemspec allows is used.
 2. Run `bin/setup` to install dependencies.
 3. Run `rake` to run the specs.
 
