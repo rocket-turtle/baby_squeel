@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- the through-and-back join chain matches Active Record; its spec was pending since 2021
 - keep Polyamorous' build override private like Active Record's build
 - Raise ArgumentError when where.has returns an association instead of a condition; it produced WHERE (1=0)
 - remove BabySqueel::Relation; BabySqueel::Table takes the model or relation itself, and the Resolver's :attribute strategy is gone with it
