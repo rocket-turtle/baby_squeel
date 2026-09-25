@@ -20,9 +20,9 @@ describe "#where.has" do
   end
 
   it "resolves the alias of an association once per block" do
-    expect(BabySqueel::JoinDependency::Builder).to receive(:new).once.and_call_original
+    expect(ActiveRecord::Associations::JoinDependency).to receive(:new).once.and_call_original
 
-    Post.joins(:author).where.has { author.name.eq("x").and(author.age.gt(1)).and(author.id.lt(9)) }.to_sql
+    Post.joins(:author).where.has { author.name.eq("x").and(author.age.gt(1)).and(author.id.lt(9)) }
   end
 
   it "accepts nil" do

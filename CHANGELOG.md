@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- remove BabySqueel::JoinDependency::Builder; Table#find_alias resolves the alias itself
 - remove BabySqueel::Resolver; Table resolves columns and associations itself
 - BabySqueel::Join is a Data value
 - Gemfile: AR is optional; without it the gemspec's Active Record range applies
