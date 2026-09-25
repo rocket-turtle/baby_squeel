@@ -22,6 +22,10 @@ module BabySqueel
       Association.new(self, reflection)
     end
 
+    def inspect
+      "#<#{self.class.name} #{_table&.name}>"
+    end
+
     # See Arel::Table#[]
     def [](key)
       Nodes::Attribute.new(self, key)
