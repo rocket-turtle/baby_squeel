@@ -19,6 +19,12 @@ describe "#where.has" do
     expect { Post.where.has { [title.eq("x"), author.outer] } }.to raise_error(ArgumentError, /instead of a condition/)
   end
 
+  it "resolves the alias of an association once per block" do
+    expect(BabySqueel::JoinDependency::Builder).to receive(:new).once.and_call_original
+
+    Post.joins(:author).where.has { author.name.eq("x").and(author.age.gt(1)).and(author.id.lt(9)) }.to_sql
+  end
+
   it "accepts nil" do
     relation = Post.where.has { nil }
 
