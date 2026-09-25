@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Raise ArgumentError when where.has returns an association instead of a condition; it produced WHERE (1=0)
 - remove BabySqueel::Relation; BabySqueel::Table takes the model or relation itself, and the Resolver's :attribute strategy is gone with it
 - Raise ArgumentError when #of is given something other than a model class
 - where.has ANDs an array of conditions instead of passing it to Active Record as a SQL template with bind values

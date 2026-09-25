@@ -12,6 +12,13 @@ describe "#where.has" do
     expect(relation.to_sql).to include(%(WHERE "posts"."title" = 'x' AND "posts"."id" > 1))
   end
 
+  it "rejects an association in place of a condition" do
+    message = "where.has got #<BabySqueel::Association authors> instead of a condition. Join it with joining."
+
+    expect { Post.where.has { author } }.to raise_error(ArgumentError, message)
+    expect { Post.where.has { [title.eq("x"), author.outer] } }.to raise_error(ArgumentError, /instead of a condition/)
+  end
+
   it "accepts nil" do
     relation = Post.where.has { nil }
 
