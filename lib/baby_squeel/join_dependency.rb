@@ -15,7 +15,7 @@ module BabySqueel
       # will use.
       def find_alias(associations)
         buckets, join_type = @relation.send(:build_join_buckets)
-        alias_tracker = @relation.send(:alias_tracker, buckets[:leading_join] + buckets[:join_node])
+        alias_tracker = @relation.alias_tracker(buckets[:leading_join] + buckets[:join_node])
         join_dependency = @relation.construct_join_dependency(buckets[:named_join], join_type)
         join_dependency.join_constraints(buckets[:stashed_join], alias_tracker, @relation.references_values)
 
