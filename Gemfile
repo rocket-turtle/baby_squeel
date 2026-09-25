@@ -9,8 +9,6 @@ else
   gem "activerecord", ENV["AR"]
 end
 
-gem "sqlite3", ">= 1.4"
-
 group :test do
   gem "byebug"
   gem "pry"
