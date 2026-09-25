@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Gemfile: AR is optional; without it the gemspec's Active Record range applies
 - gemspec: own description, bounded sqlite3 development dependency, explicit file list without ISSUE_TEMPLATE.md; built gems are git-ignored
 - resolve the alias of an association chain once per DSL block instead of twice per attribute
 - fold lib/polyamorous into BabySqueel: Polyamorous::Join is BabySqueel::Join, the Active Record prepends live in BabySqueel::ActiveRecord next to QueryMethods and WhereChain
