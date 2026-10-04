@@ -1,6 +1,6 @@
 module BabySqueel
   class Table
-    attr_accessor :_table, :_scope, :_join
+    attr_reader :_table, :_scope, :_join
 
     # scope is a model class or a relation; both answer arel_table,
     # column_names and reflect_on_association. A polymorphic association
@@ -34,10 +34,14 @@ module BabySqueel
       clone.outer!
     end
 
-    def outer! # :nodoc:
-      self._join = Arel::Nodes::OuterJoin
+    protected
+
+    def outer!
+      @_join = Arel::Nodes::OuterJoin
       self
     end
+
+    public
 
     # Evaluates a DSL block. If arity is given, this method
     # `yield` itself, rather than `instance_eval`.

@@ -8,7 +8,7 @@ module BabySqueel
 
     # Specifies the model that the polymorphic
     # association should join with
-    attr_accessor :_polymorphic_klass
+    attr_reader :_polymorphic_klass
 
     def initialize(parent, reflection)
       @parent = parent
@@ -29,12 +29,16 @@ module BabySqueel
       clone.of! klass
     end
 
+    protected
+
     def of!(klass)
-      self._scope = klass
-      self._table = klass.arel_table
-      self._polymorphic_klass = klass
+      @_scope = klass
+      @_table = klass.arel_table
+      @_polymorphic_klass = klass
       self
     end
+
+    public
 
     # The key for this association in the hash Table#_arel hands to Active
     # Record: the name for an inner join, a Join carrying the join type and
