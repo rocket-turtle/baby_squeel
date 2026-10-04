@@ -11,10 +11,9 @@
 - remove explicit joins with #on, table aliasing with #as and #alias, #inner and comparing an association with #== and #!=
 - the through-and-back join chain matches Active Record; its spec was pending since 2021
 - keep Polyamorous' build override private like Active Record's build
-- Raise ArgumentError when where.has returns an association instead of a condition; it produced WHERE (1=0)
+- Raise ArgumentError when where.has returns an association or an array instead of a condition; an association produced WHERE (1=0), an array kept only its first element
 - remove BabySqueel::Relation; BabySqueel::Table takes the model or relation itself, and the Resolver's :attribute strategy is gone with it
 - Raise ArgumentError when #of is given something other than a model class
-- where.has ANDs an array of conditions instead of passing it to Active Record as a SQL template with bind values
 - Raise NoMethodError for ==, != and ! on a node instead of silently dropping the condition
 - Document that an implicit join below an outer join is an outer join, as in Active Record; the spec that expected an inner join there was pending since 2021
 - Raise PolymorphicNotSpecifiedError instead of a NoMethodError when an attribute of a polymorphic association is used without #of

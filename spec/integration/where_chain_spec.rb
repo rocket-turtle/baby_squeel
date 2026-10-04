@@ -5,18 +5,15 @@ describe "#where.has" do
     expect(relation).to match_sql_snapshot
   end
 
-  it "ands an array of conditions" do
-    relation = Post.where.has { [title.eq("x"), nil, id.gt(1)] }
-
-    expect(relation).to produce_sql(Post.where.has { title.eq("x") }.where.has { id.gt(1) })
-    expect(relation.to_sql).to include(%(WHERE "posts"."title" = 'x' AND "posts"."id" > 1))
-  end
-
   it "rejects an association in place of a condition" do
-    message = "where.has got #<BabySqueel::Association authors> instead of a condition. Join it with joining."
+    message = "where.has got #<BabySqueel::Association authors> instead of a condition"
 
     expect { Post.where.has { author } }.to raise_error(ArgumentError, message)
-    expect { Post.where.has { [title.eq("x"), author.outer] } }.to raise_error(ArgumentError, /instead of a condition/)
+  end
+
+  it "rejects an array of conditions" do
+    expect { Post.where.has { [title.eq("x"), id.gt(1)] } }
+      .to raise_error(ArgumentError, /where\.has got \[.*\] instead of a condition/)
   end
 
   it "resolves the alias of an association once per block" do
