@@ -1,37 +1,28 @@
 ## [Unreleased]
 
-- one BabySqueel::Error replaces NotFoundError, AssociationNotFoundError, PolymorphicSpecificationError and PolymorphicNotSpecifiedError; messages unchanged in substance
-- remove BabySqueel::JoinDependency::Builder; Table#find_alias resolves the alias itself
-- remove BabySqueel::Resolver; Table resolves columns and associations itself
-- BabySqueel::Join is a Data value
-- Gemfile: AR is optional; without it the gemspec's Active Record range applies
-- gemspec: own description, bounded sqlite3 development dependency, explicit file list without ISSUE_TEMPLATE.md; built gems are git-ignored
-- resolve the alias of an association chain once per DSL block instead of twice per attribute
-- fold lib/polyamorous into BabySqueel: Polyamorous::Join is BabySqueel::Join, the Active Record prepends live in BabySqueel::ActiveRecord next to QueryMethods and WhereChain
-- remove explicit joins with #on, table aliasing with #as and #alias, #inner and comparing an association with #== and #!=
-- the through-and-back join chain matches Active Record; its spec was pending since 2021
-- keep Polyamorous' build override private like Active Record's build
-- Raise ArgumentError when where.has returns an association or an array instead of a condition; an association produced WHERE (1=0), an array kept only its first element
-- remove BabySqueel::Relation; BabySqueel::Table takes the model or relation itself, and the Resolver's :attribute strategy is gone with it
-- Raise ArgumentError when #of is given something other than a model class
-- Raise NoMethodError for ==, != and ! on a node instead of silently dropping the condition
-- Document that an implicit join below an outer join is an outer join, as in Active Record; the spec that expected an inner join there was pending since 2021
-- Raise PolymorphicNotSpecifiedError instead of a NoMethodError when an attribute of a polymorphic association is used without #of
-- Fix an outer join below an inner join of the same association joining that association twice
-- Fix outer, inner, as and on being ignored on an association that had resolved an attribute before
-- Fix merging a relation with an outer joining into a relation of another model joining the association of the wrong model
-- remove BabySqueel::Join, BabySqueel::ActiveRecord::QueryMethods::JoinsInjector and Polyamorous::TreeNode; outer and polymorphic joins are passed to Active Record as a hash of Polyamorous::Join keys
-- Fix joins of an association declared with deprecated: true not being reported (Active Record 8.1)
-- remove .rubocop_todo.yml, no offenses are left
-- Fix joining a polymorphic association with an STI subclass comparing the type column with the subclass name
-- build the subquery for a relation passed to Attribute#in or #not_in with the handler where(column: relation) uses: eager loading is applied, the primary key is selected when the relation selects nothing and bind parameters are kept
-- Fix joins with a nil value raising ConfigurationError
-- Fix references with a String renaming the joined table
-- remove BabySqueel::Nodes::Grouping and BabySqueel::Nodes::Binary
-- move BabySqueel::JoinDependency::OuterJoinConstraints into Polyamorous::JoinDependencyExtensions
-- let Active Record build the join dependency BabySqueel::JoinDependency::Builder resolves aliases from; remove Polyamorous construct_tables_for_association! and table_aliases_for
-- simplify Polyamorous::SwappingReflectionClass: only swap the memoized klass
-- remove the unused setters and String/Symbol conversion from Polyamorous::Join
+### Removed without deprecation
+- `#on`, `#as`, `#alias`, `#inner` and comparing an association with `==`/`!=`
+- `BabySqueel::Relation`, `Resolver`, `JoinDependency::Builder`, `Nodes::Grouping`, `Nodes::Binary` and all of `lib/polyamorous`; the Active Record prepends live in `BabySqueel::ActiveRecord`
+- the four error classes; rescue `BabySqueel::Error`
+
+### Changed
+- `joining` hands Active Record a nested hash; an outer or polymorphic join is a `BabySqueel::Join` key, so Active Record merges the chain with its own joins and reports `deprecated: true` associations (8.1)
+- an association chain's alias is resolved once per block
+- `where.has` raises `ArgumentError` for an association or an array in place of a condition (was `WHERE (1=0)`, or the first element only); `==`, `!=` and `!` on a node raise `NoMethodError`
+- `#of` raises `ArgumentError` unless given a model class; an attribute of a polymorphic association without `#of` raises `BabySqueel::Error`
+- a column named like a Ruby or DSL method is reached with `[]` (README)
+
+### Fixed
+- an outer join below an inner join of the same association joined it twice
+- `outer` and `of` were ignored on an association that had resolved an attribute before
+- merging an outer `joining` into a relation of another model joined the wrong model's association
+- a polymorphic join with an STI subclass compared the type column with the subclass name
+- `in`/`not_in` with a relation use Active Record's `where(column: relation)` handler: eager loading, primary key, bind parameters
+- `joins(assoc => nil)` raised `ConfigurationError`; `references("string")` renamed the joined table
+- an implicit join below an outer join is an outer join, as in Active Record; the through-and-back chain matches Active Record; both specs had been pending since 2021
+
+### Tooling
+- `Gemfile`: `AR` optional; gemspec: description, explicit file list, `sqlite3 ~> 2.0`, homepage of the fork; `.rubocop_todo.yml` gone; `produce_sql` compares for equality
 
 ## [3.0.0.internal4] - 2026-09-24
 
