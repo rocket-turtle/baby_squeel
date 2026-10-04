@@ -14,17 +14,28 @@ module BabySqueel
       # deprecation checks.
       def build(associations, base_klass)
         associations.flat_map do |name, right|
-          next super({ name => right }, base_klass) unless name.is_a?(Join)
-
-          reflection = find_reflection base_klass, name.name
-          reflection.check_validity!
-          reflection.check_eager_loadable!
-          guard_deprecation(reflection)
-
-          klass = name.klass || reflection.klass
-          ::ActiveRecord::Associations::JoinDependency::JoinAssociation.new(reflection, build(right, klass),
-                                                                            name.klass, name.type)
+          name.is_a?(Join) ? build_join(name, right, base_klass) : super({ name => right }, base_klass)
         end
+      end
+
+      def build_join(join, right, base_klass)
+        reflection = find_reflection base_klass, join.name
+        reflection.check_validity!
+        reflection.check_eager_loadable!
+        guard_deprecation(reflection)
+
+        reflection = with_klass(reflection, join.klass) if join.klass
+        children = build(right, reflection.klass)
+        join_association = ::ActiveRecord::Associations::JoinDependency::JoinAssociation.new(reflection, children)
+        join_association.join_type = join.type
+        join_association
+      end
+
+      # A copy of the polymorphic reflection whose klass is the given class.
+      # Reflection#klass reads the memoized @klass, and the copy leaves the
+      # original reflection untouched for other threads.
+      def with_klass(reflection, klass)
+        reflection.clone.tap { |copy| copy.instance_variable_set(:@klass, klass) }
       end
 
       def guard_deprecation(reflection)
