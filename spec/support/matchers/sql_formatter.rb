@@ -19,7 +19,7 @@ module Matchers
     end
 
     def self.normalize(value)
-      if value.kind_of? String
+      if value.is_a? String
         value.squish.gsub("( ", "(").gsub(" )", ")")
       elsif value.respond_to?(:to_sql)
         normalize(value.to_sql)
