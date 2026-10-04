@@ -162,6 +162,18 @@ describe "#joining" do
           expect(relation).to produce_sql(Post.joins(:author))
         end
 
+        it "dedupes outer joins" do
+          relation = Post.joining { author.outer }.joining { author.outer }
+
+          expect(relation).to produce_sql(Post.left_joins(:author))
+        end
+
+        it "dedupes polymorphic joins" do
+          relation = Picture.joining { imageable.of(Post) }.joining { imageable.of(Post) }
+
+          expect(relation.to_sql.scan("JOIN").size).to eq(1)
+        end
+
         it "dedupes incremental joins" do
           relation = Post.joining { author }.joining { author.posts }
 

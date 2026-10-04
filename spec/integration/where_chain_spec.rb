@@ -22,6 +22,16 @@ describe "#where.has" do
     Post.joins(:author).where.has { author.name.eq("x").and(author.age.gt(1)).and(author.id.lt(9)) }
   end
 
+  it "unwraps nodes passed as arguments" do
+    relation = Post.joins(:author).where.has { title.eq(author.name).and(id.in([parent_id, child_id])) }
+    posts = Post.arel_table
+    active_record = Post.joins(:author).where(
+      posts[:title].eq(Author.arel_table[:name]).and(posts[:id].in([posts[:parent_id], posts[:child_id]]))
+    )
+
+    expect(relation).to produce_sql(active_record)
+  end
+
   it "accepts nil" do
     relation = Post.where.has { nil }
 
