@@ -41,7 +41,7 @@ shared_examples_for "a table" do
       expect do
         table.association :non_existent
       end.to raise_error(
-        BabySqueel::AssociationNotFoundError,
+        BabySqueel::Error,
         /named 'non_existent'(.+)for Post/
       )
     end
@@ -57,7 +57,8 @@ shared_examples_for "a table" do
     end
 
     it "raises a custom error for things that look like columns" do
-      expect { table.non_existent_column }.to raise_error(BabySqueel::NotFoundError)
+      expect { table.non_existent_column }
+        .to raise_error(BabySqueel::Error, /no column or association named 'non_existent_column'/)
     end
 
     it "raises a NoMethodError when the wrong number of args are given" do
