@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "An expressive query DSL for Active Record 8.0+"
   spec.description   = "Squeel-like joining and where.has blocks for Active Record, including outer and " \
                        "polymorphic joins and attributes that resolve the alias of a joined table."
-  spec.homepage      = "https://github.com/rzane/baby_squeel"
+  spec.homepage      = "https://github.com/rocket-turtle/baby_squeel"
   spec.license       = "MIT"
 
   spec.require_paths = ["lib"]

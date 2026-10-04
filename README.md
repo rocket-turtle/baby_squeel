@@ -1,45 +1,8 @@
-This is a fork of [baby_squeel](https://github.com/rzane/baby_squeel).
-I aim to keep it compatible with Rails and publish my commits in case others find them useful.
-However, I do not recommend using baby_squeel or this fork.
-I plan to remove functions which I don’t need from this project without providing deprecations.
-
-Release
-```
-update lib/baby_squeel/version.rb
-update CHANGELOG.md
-
-$ git add .
-$ git commit -m "release x.y.z.internalA"
-$ gem build baby_squeel.gemspec
-
-upload gem to own gemserver
-```
-
----
+This is a fork of [baby_squeel](https://github.com/rzane/baby_squeel) kept compatible with current Active Record for one application. Features that application does not use are removed without deprecation. It is published in case others find the commits useful; using it elsewhere is not recommended.
 
 # BabySqueel 🐷
 
-![Build](https://github.com/rocket-turtle/baby_squeel/workflows/Build/badge.svg)
-
-Have you ever used the [Squeel](https://github.com/activerecord-hackery/squeel) gem? It's a really nice way to build complex queries. However, Squeel monkeypatches Active Record internals, because it was aimed at enhancing the existing API with the aim of inclusion into Rails. However, that inclusion never happened, and it left Squeel susceptible to breakage from arbitrary changes in Active Record, eventually burning out the maintainer.
-
-BabySqueel provides a Squeel-like query DSL for Active Record while hopefully avoiding the majority of the version upgrade difficulties via a minimum of monkeypatching. :heart:
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'baby_squeel'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install baby_squeel
+A Squeel-like query DSL for Active Record with a minimum of monkeypatching: two methods, `joining` and `where.has`, and the Active Record hooks they need.
 
 ## Introduction
 
@@ -95,6 +58,8 @@ class Comment < ActiveRecord::Base
   belongs_to :post
 end
 ```
+
+The SQL in the comments is as Active Record 8.0 renders it; 8.1 writes `AS` before a table alias.
 
 ##### Wheres
 
@@ -204,6 +169,16 @@ The query might look like this:
 Picture.joining { imageable.of(Post) }
 ```
 
+## How it works
+
+`joining` hands Active Record a nested hash of the associations in the block. Inner joins are keyed by name, so Active Record merges them with its own `joins`. An outer join or a polymorphic `of` is keyed by a `BabySqueel::Join` value carrying the join type and the class; a prepend on `JoinDependency#build` turns those keys into join associations, one on `make_constraints` lets the outer type win over the inner tree, and one on `Reflection#join_scope` adds the polymorphic type condition.
+
+An attribute of a joined association, `author.name`, has to use the alias Active Record gives that join. `Table#find_alias` builds the join dependency Active Record itself would build for the scope plus the chain, reads the table off the matching join association, and keeps it per chain for the block. Aliases are never computed by hand.
+
+`where.has` passes the resulting Arel node to `where!`. A relation given to `in` or `not_in` goes through Active Record's handler for `where(column: relation)`.
+
+Known limitation: an outer join of an association the relation already inner joins, `Post.joins(:author).joining { author.outer }`, is added as a second join. Active Record's `left_joins` would merge it into the inner join. The pending spec in `spec/integration/joining_spec.rb` describes it.
+
 ## What's what?
 
 The following methods give you access to BabySqueel's DSL:
@@ -233,7 +208,9 @@ bundle exec rubocop
 Two environment variables the specs read:
 
 - `COVERAGE=1` writes a coverage report to `coverage/`. Off by default, so a plain run does not produce one.
-- `UPDATE_SNAPSHOTS=1` records SQL snapshots. A missing snapshot fails the run instead of being recorded silently, so a renamed or new example needs this once.
+- `UPDATE_SNAPSHOTS=1` records SQL snapshots. A missing snapshot fails the run instead of being recorded silently, so a renamed or new example needs this once. Snapshots with `variants:` are recorded per Active Record version, so run this for each version in the list; the unsuffixed key is for versions not in the list. Recording never removes keys.
+
+`bin/setup` rewrites `Gemfile.lock` for the given `AR`. A lock left on `AR=main` needs a Rails checkout that `bin/setup` makes; run `unset AR; bin/setup` before working without it.
 
 You can also run `bin/console` to open up a prompt where you'll have access to some models to experiment with.
 
@@ -243,12 +220,18 @@ You can also run `bin/console` to open up a prompt where you'll have access to s
 2. Add the version to test matrix [build.yml](.github/workflows/build.yml)
 3. Update development section in the [README.md](README.md)
 4. If the code has to branch on the Active Record version, put the check in [version_helper.rb](lib/baby_squeel/active_record/version_helper.rb) instead of inlining it. Collecting every version branch in one file makes them easy to find and drop once support for that version ends.
-5. Run the specs with all supported versions
-6. Add comment to the unreleased section in [CHANGELOG.md](CHANGELOG.md)
+5. Add the version to every `match_sql_snapshot(variants: [...])` call whose SQL differs and record the snapshots with `UPDATE_SNAPSHOTS=1`
+6. Run the specs with all supported versions
+7. Add comment to the unreleased section in [CHANGELOG.md](CHANGELOG.md)
 
-## Contributing
+## Release
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/rocket-turtle/baby_squeel.
+1. Set the version in [lib/baby_squeel/version.rb](lib/baby_squeel/version.rb), `x.y.z.internalN`
+2. Move the unreleased section in [CHANGELOG.md](CHANGELOG.md) to a dated heading
+3. Commit those two files as `release x.y.z.internalN`
+4. `gem build baby_squeel.gemspec` and upload the gem to the gemserver; the file is git-ignored
+
+The application bundles the gem from the gemserver; its `Gemfile.defaults.rb` carries a commented `path:` line to the sibling checkout that is opted into by swapping the comment.
 
 ## License
 
