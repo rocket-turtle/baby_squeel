@@ -5,6 +5,23 @@ describe BabySqueel::Table do
 
   include_examples "a table"
 
+  describe "#find_alias" do
+    it "resolves the tables Active Record's own join sources use" do
+      relation = Post.joins(:author, comments: :author).left_joins(parent: :author)
+      chains = [
+        [create_association(Post, :author)],
+        [create_association(Post, :comments), create_association(Comment, :author)],
+        [create_association(Post, :parent)]
+      ]
+      resolved = chains.map { |chain| create_table(relation).find_alias(chain).name }
+
+      join_sources = relation.arel.join_sources.map { |join| join.left.name }
+
+      expect(resolved).to eq(%w[authors authors_comments parents_posts])
+      expect(join_sources).to include(*resolved)
+    end
+  end
+
   describe "#_arel" do
     subject { table._arel([association]) }
 
