@@ -6,6 +6,7 @@
 - the four error classes; rescue `BabySqueel::Error`
 
 ### Changed
+- `JoinAssociation` is built with Active Record's own signature; `JoinDependency#build` sets the join type and the polymorphic class afterwards
 - `joining` hands Active Record a nested hash; an outer or polymorphic join is a `BabySqueel::Join` key, so Active Record merges the chain with its own joins and reports `deprecated: true` associations (8.1)
 - an association chain's alias is resolved once per block
 - `where.has` raises `ArgumentError` for an association or an array in place of a condition (was `WHERE (1=0)`, or the first element only); `==`, `!=` and `!` on a node raise `NoMethodError`

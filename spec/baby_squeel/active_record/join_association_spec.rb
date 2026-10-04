@@ -1,12 +1,23 @@
 describe ActiveRecord::Associations::JoinDependency::JoinAssociation, :join_dependency do
-  let(:join_dependency) { new_join_dependency(Picture, {}) }
   let(:reflection) { Picture.reflect_on_association(:imageable) }
-  let(:parent) { join_dependency.send(:join_root) }
-  let(:join_association) { new_join_association(reflection, parent.children, Post) }
+  let(:join_association) do
+    join = new_join(:imageable, Arel::Nodes::OuterJoin, Post)
+    new_join_dependency(Picture, join => {}).send(:join_root).children.first
+  end
 
   it "joins the given class for a polymorphic reflection" do
     expect(join_association.reflection.klass).to eq(Post)
     expect(join_association.base_klass).to eq(Post)
+  end
+
+  it "carries the join type of the key" do
+    expect(join_association.join_type).to eq(Arel::Nodes::OuterJoin)
+  end
+
+  it "is an inner join when built by Active Record" do
+    plain = new_join_dependency(Post, :author).send(:join_root).children.first
+
+    expect(plain.join_type).to eq(Arel::Nodes::InnerJoin)
   end
 
   it "leaves the original reflection intact for thread safety" do
