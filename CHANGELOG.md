@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [3.0.0.internal5] - 2026-10-04
+
 ### Removed without deprecation
 - `#on`, `#as`, `#alias`, `#inner` and comparing an association with `==`/`!=`
 - `BabySqueel::Relation`, `Resolver`, `JoinDependency::Builder`, `Nodes::Grouping`, `Nodes::Binary` and all of `lib/polyamorous`; the Active Record prepends live in `BabySqueel::ActiveRecord`
