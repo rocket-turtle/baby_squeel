@@ -2,7 +2,7 @@ describe "#where.has" do
   it "wheres on an attribute" do
     relation = Post.where.has { title.eq("OJ Simpson") }
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Post.where(title: "OJ Simpson"))
   end
 
   it "rejects an association in place of a condition" do
@@ -25,7 +25,7 @@ describe "#where.has" do
   it "accepts nil" do
     relation = Post.where.has { nil }
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Post.all)
   end
 
   it "wheres on associations" do
@@ -33,13 +33,13 @@ describe "#where.has" do
       author.name.eq("Yo Gotti")
     end
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Post.joins(:author).where(authors: { name: "Yo Gotti" }))
   end
 
   it "wheres using operations" do
     relation = Post.where.has { (id + 1).eq(2) }
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Post.where((Post.arel_table[:id] + 1).eq(2)))
   end
 
   it "wheres using complex conditions" do
@@ -47,7 +47,9 @@ describe "#where.has" do
       title.matches("Simp%").or(author.name.eq("meatloaf"))
     end
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(
+      Post.joins(:author).where(Post.arel_table[:title].matches("Simp%").or(Author.arel_table[:name].eq("meatloaf")))
+    )
   end
 
   it "wheres on deep associations" do
@@ -55,7 +57,7 @@ describe "#where.has" do
       author.comments.id.gt(0)
     end
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Post.joins(author: :comments).where(Comment.arel_table[:id].gt(0)))
   end
 
   it "wheres on an aliased association" do
@@ -63,7 +65,7 @@ describe "#where.has" do
       author.posts.id.gt(0)
     end
 
-    expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
+    expect(relation).to produce_sql(Post.joins(author: :posts).where(Post.arel_table.alias("posts_authors")[:id].gt(0)))
   end
 
   it "wheres on an aliased association with through" do
@@ -71,7 +73,9 @@ describe "#where.has" do
       author_comments.id.gt(0)
     end
 
-    expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
+    expect(relation).to produce_sql(
+      Post.joins(:comments, :author_comments).where(Comment.arel_table.alias("author_comments_posts")[:id].gt(0))
+    )
   end
 
   it "wheres on polymorphic associations" do
@@ -95,7 +99,9 @@ describe "#where.has" do
                    .where.has { author.comments.id.in [1, 2] }
                    .where.has { author.name.eq("Joe") }
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(
+      Post.joins(author: :comments).where(comments: { id: [1, 2] }, authors: { name: "Joe" })
+    )
   end
 
   it "wheres on an alias with outer join" do
@@ -103,7 +109,9 @@ describe "#where.has" do
                    .where.has { author.comments.id.in [1, 2] }
                    .where.has { author.name.eq("Joe") }
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(
+      Post.joins(:author).left_joins(author: :comments).where(comments: { id: [1, 2] }, authors: { name: "Joe" })
+    )
   end
 
   it "wheres with an empty subquery" do
@@ -111,7 +119,7 @@ describe "#where.has" do
       author_id.in Author.none.select(:id)
     end
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Post.where(author_id: Author.none.select(:id)))
   end
 
   it "wheres with an empty subquery and keeps values" do
@@ -122,7 +130,8 @@ describe "#where.has" do
                   .none
 
     relation = Post.where.has { author_id.in other }
-    expect(relation).to match_sql_snapshot
+
+    expect(relation).to produce_sql(Post.where(author_id: other))
   end
 
   it "wheres with a not in subquery" do
@@ -130,7 +139,7 @@ describe "#where.has" do
       author_id.not_in Author.none.select(:id)
     end
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Post.where.not(author_id: Author.none.select(:id)))
   end
 
   it "handles a hash" do

@@ -22,6 +22,7 @@
 - an implicit join below an outer join is an outer join, as in Active Record; the through-and-back chain matches Active Record; both specs had been pending since 2021
 
 ### Tooling
+- specs assert `produce_sql(<Active Record relation>)` wherever an equivalent exists; snapshots remain for polymorphic joins and the documented duplicate; `rake snapshots:prune` drops keys no example reads; branch coverage is on
 - `Gemfile`: `AR` optional; gemspec: description, explicit file list, `sqlite3 ~> 2.0`, homepage of the fork; `.rubocop_todo.yml` gone; `produce_sql` compares for equality
 
 ## [3.0.0.internal4] - 2026-09-24

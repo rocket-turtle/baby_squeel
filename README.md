@@ -208,7 +208,9 @@ bundle exec rubocop
 Two environment variables the specs read:
 
 - `COVERAGE=1` writes a coverage report to `coverage/`. Off by default, so a plain run does not produce one.
-- `UPDATE_SNAPSHOTS=1` records SQL snapshots. A missing snapshot fails the run instead of being recorded silently, so a renamed or new example needs this once. Snapshots with `variants:` are recorded per Active Record version, so run this for each version in the list; the unsuffixed key is for versions not in the list. Recording never removes keys.
+- `UPDATE_SNAPSHOTS=1` records SQL snapshots. A missing snapshot fails the run instead of being recorded silently, so a renamed or new example needs this once. Snapshots with `variants:` are recorded per Active Record version, so run this for each version in the list; the unsuffixed key is for versions not in the list. Recording never removes keys; `rake snapshots:prune` does.
+
+A snapshot is for SQL that has no plain Active Record equivalent, such as a polymorphic join. Everything else asserts `produce_sql(<the Active Record relation>)`, which also proves the gem does what Active Record does.
 
 `bin/setup` rewrites `Gemfile.lock` for the given `AR`. A lock left on `AR=main` needs a Rails checkout that `bin/setup` makes; run `unset AR; bin/setup` before working without it.
 

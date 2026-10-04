@@ -1,40 +1,14 @@
 ---
-"#joining when joining implicitly correctly aliases when joining the same table twice 1": SELECT
-  "posts".* FROM "posts" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "posts" "parents_posts" ON "parents_posts"."id" = "posts"."parent_id"
-  LEFT OUTER JOIN "authors" "authors_posts" ON "authors_posts"."id" = "parents_posts"."author_id"
-  WHERE ("authors"."name" = 'Rick' OR "authors_posts"."name" = 'Flair')
-"#joining when joining implicitly correctly identifies a table independenty joined via separate associations 1": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" INNER JOIN "authors"
-  "authors_comments" ON "authors_comments"."id" = "comments"."author_id" WHERE "authors_comments"."name"
-  = 'Bob'
 "#joining when joining implicitly polymorphism inner joins 1": SELECT "pictures".*
   FROM "pictures" INNER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND
   "pictures"."imageable_type" = 'Post'
 "#joining when joining implicitly polymorphism outer joins 1": SELECT "pictures".*
   FROM "pictures" LEFT OUTER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id"
   AND "pictures"."imageable_type" = 'Post'
-"#joining when joining implicitly habtm inner joins 1": SELECT "research_papers".*
-  FROM "research_papers" INNER JOIN "author_research_papers" ON "author_research_papers"."research_paper_id"
-  = "research_papers"."id" INNER JOIN "authors" ON "authors"."id" = "author_research_papers"."author_id"
-  WHERE "authors"."name" = 'Alex'
-"#joining when joining implicitly nested joins inner joins 1": SELECT "posts".* FROM
-  "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id" INNER JOIN
-  "comments" ON "comments"."author_id" = "authors"."id"
 "#joining when joining implicitly nested joins handles polymorphism 1": SELECT "pictures".*
   FROM "pictures" INNER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND
   "pictures"."imageable_type" = 'Post' INNER JOIN "comments" ON "comments"."post_id"
   = "posts"."id"
-"#joining when joining implicitly nested joins outer joins at multiple levels 1": SELECT
-  "posts".* FROM "posts" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-"#joining when joining implicitly nested joins outer joins only the specified associations 1": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-"#joining when joining implicitly duplicate prevention when given two DSL joins dedupes incremental joins 1": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
 "#joining when joining implicitly duplicate prevention when given a DSL join with an Active Record join dedupes through joins 1": SELECT
   "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
@@ -43,29 +17,11 @@
   OUTER JOIN "authors" "authors_posts_join_2" ON "authors_posts_join_2"."id" = "posts_authors"."author_id"
   LEFT OUTER JOIN "comments" "author_comments_posts" ON "author_comments_posts"."author_id"
   = "authors_posts_join_2"."id"
-? "#joining when joining implicitly duplicate prevention when given a DSL join with
-  an Active Record join dedupes incremental outer joins 1"
-: SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-? "#joining when joining implicitly duplicate prevention when given a DSL join with
-  an Active Record join dedupes incremental outer joins (in any order) 1"
-: SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
 "#joining when joining implicitly polymorphism double polymorphic joining 1": SELECT
   "pictures".* FROM "pictures" INNER JOIN "authors" ON "authors"."id" = "pictures"."imageable_id"
   AND "pictures"."imageable_type" = 'Author' INNER JOIN "posts" ON "posts"."id" =
   "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post' WHERE ("authors"."name"
   = 'NameOfTheAuthor' OR "posts"."title" = 'NameOfThePost')
-"#joining when joining implicitly inner joins 1": SELECT "posts".* FROM "posts" INNER
-  JOIN "authors" ON "authors"."id" = "posts"."author_id"
-"#joining when joining implicitly outer joins single 1": SELECT "posts".* FROM "posts"
-  LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-"#joining when joining implicitly outer joins multi 1": SELECT "posts".* FROM "posts"
-  LEFT OUTER JOIN "posts" "parents_posts" ON "parents_posts"."id" = "posts"."parent_id"
-  LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-"#joining when joining implicitly duplicate prevention when given two DSL joins dedupes incremental joins 1 (Active Record: v8.1)": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
 ? "#joining when joining implicitly duplicate prevention when given a DSL join with
   an Active Record join dedupes through joins 1 (Active Record: v8.1)"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
@@ -76,46 +32,6 @@
   "posts_authors"."author_id" LEFT OUTER JOIN "comments" AS "author_comments_posts"
   ON "author_comments_posts"."author_id" = "authors_posts_join_2"."id"
 ? "#joining when joining implicitly duplicate prevention when given a DSL join with
-  an Active Record join dedupes incremental outer joins 1 (Active Record: v8.1)"
-: SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-? "#joining when joining implicitly duplicate prevention when given a DSL join with
-  an Active Record join dedupes incremental outer joins (in any order) 1 (Active Record:
-  v8.1)"
-: SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-"#joining when joining implicitly outer joins multi 1 (Active Record: v8.1)": SELECT
-  "posts".* FROM "posts" LEFT OUTER JOIN "posts" AS "parents_posts" ON "parents_posts"."id"
-  = "posts"."parent_id" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-"#joining when joining implicitly correctly aliases when joining the same table twice 1 (Active Record: v8.1)": SELECT
-  "posts".* FROM "posts" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "posts" AS "parents_posts" ON "parents_posts"."id" = "posts"."parent_id"
-  LEFT OUTER JOIN "authors" AS "authors_posts" ON "authors_posts"."id" = "parents_posts"."author_id"
-  WHERE ("authors"."name" = 'Rick' OR "authors_posts"."name" = 'Flair')
-? "#joining when joining implicitly correctly identifies a table independenty joined
-  via separate associations 1 (Active Record: v8.1)"
-: SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" INNER JOIN "authors"
-  AS "authors_comments" ON "authors_comments"."id" = "comments"."author_id" WHERE
-  "authors_comments"."name" = 'Bob'
-"#joining when joining implicitly correctly aliases when joining the same table twice 1 (Active Record: v8.2)": SELECT
-  "posts".* FROM "posts" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "posts" AS "parents_posts" ON "parents_posts"."id" = "posts"."parent_id"
-  LEFT OUTER JOIN "authors" AS "authors_posts" ON "authors_posts"."id" = "parents_posts"."author_id"
-  WHERE ("authors"."name" = 'Rick' OR "authors_posts"."name" = 'Flair')
-? "#joining when joining implicitly correctly identifies a table independenty joined
-  via separate associations 1 (Active Record: v8.2)"
-: SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" INNER JOIN "authors"
-  AS "authors_comments" ON "authors_comments"."id" = "comments"."author_id" WHERE
-  "authors_comments"."name" = 'Bob'
-"#joining when joining implicitly outer joins multi 1 (Active Record: v8.2)": SELECT
-  "posts".* FROM "posts" LEFT OUTER JOIN "posts" AS "parents_posts" ON "parents_posts"."id"
-  = "posts"."parent_id" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-"#joining when joining implicitly duplicate prevention when given two DSL joins dedupes incremental joins 1 (Active Record: v8.2)": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
-? "#joining when joining implicitly duplicate prevention when given a DSL join with
   an Active Record join dedupes through joins 1 (Active Record: v8.2)"
 : SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
@@ -124,48 +40,3 @@
   OUTER JOIN "authors" AS "authors_posts_join_2" ON "authors_posts_join_2"."id" =
   "posts_authors"."author_id" LEFT OUTER JOIN "comments" AS "author_comments_posts"
   ON "author_comments_posts"."author_id" = "authors_posts_join_2"."id"
-? "#joining when joining implicitly duplicate prevention when given a DSL join with
-  an Active Record join dedupes incremental outer joins 1 (Active Record: v8.2)"
-: SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-? "#joining when joining implicitly duplicate prevention when given a DSL join with
-  an Active Record join dedupes incremental outer joins (in any order) 1 (Active Record:
-  v8.2)"
-: SELECT "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-"#joining when joining implicitly nested joins outer joins everything below an outer join, like Active Record 1": SELECT
-  "posts".* FROM "posts" LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-"#joining when joining implicitly nested joins joins a through association and then back again 1 (Active Record: v8.1)": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
-  LEFT OUTER JOIN "authors" AS "authors_posts_join" ON "authors_posts_join"."id" =
-  "posts_authors"."author_id" LEFT OUTER JOIN "comments" ON "comments"."author_id"
-  = "authors_posts_join"."id" LEFT OUTER JOIN "posts" AS "posts_comments" ON "posts_comments"."id"
-  = "comments"."post_id" LEFT OUTER JOIN "comments" AS "author_comments_posts" ON
-  "author_comments_posts"."author_id" = "authors_posts_join"."id"
-"#joining when joining implicitly nested joins joins a through association and then back again 1": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
-  LEFT OUTER JOIN "authors" "authors_posts_join" ON "authors_posts_join"."id" = "posts_authors"."author_id"
-  LEFT OUTER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id"
-  LEFT OUTER JOIN "posts" "posts_comments" ON "posts_comments"."id" = "comments"."post_id"
-  LEFT OUTER JOIN "comments" "author_comments_posts" ON "author_comments_posts"."author_id"
-  = "authors_posts_join"."id"
-"#joining when joining implicitly nested joins joins a through association and then back again 1 (Active Record: v8.2)": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
-  INNER JOIN "posts" AS "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
-  LEFT OUTER JOIN "authors" AS "authors_posts_join" ON "authors_posts_join"."id" =
-  "posts_authors"."author_id" LEFT OUTER JOIN "comments" ON "comments"."author_id"
-  = "authors_posts_join"."id" LEFT OUTER JOIN "posts" AS "posts_comments" ON "posts_comments"."id"
-  = "comments"."post_id" LEFT OUTER JOIN "comments" AS "author_comments_posts" ON
-  "author_comments_posts"."author_id" = "authors_posts_join"."id"
-"#joining when joining implicitly merges bind values 1 (Active Record: v8.1)": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."ugly" = TRUE AND "authors"."id"
-  = "posts"."author_id" INNER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-"#joining when joining implicitly merges bind values 1": SELECT "posts".* FROM "posts"
-  INNER JOIN "authors" ON "authors"."ugly" = 1 AND "authors"."id" = "posts"."author_id"
-  INNER JOIN "comments" ON "comments"."author_id" = "authors"."id"
-"#joining when joining implicitly merges bind values 1 (Active Record: v8.2)": SELECT
-  "posts".* FROM "posts" INNER JOIN "authors" ON "authors"."ugly" = TRUE AND "authors"."id"
-  = "posts"."author_id" INNER JOIN "comments" ON "comments"."author_id" = "authors"."id"
