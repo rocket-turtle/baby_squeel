@@ -69,10 +69,11 @@ module BabySqueel
       end
     end
 
-    # This method will be invoked by BabySqueel::Nodes::unwrap. Active
-    # Record gets a nested hash, one key per association in the chain (see
-    # Association#join_key). Names as keys let Active Record merge the chain
-    # with its own joins of the same association.
+    # Called by BabySqueel::Nodes.unwrap, which treats a Table like a Proxy;
+    # the result is not Arel but the nested hash Active Record joins from, one
+    # key per association in the chain (see Association#join_key). Names as
+    # keys let Active Record merge the chain with its own joins of the same
+    # association.
     def _arel(associations = [])
       return unless associations.any?
 
@@ -96,16 +97,13 @@ module BabySqueel
 
     # Walks the chain of associations down the join tree. A polymorphic
     # association is matched by the class it was joined with.
-    def find_join_association(current, associations)
-      associations.each do |association|
-        current = current.children.find do |child|
+    def find_join_association(root, associations)
+      associations.inject(root) do |node, association|
+        node.children.find do |child|
           child.reflection.name == association._reflection.name &&
             (!association._reflection.polymorphic? || association._polymorphic_klass == child.base_klass)
-        end
-        break if current.nil?
+        end || raise(Error, "Active Record's join tree has no join for '#{association._reflection.name}'.")
       end
-
-      current
     end
 
     def column?(name)

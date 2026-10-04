@@ -21,7 +21,7 @@ module BabySqueel
       end
 
       def _arel
-        if @parent.kind_of?(BabySqueel::Association)
+        if @parent.is_a?(BabySqueel::Association)
           @parent.find_alias[@name]
         else
           super

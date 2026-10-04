@@ -5,15 +5,13 @@ module BabySqueel
   module Nodes
     class << self
       # Wraps an Arel node in a Proxy so that methods called on it return
-      # wrapped nodes again. Proxy covers every node type: Arel::Nodes::Binary
-      # and Arel::Nodes::Grouping bring the alias, order and math predications
-      # with them through Arel::Nodes::NodeExpression.
+      # wrapped nodes again; anything else passes through untouched.
       def wrap(arel)
         arel.is_a?(Arel::Nodes::Node) ? Proxy.new(arel) : arel
       end
 
-      # Unwraps a BabySqueel::Proxy before being passed to
-      # ActiveRecord.
+      # Turns a DSL result into what Active Record accepts: a Proxy into its
+      # Arel node, a Table into the joins hash, an array element by element.
       def unwrap(node)
         if node.respond_to? :_arel
           unwrap node._arel
