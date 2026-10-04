@@ -13,12 +13,11 @@ module BabySqueel
     def initialize(parent, reflection)
       @parent = parent
       @_reflection = reflection
+      super(reflection.polymorphic? ? nil : reflection.klass)
+    end
 
-      # In the case of a polymorphic reflection these
-      # attributes will be set after calling #of
-      return if @_reflection.polymorphic?
-
-      super(@_reflection.klass)
+    def inspect
+      "#<#{self.class.name} #{_reflection.name}>"
     end
 
     def of(klass)

@@ -6,7 +6,7 @@ describe "#where.has" do
   end
 
   it "rejects an association in place of a condition" do
-    message = "where.has got #<BabySqueel::Association authors> instead of a condition"
+    message = "where.has got #<BabySqueel::Association author> instead of a condition"
 
     expect { Post.where.has { author } }.to raise_error(ArgumentError, message)
   end

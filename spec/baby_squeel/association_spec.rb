@@ -12,6 +12,7 @@ describe BabySqueel::Association do
     specify { expect(polymorph._scope).to be_nil }
     specify { expect(polymorph._table).to be_nil }
     specify { expect(polymorph._polymorphic_klass).to be_nil }
+    specify { expect(polymorph.inspect).to eq("#<BabySqueel::Association imageable>") }
 
     it "assigns the _scope" do
       expect(polymorph.of(Post)._scope).to eq(Post)

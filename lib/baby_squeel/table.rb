@@ -1,13 +1,14 @@
 module BabySqueel
   class Table
-    attr_accessor :_table, :_scope
-    attr_writer :_join
+    attr_accessor :_table, :_scope, :_join
 
     # scope is a model class or a relation; both answer arel_table,
-    # column_names and reflect_on_association.
+    # column_names and reflect_on_association. A polymorphic association
+    # passes nil until #of names the class.
     def initialize(scope)
       @_scope = scope
-      @_table = scope.arel_table
+      @_table = scope&.arel_table
+      @_join = Arel::Nodes::InnerJoin
     end
 
     # Constructs a new BabySqueel::Association. Raises
@@ -20,16 +21,12 @@ module BabySqueel
     end
 
     def inspect
-      "#<#{self.class.name} #{_table&.name}>"
+      "#<#{self.class.name} #{_table.name}>"
     end
 
     # See Arel::Table#[]
     def [](key)
       Nodes::Attribute.new(self, key)
-    end
-
-    def _join
-      @_join ||= Arel::Nodes::InnerJoin
     end
 
     # Instruct the table to be joined with a LEFT OUTER JOIN.
