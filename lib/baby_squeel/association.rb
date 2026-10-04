@@ -22,7 +22,9 @@ module BabySqueel
     end
 
     def of(klass)
-      raise PolymorphicSpecificationError.new(_reflection.name, klass) unless _reflection.polymorphic?
+      unless _reflection.polymorphic?
+        raise Error, "'#{_reflection.name}' is not a polymorphic association, #of only applies to one."
+      end
       raise ArgumentError, "#{klass.inspect} is not an Active Record model" unless model?(klass)
 
       clone.of! klass
@@ -57,12 +59,17 @@ module BabySqueel
     #        Post.joining { author }
     #
     def _arel(associations = [])
-      raise PolymorphicNotSpecifiedError, _reflection.name if _reflection.polymorphic? && _polymorphic_klass.nil?
+      polymorphic_class! if _reflection.polymorphic? && _polymorphic_klass.nil?
 
       @parent._arel([self, *associations])
     end
 
     private
+
+    def polymorphic_class!
+      raise Error, "'#{_reflection.name}' is a polymorphic association, name the class to join with " \
+                   "#{_reflection.name}.of(SomeModel)."
+    end
 
     def model?(klass)
       klass.is_a?(Class) && klass < ::ActiveRecord::Base
@@ -75,7 +82,7 @@ module BabySqueel
     end
 
     def method_missing(*, &)
-      raise PolymorphicNotSpecifiedError, _reflection.name if _scope.nil?
+      polymorphic_class! if _scope.nil?
 
       super
     end

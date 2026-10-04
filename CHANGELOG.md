@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- one BabySqueel::Error replaces NotFoundError, AssociationNotFoundError, PolymorphicSpecificationError and PolymorphicNotSpecifiedError; messages unchanged in substance
 - remove BabySqueel::JoinDependency::Builder; Table#find_alias resolves the alias itself
 - remove BabySqueel::Resolver; Table resolves columns and associations itself
 - BabySqueel::Join is a Data value

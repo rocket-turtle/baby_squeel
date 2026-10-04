@@ -14,7 +14,7 @@ module BabySqueel
     # an exception if the association is not found.
     def association(name)
       reflection = _scope.reflect_on_association(name)
-      raise AssociationNotFoundError.new(_scope.model_name, name) unless reflection
+      raise Error, "Association named '#{name}' was not found for #{_scope.model_name}." unless reflection
 
       Association.new(self, reflection)
     end
@@ -129,7 +129,7 @@ module BabySqueel
       elsif association?(name)
         association(name)
       else
-        raise NotFoundError.new(_scope.model_name, name)
+        raise Error, "There is no column or association named '#{name}' for #{_scope.model_name}."
       end
     end
   end

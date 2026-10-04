@@ -31,7 +31,7 @@ describe BabySqueel::Association do
     end
 
     it "throws a fit when the reflection is not polymorphic" do
-      expect { association.of(Post) }.to raise_error(BabySqueel::PolymorphicSpecificationError)
+      expect { association.of(Post) }.to raise_error(BabySqueel::Error, /'posts' is not a polymorphic association/)
     end
   end
 
@@ -51,7 +51,7 @@ describe BabySqueel::Association do
 
   describe "#method_missing" do
     it "raises when a polymorphic association is used without #of" do
-      expect { polymorph.name }.to raise_error(BabySqueel::PolymorphicNotSpecifiedError)
+      expect { polymorph.name }.to raise_error(BabySqueel::Error, /imageable\.of\(SomeModel\)/)
     end
 
     it "resolves once #of has named the class" do
@@ -82,7 +82,7 @@ describe BabySqueel::Association do
 
       context "when joining polymorphic associations" do
         it "throws an error if the _polymorphic_klass has not been set" do
-          expect { polymorph._arel }.to raise_error(BabySqueel::PolymorphicNotSpecifiedError)
+          expect { polymorph._arel }.to raise_error(BabySqueel::Error, /'imageable' is a polymorphic association/)
         end
       end
     end
