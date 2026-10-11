@@ -1,19 +1,17 @@
 describe BabySqueel::Nodes::Attribute do
   subject(:attribute) do
-    described_class.new(
-      create_table(Post),
-      :id
-    )
+    create_table(Post)[:id]
+  end
+
+  it "is the Arel attribute of the column, equal to Active Record's" do
+    expect(attribute).to be_an_instance_of(Arel::Attributes::Attribute)
+    expect(attribute).to eq(Post.arel_table[:id])
+    expect(attribute.hash).to eq(Post.arel_table[:id].hash)
   end
 
   describe "#in" do
     it "doesnt break existing in behavior" do
       expect(attribute.in([1, 2])).to produce_sql('"posts"."id" IN (1, 2)')
-    end
-
-    it "returns a BabySqueel node" do
-      relation = Post.select(:id)
-      expect(attribute.in(relation)).to respond_to(:_arel)
     end
 
     it "keeps the bind parameters of the relation" do
@@ -43,11 +41,6 @@ describe BabySqueel::Nodes::Attribute do
   describe "#not_in" do
     it "doesnt break existing not_in behavior" do
       expect(attribute.not_in([1, 2])).to produce_sql('"posts"."id" NOT IN (1, 2)')
-    end
-
-    it "returns a BabySqueel node" do
-      relation = Post.select(:id)
-      expect(attribute.not_in(relation)).to respond_to(:_arel)
     end
 
     it "applies eager loading to the relation" do

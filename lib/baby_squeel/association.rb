@@ -40,7 +40,7 @@ module BabySqueel
 
     public
 
-    # The key for this association in the hash Table#_arel hands to Active
+    # The key for this association in the hash Table#_joins hands to Active
     # Record: the name for an inner join, a Join carrying the join type and
     # the class for an outer join or a polymorphic association.
     def join_key
@@ -56,15 +56,21 @@ module BabySqueel
       @parent.find_alias([self, *associations])
     end
 
+    def [](key)
+      polymorphic_class! if _scope.nil?
+
+      Nodes::Attribute.from(find_alias[key])
+    end
+
     # Passes this association up the tree until it hits the top-level
     # BabySqueel::Table, which builds the hash Active Record joins from.
     #
     #        Post.joining { author }
     #
-    def _arel(associations = [])
+    def _joins(associations = [])
       polymorphic_class! if _reflection.polymorphic? && _polymorphic_klass.nil?
 
-      @parent._arel([self, *associations])
+      @parent._joins([self, *associations])
     end
 
     private

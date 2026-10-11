@@ -1,5 +1,17 @@
 ## [Unreleased]
 
+### Removed without deprecation
+- `BabySqueel::Nodes::Proxy` and `Nodes.wrap`: an attribute in a DSL block is a plain `Arel::Attributes::Attribute` of the aliased table, so every method on it is Arel's own and `==`, `!=` and `!` return a boolean (was `NoMethodError` on the node). As the block result `where.has` rejects the boolean with `ArgumentError`, and `and`/`or` reject it when the SQL is built. As an operand it is a value like any other: `id.eq(title == "x")` renders `"posts"."id" = 0` without an error
+
+### Changed
+- `Nodes::Attribute` is a module that extends the Arel attribute with `in`/`not_in` for a relation; the attribute stays an `Arel::Attributes::Attribute` equal to Active Record's, so `rewhere`, `merge` and `unscope` find it. `Table#[]` and `Association#[]` resolve the alias when the attribute is built instead of when the block result is unwrapped
+- `where.has` accepts nil, a String, a Hash or an Arel node and rejects anything else
+- `Table#_arel` and `Association#_arel` are `_joins`; they return the joins hash, not Arel
+- `where.has` names an array it rejects by its size and an attribute by table and column instead of inspecting them
+
+### Fixed
+- `attribute.clone.not_in(relation)` and `.clone.in(relation)` ran the relation when the block was evaluated and rendered its result: `1=1` and `1=0` for an empty one. The clone kept the plain Arel attribute without the DSL's handling of a relation; it now keeps it and renders the subquery. `dup` drops the extension like any singleton module and still runs the relation; use `clone`
+
 ## [3.0.0.internal5] - 2026-10-04
 
 ### Removed without deprecation

@@ -13,6 +13,7 @@ describe BabySqueel::Association do
     specify { expect(polymorph._table).to be_nil }
     specify { expect(polymorph._polymorphic_klass).to be_nil }
     specify { expect(polymorph.inspect).to eq("#<BabySqueel::Association imageable>") }
+    specify { expect { polymorph[:id] }.to raise_error(BabySqueel::Error, /'imageable' is a polymorphic association/) }
 
     it "assigns the _scope" do
       expect(polymorph.of(Post)._scope).to eq(Post)
@@ -67,23 +68,23 @@ describe BabySqueel::Association do
     end
   end
 
-  describe "#_arel" do
+  describe "#_joins" do
     context "when implicitly joining" do
       context "when inner joining" do
         it "resolves to a hash" do
-          expect(association._arel).to eq(posts: {})
+          expect(association._joins).to eq(posts: {})
         end
       end
 
       context "when outer joining" do
         it "resolves to a Join" do
-          expect(association.outer._arel).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin) => {})
+          expect(association.outer._joins).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin) => {})
         end
       end
 
       context "when joining polymorphic associations" do
         it "throws an error if the _polymorphic_klass has not been set" do
-          expect { polymorph._arel }.to raise_error(BabySqueel::Error, /'imageable' is a polymorphic association/)
+          expect { polymorph._joins }.to raise_error(BabySqueel::Error, /'imageable' is a polymorphic association/)
         end
       end
     end

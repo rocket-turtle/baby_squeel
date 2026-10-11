@@ -1,31 +1,25 @@
-require "baby_squeel/nodes/proxy"
-
 module BabySqueel
   module Nodes
-    class Attribute < Proxy
-      def initialize(parent, name)
-        @parent = parent
-        @name = name.to_s
-        super(parent._table[@name])
+    # Extends an Arel attribute of the table the final query will use with
+    # IN and NOT IN accepting a relation as a subquery.
+    #
+    # An extension of the instance, not a subclass: Arel's attribute is a
+    # Struct, whose == compares the class, and Active Record relies on that
+    # equality in rewhere and merge to find the predicate of a
+    # column.
+    module Attribute
+      # The DSL attribute for an attribute built by Arel::Table#[], which
+      # resolves an alias_attribute name to the column.
+      def self.from(arel_attribute)
+        arel_attribute.extend(self)
       end
 
       def in(rel)
-        rel.is_a?(::ActiveRecord::Relation) ? Nodes.wrap(subquery(rel)) : super
+        rel.is_a?(::ActiveRecord::Relation) ? subquery(rel) : super
       end
 
       def not_in(rel)
-        return super unless rel.is_a?(::ActiveRecord::Relation)
-
-        node = subquery(rel)
-        Nodes.wrap ::Arel::Nodes::NotIn.new(node.left, node.right)
-      end
-
-      def _arel
-        if @parent.is_a?(BabySqueel::Association)
-          @parent.find_alias[@name]
-        else
-          super
-        end
+        rel.is_a?(::ActiveRecord::Relation) ? subquery(rel).invert : super
       end
 
       private
@@ -36,7 +30,7 @@ module BabySqueel
       # relation selects nothing, rejects composite primary keys and keeps
       # the bind parameters.
       def subquery(rel)
-        ::ActiveRecord::PredicateBuilder::RelationHandler.new.call(_arel, rel)
+        ::ActiveRecord::PredicateBuilder::RelationHandler.new.call(self, rel)
       end
     end
   end

@@ -24,9 +24,10 @@ module BabySqueel
       "#<#{self.class.name} #{_table.name}>"
     end
 
-    # See Arel::Table#[]
+    # See Arel::Table#[]. The attribute belongs to the table the final query
+    # will use, which for an association is its alias.
     def [](key)
-      Nodes::Attribute.new(self, key)
+      Nodes::Attribute.from(_table[key])
     end
 
     # Instruct the table to be joined with a LEFT OUTER JOIN.
@@ -64,17 +65,15 @@ module BabySqueel
     def find_alias(associations = [])
       @aliases ||= {}
       @aliases[associations.map(&:join_key)] ||= begin
-        rel = _scope.joins _arel(associations)
+        rel = _scope.joins _joins(associations)
         find_join_association(join_root(rel), associations).table
       end
     end
 
-    # Called by BabySqueel::Nodes.unwrap, which treats a Table like a Proxy;
-    # the result is not Arel but the nested hash Active Record joins from, one
-    # key per association in the chain (see Association#join_key). Names as
-    # keys let Active Record merge the chain with its own joins of the same
-    # association.
-    def _arel(associations = [])
+    # The nested hash Active Record joins from, one key per association in
+    # the chain (see Association#join_key). Names as keys let Active Record
+    # merge the chain with its own joins of the same association.
+    def _joins(associations = [])
       return unless associations.any?
 
       associations.reverse.inject({}) do |children, assoc|

@@ -9,6 +9,8 @@ class UglyAuthor < Author
 end
 
 class Post < ActiveRecord::Base
+  alias_attribute :headline, :title
+
   has_many :comments
   belongs_to :author
   has_many :author_comments, through: :author, source: :comments

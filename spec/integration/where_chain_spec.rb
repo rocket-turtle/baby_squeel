@@ -11,9 +11,56 @@ describe "#where.has" do
     expect { Post.where.has { author } }.to raise_error(ArgumentError, message)
   end
 
+  it "rejects the table itself in place of a condition" do
+    message = "where.has got #<BabySqueel::DSL posts> instead of a condition"
+
+    expect { Post.where.has { self } }.to raise_error(ArgumentError, message)
+  end
+
+  it "resolves an alias_attribute through []" do
+    relation = Author.joins(:posts).where.has { posts[:headline].eq("x") }
+
+    expect(relation).to produce_sql(Author.joins(:posts).where(posts: { headline: "x" }))
+  end
+
+  it "resolves an alias_attribute through [] on an aliased table" do
+    relation = Post.joins(author: :posts).where.has { author.posts[:headline].eq("x") }
+
+    aliased_posts = Post.arel_table.alias("posts_authors")
+    expect(relation).to produce_sql(Post.joins(author: :posts).where(aliased_posts[:title].eq("x")))
+  end
+
+  it "lets rewhere replace a condition" do
+    relation = Post.where.has { title.eq("x") }.rewhere(title: "y")
+
+    expect(relation).to produce_sql(Post.where(title: "y"))
+  end
+
+  it "lets merge replace a condition on the same column, in both directions" do
+    expect(Post.where.has { title.eq("x") }.merge(Post.where(title: "y"))).to produce_sql(Post.where(title: "y"))
+    expect(Post.where(title: "x").merge(Post.where.has { title.eq("y") })).to produce_sql(Post.where(title: "y"))
+  end
+
+  it "lets unscope remove a condition by its attribute" do
+    relation = Post.where.has { title.eq("x") }.unscope(where: Post.arel_table[:title])
+
+    expect(relation).to produce_sql(Post.all)
+  end
+
   it "rejects an array of conditions" do
     expect { Post.where.has { [title.eq("x"), id.gt(1)] } }
-      .to raise_error(ArgumentError, /where\.has got \[.*\] instead of a condition/)
+      .to raise_error(ArgumentError, "where.has got an Array of 2 instead of a condition")
+  end
+
+  it "rejects an attribute in place of a condition" do
+    expect { Post.where.has { title } }
+      .to raise_error(ArgumentError, "where.has got the attribute posts.title instead of a condition")
+  end
+
+  it "rejects the boolean that ==, != and ! on an attribute return" do
+    expect { Post.where.has { title == "x" } }.to raise_error(ArgumentError, /got false instead of a condition/)
+    expect { Post.where.has { title != "x" } }.to raise_error(ArgumentError, /got true instead of a condition/)
+    expect { Post.where.has { !title } }.to raise_error(ArgumentError, /got false instead of a condition/)
   end
 
   it "resolves the alias of an association once per block" do
