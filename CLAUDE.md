@@ -6,5 +6,6 @@
 - Specs assert `produce_sql(<plain Active Record relation>)`; SQL without an equivalent, such as a polymorphic join, is a literal SQL heredoc passed to `produce_sql`. No snapshots.
 - Aliases come from Active Record's own join dependency (`DSL#find_alias`), never computed by hand. Version branches go into `active_record/version_helper.rb` only.
 - Known limitation, pending spec in `spec/integration/joining_spec.rb`: an outer join of an association Active Record already inner joins is added, not merged.
+- Proposals already decided against, with reasons: `docs/decisions.md`. Reopen one only with a new argument.
 - Consumer: one application, which also builds its permission scopes on `joining` and `where.has`. Before removing a feature, `grep -rE 'joining|where\.has'` its code and run its specs that touch the gem.
 - Release: version in `lib/baby_squeel/version.rb`, dated CHANGELOG section, commit only those two files, `gem build`, upload to the gemserver. `.ruby-version`, `.ruby-gemset` and built gems are git-ignored.
