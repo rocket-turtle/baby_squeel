@@ -17,33 +17,14 @@ shared_examples_for "a table" do
     end
   end
 
-  describe "#association" do
-    it "builds a table from the associated class" do
-      expect(table.association(:author)).to be_a(BabySqueel::Table)
-    end
-
-    it "allows chaining attributes" do
-      assoc = table.association :author
-      expect(assoc.id).to be_a(Arel::Attributes::Attribute)
-    end
-
-    it "raises an error for non-existant associations" do
-      expect do
-        table.association :non_existent
-      end.to raise_error(
-        BabySqueel::Error,
-        /named 'non_existent'(.+)for Post/
-      )
-    end
-  end
-
   describe "#method_missing" do
     it "resolves attributes" do
       expect(table.id).to be_an(Arel::Attributes::Attribute)
     end
 
-    it "resolves associations" do
+    it "resolves associations and their attributes" do
       expect(table.author).to be_a(BabySqueel::Association)
+      expect(table.author.id).to be_an(Arel::Attributes::Attribute)
     end
 
     it "raises a custom error for things that look like columns" do

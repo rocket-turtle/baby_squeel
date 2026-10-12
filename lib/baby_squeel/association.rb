@@ -1,4 +1,5 @@
 require "baby_squeel/table"
+require "baby_squeel/nodes/attribute"
 
 module BabySqueel
   class Association < Table
@@ -32,7 +33,7 @@ module BabySqueel
       clone.outer!
     end
 
-    # The key for this association in the hash Table#_joins hands to Active
+    # The key for this association in the hash DSL#_joins hands to Active
     # Record: the name for an inner join, a Join carrying the join type and
     # the class for an outer join or a polymorphic association. Joining and
     # resolving an alias both start from it, so a polymorphic association
@@ -47,7 +48,7 @@ module BabySqueel
       end
     end
 
-    # See BabySqueel::Table#find_alias.
+    # See BabySqueel::DSL#find_alias.
     def find_alias(associations = [])
       @parent.find_alias([self, *associations])
     end
@@ -56,8 +57,8 @@ module BabySqueel
       Nodes::Attribute.from(find_alias[key])
     end
 
-    # Passes this association up the tree until it hits the top-level
-    # BabySqueel::Table, which builds the hash Active Record joins from.
+    # Passes this association up the tree until it hits the
+    # BabySqueel::DSL, which builds the hash Active Record joins from.
     #
     #        Post.joining { author }
     #

@@ -20,16 +20,11 @@ describe BabySqueel::Association do
 
   describe "#of" do
     specify { expect(polymorph._scope).to be_nil }
-    specify { expect(polymorph._table).to be_nil }
     specify { expect(polymorph.inspect).to eq("#<BabySqueel::Association imageable>") }
     specify { expect { polymorph[:id] }.to raise_error(BabySqueel::Error, /'imageable' is a polymorphic association/) }
 
     it "assigns the _scope" do
       expect(polymorph.of(Post)._scope).to eq(Post)
-    end
-
-    it "assigns the _table" do
-      expect(polymorph.of(Post)._table).to eq(Post.arel_table)
     end
 
     it "rejects anything but a model class" do

@@ -1,131 +1,16 @@
-require "baby_squeel/nodes/attribute"
-
 module BabySqueel
+  # The base of DSL, the table of the scope, and Association: a scope whose
+  # columns and associations resolve by name.
   class Table
     attr_reader :_scope
 
-    # scope is a model class or a relation; both answer arel_table,
-    # column_names and reflect_on_association. A polymorphic association
+    # scope is the model class names resolve on. A polymorphic association
     # passes nil until #of names the class.
     def initialize(scope)
       @_scope = scope
     end
 
-    def _table
-      _scope&.arel_table
-    end
-
-    # Constructs a new BabySqueel::Association. Raises
-    # an exception if the association is not found.
-    def association(name)
-      reflection = _scope.reflect_on_association(name)
-      raise Error, "Association named '#{name}' was not found for #{_scope.model_name}." unless reflection
-
-      Association.new(self, reflection)
-    end
-
-    def inspect
-      "#<#{self.class.name} #{_table.name}>"
-    end
-
-    # See Arel::Table#[]. The attribute belongs to the table the final query
-    # will use, which for an association is its alias.
-    def [](key)
-      Nodes::Attribute.from(_table[key])
-    end
-
-    # When referencing a joined table, the tables that
-    # attributes reference can change (due to aliasing).
-    # This method allows BabySqueel::Nodes::Attribute
-    # instances to find what their alias will be.
-    #
-    # The chain is looked up in the joins the scope already has, inner and
-    # outer, so the alias is the one of the final query whichever way the
-    # scope joined it. A chain the scope does not join is added as an inner
-    # join first; Active Record then aliases it as it would in the query.
-    #
-    # Resolving means building the join dependency of the scope, so the
-    # result is kept per chain for the lifetime of this table, which is one
-    # DSL block. The scope does not change within it.
-    def find_alias(associations = [])
-      @aliases ||= {}
-      @aliases[associations.map(&:join_key)] ||= resolve(associations).table
-    end
-
-    # The nested hash Active Record joins from, one key per association in
-    # the chain (see Association#join_key). Names as keys let Active Record
-    # merge the chain with its own joins of the same association.
-    def _joins(associations = [])
-      return unless associations.any?
-
-      associations.reverse.inject({}) do |children, assoc|
-        { assoc.join_key => children }
-      end
-    end
-
     private
-
-    def resolve(associations)
-      find_join_association(scope_roots, associations) ||
-        find_join_association(join_roots(_scope.joins(_joins(associations))), associations) ||
-        raise(Error, "Active Record's join tree has no join for '#{associations.last._reflection.name}'.")
-    end
-
-    # The join trees of the scope as it is, built once per DSL block.
-    def scope_roots
-      @scope_roots ||= join_roots(_scope.all)
-    end
-
-    # The join roots of the join dependencies Active Record would build for
-    # relation.arel (see ActiveRecord::QueryMethods#build_joins): the one of
-    # the inner joins first, then the stashed ones of left_joins, so each
-    # JoinAssociation carries the table the final query will use.
-    def join_roots(relation)
-      buckets, join_type = relation.send(:build_join_buckets)
-      alias_tracker = relation.alias_tracker(buckets[:leading_join] + buckets[:join_node])
-      join_dependency = relation.construct_join_dependency(buckets[:named_join], join_type)
-      stashed = buckets[:stashed_join].map { |dependency| copy_join_dependency(dependency) }
-      join_dependency.join_constraints(stashed, alias_tracker, relation.references_values)
-      [join_dependency, *stashed].map { |dependency| dependency.send(:join_root) }
-    end
-
-    # join_constraints assigns each JoinAssociation its table once and keeps
-    # it. A join dependency merged in from another model is the object the
-    # scope holds, so walking it here would fix its tables for the final
-    # query, which may join more. The walk gets a copy of its tree.
-    def copy_join_dependency(dependency)
-      dependency.clone.tap do |copy|
-        copy.instance_variable_set(:@join_root, copy_join_part(dependency.send(:join_root)))
-      end
-    end
-
-    def copy_join_part(part)
-      part.clone.tap do |copy|
-        copy.instance_variable_set(:@children, part.children.map { |child| copy_join_part(child) })
-      end
-    end
-
-    # The JoinAssociation at the end of the chain in the first join tree
-    # that has the whole chain, nil when none has. A tree merged in from
-    # another model joins from that model's table and is skipped.
-    def find_join_association(roots, associations)
-      roots.each do |root|
-        next unless root.table == _table
-
-        node = associations.inject(root) { |parent, association| find_child(parent, association) || break }
-        return node if node
-      end
-
-      nil
-    end
-
-    # A polymorphic association is matched by the class it was joined with.
-    def find_child(parent, association)
-      parent.children.find do |child|
-        child.reflection.name == association._reflection.name &&
-          (!association._reflection.polymorphic? || association._scope == child.base_klass)
-      end
-    end
 
     def column?(name)
       _scope.column_names.include?(name.to_s)
@@ -146,8 +31,8 @@ module BabySqueel
 
       if column?(name)
         self[name]
-      elsif association?(name)
-        association(name)
+      elsif (reflection = _scope.reflect_on_association(name))
+        Association.new(self, reflection)
       else
         raise Error, "There is no column or association named '#{name}' for #{_scope.model_name}."
       end

@@ -1,6 +1,6 @@
 describe BabySqueel::Nodes::Attribute do
   subject(:attribute) do
-    create_table(Post)[:id]
+    create_dsl(Post)[:id]
   end
 
   it "is the Arel attribute of the column, equal to Active Record's" do
