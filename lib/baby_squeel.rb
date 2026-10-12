@@ -8,10 +8,11 @@ module BabySqueel
   class Error < StandardError; end
 
   # A key in the association tree Active Record's JoinDependency walks. Where
-  # a plain key is the association name, a Join also carries the join type
-  # and the class a polymorphic association is joined with. As a Data value
-  # it compares by content, so Active Record dedupes equal joins like names.
-  Join = Data.define(:name, :type, :klass)
+  # a plain key is the association name, a Join also says whether it is an
+  # outer join and which class a polymorphic association is joined with. As
+  # a Data value it compares by content, so Active Record dedupes equal
+  # joins like names.
+  Join = Data.define(:name, :outer, :klass)
 end
 
 ActiveSupport.on_load :active_record do

@@ -22,7 +22,7 @@ module BabySqueel
       private
 
       # Builds the JoinAssociations for one level of the association tree.
-      # BabySqueel::Join keys carry a join type and, for a polymorphic
+      # BabySqueel::Join keys carry an outer flag and, for a polymorphic
       # association, the class to join; every other key is Active Record's
       # own and goes through its builder, including its validity and
       # deprecation checks. The prepend sees every join of the application,
@@ -44,7 +44,7 @@ module BabySqueel
         reflection = with_klass(reflection, join.klass) if join.klass
         children = build(right, reflection.klass)
         join_association = ::ActiveRecord::Associations::JoinDependency::JoinAssociation.new(reflection, children)
-        join_association.instance_variable_set(OUTER, true) if join.type == Arel::Nodes::OuterJoin
+        join_association.instance_variable_set(OUTER, true) if join.outer
         join_association
       end
 

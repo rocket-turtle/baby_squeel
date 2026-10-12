@@ -11,9 +11,11 @@
 - `where.has` accepts nil, a String, a Hash or an Arel node and rejects anything else
 - `Table#_arel` and `Association#_arel` are `_joins`; they return the joins hash, not Arel
 - `BabySqueel::ActiveRecord::Base`, `lib/baby_squeel/errors.rb` and `lib/baby_squeel/join.rb` are folded into `lib/baby_squeel.rb`; `Join` has no default arguments
+- `Join` is `name, outer, klass`, with a boolean `outer` instead of an Arel join class
 - `DSL.new` takes the relation and resolves column and association names on its model, keeping the relation for the join trees the aliases come from; `DSL#_scope` is the model. A relation reaches `column_names`, `reflect_on_association` and `arel_table` only by delegating, which cost a `where.has` with eight attributes on a scope with four outer joins about 10%
 - the alias lookup and the joins hash of the block's table, `#[]`, `#find_alias`, `#_joins`, `#_table`, `#inspect` and their private helpers, live on `DSL`; `Table` is the base of `DSL` and `Association` and resolves names only, so an association no longer inherits helpers it never calls
 - `Association#_polymorphic_klass` is gone: `#of` sets the scope and nothing else, and the table is derived from the scope instead of stored
+- `Association#_join` is gone. An association does not change once built: `#of` and `#outer` return a new one
 - no prepend on `JoinAssociation`: a join association built from an `.outer` key carries the instance variable named by `JoinDependency::OUTER`, which `make_constraints` checks; `JoinAssociation#join_type` is gone. A marker module would give each such join its own singleton class, which made a query with three outer chains and four resolved chains about 8% slower
 - `JoinDependency#build` hands a level without a `BabySqueel::Join` to Active Record unchanged, so the joins, includes and eager loads of the rest of the application allocate as they would without the gem
 - no prepend on Active Record's reflections: the copy of a polymorphic reflection `JoinDependency` makes for the class named by `#of` is extended with the type condition, every other reflection's `join_scope` is Active Record's own (was a prepend on `AbstractReflection`)

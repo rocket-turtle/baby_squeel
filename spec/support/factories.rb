@@ -14,7 +14,7 @@ module Factories
     ActiveRecord::Associations::JoinDependency.new klass, klass.arel_table, associations, Arel::Nodes::InnerJoin
   end
 
-  def new_join(name, type = Arel::Nodes::InnerJoin, klass = nil)
-    BabySqueel::Join.new name, type, klass
+  def new_join(name, outer: false, klass: nil)
+    BabySqueel::Join.new name, outer, klass
   end
 end

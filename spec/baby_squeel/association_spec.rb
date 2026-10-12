@@ -9,12 +9,15 @@ describe BabySqueel::Association do
   end
 
   describe "#outer" do
-    it "flags the outer join" do
-      expect(association.outer._join).to eq(Arel::Nodes::OuterJoin)
+    it "leaves the original an inner join" do
+      association.outer
+      expect(association.join_key).to eq(:posts)
     end
 
-    it "does not mutate the original instance" do
-      expect(association.outer.object_id).not_to eq(association.object_id)
+    it "keeps the class #of names, in either order" do
+      expected = BabySqueel::Join.new(:imageable, true, Post)
+      expect(polymorph.of(Post).outer.join_key).to eq(expected)
+      expect(polymorph.outer.of(Post).join_key).to eq(expected)
     end
   end
 
@@ -43,11 +46,11 @@ describe BabySqueel::Association do
     end
 
     it "is a Join for an outer join" do
-      expect(association.outer.join_key).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin, nil))
+      expect(association.outer.join_key).to eq(BabySqueel::Join.new(:posts, true, nil))
     end
 
     it "is a Join with the class for a polymorphic association" do
-      expect(polymorph.of(Post).join_key).to eq(BabySqueel::Join.new(:imageable, Arel::Nodes::InnerJoin, Post))
+      expect(polymorph.of(Post).join_key).to eq(BabySqueel::Join.new(:imageable, false, Post))
     end
   end
 
@@ -78,7 +81,7 @@ describe BabySqueel::Association do
 
       context "when outer joining" do
         it "resolves to a Join" do
-          expect(association.outer._joins).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin, nil) => {})
+          expect(association.outer._joins).to eq(BabySqueel::Join.new(:posts, true, nil) => {})
         end
       end
 

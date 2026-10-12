@@ -4,13 +4,16 @@ require "baby_squeel/nodes/attribute"
 module BabySqueel
   class Association < Table
     # An Active Record association reflection
-    attr_reader :_reflection, :_join
+    attr_reader :_reflection
 
-    def initialize(parent, reflection)
+    # klass is the class #of names for a polymorphic association, which has
+    # no scope until then. An association does not change once built; #of
+    # and #outer return a new one.
+    def initialize(parent, reflection, outer: false, klass: nil)
       @parent = parent
       @_reflection = reflection
-      @_join = Arel::Nodes::InnerJoin
-      super(reflection.polymorphic? ? nil : reflection.klass)
+      @outer = outer
+      super(klass || (reflection.klass unless reflection.polymorphic?))
     end
 
     def inspect
@@ -25,24 +28,24 @@ module BabySqueel
       end
       raise ArgumentError, "#{klass.inspect} is not an Active Record model" unless model?(klass)
 
-      clone.scope! klass
+      Association.new(@parent, _reflection, outer: @outer, klass:)
     end
 
     # Instruct the association to be joined with a LEFT OUTER JOIN.
     def outer
-      clone.outer!
+      Association.new(@parent, _reflection, outer: true, klass: _scope)
     end
 
     # The key for this association in the hash DSL#_joins hands to Active
-    # Record: the name for an inner join, a Join carrying the join type and
+    # Record: the name for an inner join, a Join carrying the outer flag and
     # the class for an outer join or a polymorphic association. Joining and
     # resolving an alias both start from it, so a polymorphic association
     # without #of fails here.
     def join_key
       polymorphic_class! if _scope.nil?
 
-      if _join == Arel::Nodes::OuterJoin || _reflection.polymorphic?
-        Join.new(_reflection.name, _join, _reflection.polymorphic? ? _scope : nil)
+      if @outer || _reflection.polymorphic?
+        Join.new(_reflection.name, @outer, _reflection.polymorphic? ? _scope : nil)
       else
         _reflection.name
       end
@@ -64,18 +67,6 @@ module BabySqueel
     #
     def _joins(associations = [])
       @parent._joins([self, *associations])
-    end
-
-    protected
-
-    def outer!
-      @_join = Arel::Nodes::OuterJoin
-      self
-    end
-
-    def scope!(scope)
-      @_scope = scope
-      self
     end
 
     private
