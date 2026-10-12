@@ -22,10 +22,18 @@ class Post < ActiveRecord::Base
 
   belongs_to :parent, class_name: "Post"
   belongs_to :child, class_name: "Post"
+  has_many :kids, -> { joins(:author).where.has { author.name.eq("a").and(title.eq("t")) } },
+           class_name: "Post", foreign_key: :parent_id
+  belongs_to :titled_parent, class_name: "TitledPost", foreign_key: :parent_id
 
   if BabySqueel::ActiveRecord::VersionHelper.deprecated_associations?
     has_many :deprecated_comments, class_name: "Comment", foreign_key: :post_id, deprecated: true
   end
+end
+
+class TitledPost < ActiveRecord::Base
+  self.table_name = "posts"
+  default_scope { where.has { title.eq("t") } }
 end
 
 class Comment < ActiveRecord::Base

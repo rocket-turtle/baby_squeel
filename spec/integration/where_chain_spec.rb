@@ -141,6 +141,39 @@ describe "#where.has" do
     expect(relation).to produce_sql(scope.call.joins(:author).where(comments: { id: 1 }))
   end
 
+  it "renders the columns and chains of an association scope on the alias Active Record gives the association" do
+    # Post has_many :kids, -> { joins(:author).where.has { author.name.eq("a").and(title.eq("t")) } }
+    # 8.1 writes AS before a table alias, 8.0 does not
+    expect(Post.joins(:kids).to_sql.gsub('" AS "', '" "')).to produce_sql(<<~SQL)
+      SELECT "posts".* FROM "posts"
+      INNER JOIN "posts" "kids_posts" ON "kids_posts"."parent_id" = "posts"."id"
+      INNER JOIN "authors" ON "authors"."id" = "kids_posts"."author_id"
+      AND "authors"."name" = 'a' AND "kids_posts"."title" = 't'
+    SQL
+  end
+
+  it "renders a default scope on the alias Active Record gives the association" do
+    # TitledPost default_scope { where.has { title.eq("t") } }, joined from Post as titled_parent
+    expect(Post.joins(:titled_parent).to_sql.gsub('" AS "', '" "')).to produce_sql(<<~SQL)
+      SELECT "posts".* FROM "posts"
+      INNER JOIN "posts" "titled_parents_posts" ON "titled_parents_posts"."title" = 't'
+      AND "titled_parents_posts"."id" = "posts"."parent_id"
+    SQL
+  end
+
+  it "resolves a chain in an association scope like Active Record's own conditions there" do
+    # The scope is built before the outer query joins authors as well, so its
+    # author join ends up as "authors_posts" while the condition stays on
+    # "authors", as where(authors: { name: "a" }) in the scope would.
+    expect(Post.joins(:author, :kids).to_sql.gsub('" AS "', '" "')).to produce_sql(<<~SQL)
+      SELECT "posts".* FROM "posts"
+      INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+      INNER JOIN "posts" "kids_posts" ON "kids_posts"."parent_id" = "posts"."id"
+      INNER JOIN "authors" "authors_posts" ON "authors_posts"."id" = "kids_posts"."author_id"
+      AND "authors"."name" = 'a' AND "kids_posts"."title" = 't'
+    SQL
+  end
+
   it "resolves the alias of a chain joining outer joins beside another join of the same table" do
     relation = Post.joining { [parent.outer.author.outer, comments.outer.author.outer] }
                    .where.has { comments.author.name.eq("x") }

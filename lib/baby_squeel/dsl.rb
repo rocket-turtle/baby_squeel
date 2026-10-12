@@ -11,8 +11,10 @@ module BabySqueel
       super(relation.model)
     end
 
+    # The relation's own table, which inside an association scope carries
+    # the alias Active Record gives that association.
     def _table
-      _scope.arel_table
+      @relation.table
     end
 
     def inspect
