@@ -16,7 +16,10 @@
 - `where.has` names an array it rejects by its size and an attribute by table and column instead of inspecting them
 
 ### Fixed
+- `where.has` resolved the wrong alias for a chain the scope joins with `left_joins` when another join uses the same table: the chain was always added as an inner join, which Active Record aliases before the outer joins. The chain is now looked up in the joins the scope has first. Joins of `eager_load` and `includes` are not among them, they are built after `where.has` runs
+- `where.has` resolved a chain to the join of another model merged into the scope when that model has an association of the same name: `Post.joins(:comments).left_joins(:author).merge(Comment.joins(:author))` put `author.name` on the comment's author. Only join trees that start at the scope's table are searched
 - `attribute.clone.not_in(relation)` and `.clone.in(relation)` ran the relation when the block was evaluated and rendered its result: `1=1` and `1=0` for an empty one. The clone kept the plain Arel attribute without the DSL's handling of a relation; it now keeps it and renders the subquery. `dup` drops the extension like any singleton module and still runs the relation; use `clone`
+- looking a chain up in the scope's joins fixed the tables of a join dependency merged in from another model: Active Record assigns them once, so a join added afterwards, `Post.joins(:comments).merge(Comment.joins(author: :posts)).where.has { … }.joins(:author)`, joined the merged `posts` on the post's `authors` instead of the comment's. The lookup walks a copy of those trees
 
 ### Tooling
 - the snapshot infrastructure is gone (`__snapshots__/*.yaml`, `match_sql_snapshot`, `variants:`, `UPDATE_SNAPSHOTS`, `rake snapshots:prune`). Of the ten snapshot examples seven assert `produce_sql` with an Active Record relation or the literal SQL, the documented duplicate join with the `AS` of 8.1 removed; the three that checked plain Active Record are gone

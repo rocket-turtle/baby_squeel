@@ -117,6 +117,38 @@ describe "#where.has" do
     expect(relation).to produce_sql(Post.joins(author: :comments).where(Comment.arel_table[:id].gt(0)))
   end
 
+  it "resolves the alias of a chain the scope left_joins beside another join of the same table" do
+    scope = Post.left_joins(parent: :author).left_joins(comments: :author)
+    relation = scope.where.has { comments.author.name.eq("x") }
+
+    expect(relation).to produce_sql(scope.where(authors_comments: { name: "x" }))
+  end
+
+  it "resolves the alias of a chain past the joins merged in from another model" do
+    scope = Post.joins(:comments).left_joins(:author).merge(Comment.joins(:author))
+    relation = scope.where.has { author.name.eq("x") }
+
+    expect(relation).to produce_sql(scope.where(authors_posts: { name: "x" }))
+  end
+
+  it "leaves the joins merged in from another model to the final query" do
+    scope = -> { Post.joins(:comments).merge(Comment.joins(author: :posts)) }
+    relation = scope.call.where.has { author.name.eq("x") }.joins(:author)
+
+    expect(relation).to produce_sql(scope.call.joins(:author).where(authors: { name: "x" }))
+
+    relation = scope.call.where.has { comments.id.eq(1) }.joins(:author)
+    expect(relation).to produce_sql(scope.call.joins(:author).where(comments: { id: 1 }))
+  end
+
+  it "resolves the alias of a chain joining outer joins beside another join of the same table" do
+    relation = Post.joining { [parent.outer.author.outer, comments.outer.author.outer] }
+                   .where.has { comments.author.name.eq("x") }
+    active_record = Post.left_joins(parent: :author, comments: :author).where(authors_comments: { name: "x" })
+
+    expect(relation).to produce_sql(active_record)
+  end
+
   it "wheres on an aliased association" do
     relation = Post.joins(author: :posts).where.has do
       author.posts.id.gt(0)
