@@ -83,7 +83,7 @@ describe BabySqueel::Association do
       end
 
       context "when joining polymorphic associations" do
-        it "throws an error if the _polymorphic_klass has not been set" do
+        it "raises until #of names the class" do
           expect { polymorph._joins }.to raise_error(BabySqueel::Error, /'imageable' is a polymorphic association/)
         end
       end
@@ -95,8 +95,8 @@ describe BabySqueel::Association do
       expect(association.find_alias.name).to eq("posts")
     end
 
-    # Without `reconstruct_with_type_caster`, this would fail in Active Record 5.
-    # See: https://github.com/rails/rails/pull/27994
+    # The alias table has to carry the model's type caster, otherwise "5"
+    # would stay a string.
     it "uses the correct type_caster" do
       view_count = association.find_alias[:view_count]
       expect(view_count.eq("5")).to produce_sql('"posts"."view_count" = 5')

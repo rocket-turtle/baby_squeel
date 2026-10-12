@@ -15,6 +15,7 @@
 ### Tooling
 - the snapshot infrastructure is gone (`__snapshots__/*.yaml`, `match_sql_snapshot`, `variants:`, `UPDATE_SNAPSHOTS`, `rake snapshots:prune`). Of the ten snapshot examples seven assert `produce_sql` with an Active Record relation or the literal SQL, the documented duplicate join with the `AS` of 8.1 removed; the three that checked plain Active Record are gone
 - `produce_sql` is one matcher file and still compares for equality
+- specs that only repeated Active Record or each other are gone: `join_dependency_spec`, all of `join_association_spec` but the thread-safety example, the plain Active Record checks in `rails_integration_spec`, `join_spec`, and a spec for the `not_in` code before `In#invert`. `table_spec` is part of `dsl_spec`, and the two spec helper modules are one. The integration specs fail without the outer marker, the `make_constraints` override, the polymorphic type condition or the reflection clone
 
 ## [3.0.0.internal5] - 2026-10-04
 

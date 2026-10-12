@@ -55,17 +55,5 @@ describe BabySqueel::Nodes::Attribute do
 
       expect(relation.to_sql).to include('NOT IN (SELECT "authors"."id" FROM "authors" WHERE')
     end
-
-    # not_in takes the IN node apart, so it depends on the handler returning
-    # an Arel::Nodes::In whose left is the attribute and whose right is the
-    # select statement of the relation.
-    it "builds on the node the RelationHandler returns" do
-      handler = ActiveRecord::PredicateBuilder::RelationHandler.new
-      node = handler.call(Post.arel_table[:author_id], Author.select(:id))
-
-      expect(node).to be_an_instance_of(Arel::Nodes::In)
-      expect(node.left).to eq(Post.arel_table[:author_id])
-      expect(node.right).to be_a(Arel::Nodes::SelectStatement)
-    end
   end
 end

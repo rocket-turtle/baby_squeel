@@ -1,11 +1,5 @@
-require "shared_examples/table"
-
 describe BabySqueel::DSL do
   subject(:dsl) { create_dsl Post }
-
-  it_behaves_like "a table" do
-    subject(:table) { dsl }
-  end
 
   describe "#evaluate" do
     context "when an arity is given" do
