@@ -141,6 +141,15 @@ describe "#where.has" do
     expect(relation).to produce_sql(scope.call.joins(:author).where(comments: { id: 1 }))
   end
 
+  it "resolves a chain past an inner join of the same association" do
+    # The scope joins author twice, inner and outer; only the outer one has
+    # the rest of the chain.
+    scope = Post.joins(:author).joining { [author.outer.comments.outer, author.outer.posts.outer.comments.outer] }
+
+    expect(scope.where.has { author.posts.comments.id.eq(1) }).to produce_sql(scope.where(comments_posts: { id: 1 }))
+    expect(scope.where.has { author.outer.comments.outer.id.eq(1) }).to produce_sql(scope.where(comments: { id: 1 }))
+  end
+
   it "renders the columns and chains of an association scope on the alias Active Record gives the association" do
     # Post has_many :kids, -> { joins(:author).where.has { author.name.eq("a").and(title.eq("t")) } }
     # 8.1 writes AS before a table alias, 8.0 does not

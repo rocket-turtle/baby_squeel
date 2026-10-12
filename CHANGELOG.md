@@ -23,6 +23,7 @@
 - `where.has` names an array it rejects by its size and an attribute by table and column instead of inspecting them
 
 ### Fixed
+- with an association joined twice, inner and outer, a chain through the outer one followed the inner one: it resolved to the alias of a join the query did not have, or raised (internal3 raised `NoMethodError`). Each child of the same name is tried in turn now
 - inside an association scope that Active Record joins under an alias, `has_many :kids, -> { where.has { title.eq("t") } }`, a column of the scope's own table rendered on the unaliased table, `"posts"."title"` instead of `"kids_posts"."title"`. The same held for a `default_scope` built with `where.has` on a model joined under an alias. The block's table is the relation's table
 - `where.has` resolved the wrong alias for a chain the scope joins with `left_joins` when another join uses the same table: the chain was always added as an inner join, which Active Record aliases before the outer joins. The chain is now looked up in the joins the scope has first. Joins of `eager_load` and `includes` are not among them, they are built after `where.has` runs
 - `where.has` resolved a chain to the join of another model merged into the scope when that model has an association of the same name: `Post.joins(:comments).left_joins(:author).merge(Comment.joins(:author))` put `author.name` on the comment's author. Only join trees that start at the scope's table are searched

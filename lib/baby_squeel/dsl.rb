@@ -114,7 +114,22 @@ module BabySqueel
       roots.each do |root|
         next unless root.table == _table
 
-        node = associations.inject(root) { |parent, association| find_child(parent, association) || break }
+        node = find_path(root, associations)
+        return node if node
+      end
+
+      nil
+    end
+
+    # Follows the chain down from parent. An association joined twice, inner
+    # and outer, has two children of the same name; each is tried in turn,
+    # because only one of them may join the rest of the chain.
+    def find_path(parent, associations)
+      return parent if associations.empty?
+
+      association, *rest = associations
+      parent.children.each do |child|
+        node = child?(child, association) && find_path(child, rest)
         return node if node
       end
 
@@ -122,11 +137,9 @@ module BabySqueel
     end
 
     # A polymorphic association is matched by the class it was joined with.
-    def find_child(parent, association)
-      parent.children.find do |child|
-        child.reflection.name == association._reflection.name &&
-          (!association._reflection.polymorphic? || association._scope == child.base_klass)
-      end
+    def child?(child, association)
+      child.reflection.name == association._reflection.name &&
+        (!association._reflection.polymorphic? || association._scope == child.base_klass)
     end
   end
 end
