@@ -12,6 +12,11 @@ describe "#joining" do
       expect(relation).to produce_sql(Post.joins(:author))
     end
 
+    it "joins every table in an array, nested or empty" do
+      expect(Post.joining { [[author], :comments] }).to produce_sql(Post.joins(:author, :comments))
+      expect(Post.joining { [] }).to produce_sql(Post.all)
+    end
+
     context "outer joins" do
       it "single" do
         relation = Post.joining { author.outer }

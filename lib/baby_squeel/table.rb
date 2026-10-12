@@ -1,3 +1,5 @@
+require "baby_squeel/nodes/attribute"
+
 module BabySqueel
   class Table
     attr_reader :_scope
@@ -30,16 +32,6 @@ module BabySqueel
     # will use, which for an association is its alias.
     def [](key)
       Nodes::Attribute.from(_table[key])
-    end
-
-    # Evaluates a DSL block. If arity is given, this method
-    # `yield` itself, rather than `instance_eval`.
-    def evaluate(&block)
-      if block.arity.zero?
-        instance_eval(&block)
-      else
-        yield(self)
-      end
     end
 
     # When referencing a joined table, the tables that

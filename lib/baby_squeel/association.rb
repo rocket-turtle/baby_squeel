@@ -1,5 +1,4 @@
 require "baby_squeel/table"
-require "baby_squeel/join"
 
 module BabySqueel
   class Association < Table

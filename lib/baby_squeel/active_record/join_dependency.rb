@@ -1,4 +1,3 @@
-require "baby_squeel/join"
 require "baby_squeel/active_record/version_helper"
 
 module BabySqueel

@@ -48,7 +48,7 @@ describe BabySqueel::Association do
     end
 
     it "is a Join for an outer join" do
-      expect(association.outer.join_key).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin))
+      expect(association.outer.join_key).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin, nil))
     end
 
     it "is a Join with the class for a polymorphic association" do
@@ -83,7 +83,7 @@ describe BabySqueel::Association do
 
       context "when outer joining" do
         it "resolves to a Join" do
-          expect(association.outer._joins).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin) => {})
+          expect(association.outer._joins).to eq(BabySqueel::Join.new(:posts, Arel::Nodes::OuterJoin, nil) => {})
         end
       end
 

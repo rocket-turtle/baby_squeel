@@ -2,12 +2,14 @@
 
 ### Removed without deprecation
 - `BabySqueel::Nodes::Proxy` and `Nodes.wrap`: an attribute in a DSL block is a plain `Arel::Attributes::Attribute` of the aliased table, so every method on it is Arel's own and `==`, `!=` and `!` return a boolean (was `NoMethodError` on the node). As the block result `where.has` rejects the boolean with `ArgumentError`, and `and`/`or` reject it when the SQL is built. As an operand it is a value like any other: `id.eq(title == "x")` renders `"posts"."id" = 0` without an error
+- `Nodes.unwrap` and `DSL.evaluate`: `joining` turns the tables in the block result into joins hashes itself; `#evaluate` is on `DSL` only, not on `Table` and `Association`
 - `#outer` on the block's own table: it set a join type nothing read, so `Post.joining { outer }` joined nothing. It is a method of `Association` only, and on the table `outer` resolves as a column like any other name
 
 ### Changed
 - `Nodes::Attribute` is a module that extends the Arel attribute with `in`/`not_in` for a relation; the attribute stays an `Arel::Attributes::Attribute` equal to Active Record's, so `rewhere`, `merge` and `unscope` find it. `Table#[]` and `Association#[]` resolve the alias when the attribute is built instead of when the block result is unwrapped
 - `where.has` accepts nil, a String, a Hash or an Arel node and rejects anything else
 - `Table#_arel` and `Association#_arel` are `_joins`; they return the joins hash, not Arel
+- `BabySqueel::ActiveRecord::Base`, `lib/baby_squeel/errors.rb` and `lib/baby_squeel/join.rb` are folded into `lib/baby_squeel.rb`; `Join` has no default arguments
 - `Association#_polymorphic_klass` is gone: `#of` sets the scope and nothing else, and the table is derived from the scope instead of stored
 - no prepend on Active Record's reflections: the copy of a polymorphic reflection `JoinDependency` makes for the class named by `#of` is extended with the type condition, every other reflection's `join_scope` is Active Record's own (was a prepend on `AbstractReflection`)
 - joining and resolving an alias reject a polymorphic association without `#of` in `Association#join_key`, which `#[]` and `#_joins` reach; `method_missing` keeps its own check for names looked up on it. The message is unchanged
