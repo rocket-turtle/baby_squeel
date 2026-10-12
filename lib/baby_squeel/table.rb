@@ -13,7 +13,7 @@ module BabySqueel
     private
 
     def column?(name)
-      _scope.column_names.include?(name.to_s)
+      _scope.columns_hash.key?(name.to_s)
     end
 
     def association?(name)

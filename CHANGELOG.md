@@ -7,6 +7,7 @@
 - `Table#association(name)`: a name resolves by itself, `author` rather than `association(:author)`, and a column or association named `association` is no longer hidden behind the method
 
 ### Changed
+- a name in a block is looked up in the model's `columns_hash` instead of `column_names`: a `where.has` naming six columns of a table with 54 is about 9% faster
 - `Nodes::Attribute` is a module that extends the Arel attribute with `in`/`not_in` for a relation; the attribute stays an `Arel::Attributes::Attribute` equal to Active Record's, so `rewhere`, `merge` and `unscope` find it. `Table#[]` and `Association#[]` resolve the alias when the attribute is built instead of when the block result is unwrapped
 - `where.has` accepts nil, a String, a Hash or an Arel node and rejects anything else
 - `Table#_arel` and `Association#_arel` are `_joins`; they return the joins hash, not Arel

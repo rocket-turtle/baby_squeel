@@ -60,9 +60,6 @@ the same association; three specs fail.
 Active Record writes each join's table into those trees, which the scope
 holds, so a join added after `where.has` would get the wrong ON clause.
 
-**`columns_hash.key?` instead of `column_names.include?`.** Measured the same
-(about 0.1 µs).
-
 **Shorten `WhereChain#rejected`.** Saves about eight lines but makes the
 errors worse: inspecting an array or attribute prints every node or the
 whole table. The messages are specified.
