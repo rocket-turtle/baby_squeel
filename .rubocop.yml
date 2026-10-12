@@ -7,9 +7,9 @@ inherit_mode:
 AllCops:
   TargetRubyVersion: 3.3
   NewCops: enable
+  SuggestExtensions: false
   Exclude:
     - 'bin/**/*'
-    - 'exe/**/*'
 
 Gemspec/DevelopmentDependencies:
   Enabled: false
@@ -27,25 +27,6 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
 
-# Existing code uses alias in class bodies
-Style/Alias:
-  EnforcedStyle: prefer_alias_method
-
 # Documentation comments are not maintained for this fork
 Style/Documentation:
   Enabled: false
-
-# Error messages interpolate named values
-Style/FormatStringToken:
-  EnforcedStyle: template
-
-# Proxy inherits from BasicObject, which has no respond_to? for Ruby to hook
-# respond_to_missing? into, so respond_to? is defined directly instead
-Style/MissingRespondToMissing:
-  Exclude:
-    - 'lib/baby_squeel/nodes/proxy.rb'
-
-# respond_to?'s second parameter is positional by Ruby's calling convention
-Style/OptionalBooleanParameter:
-  Exclude:
-    - 'lib/baby_squeel/nodes/proxy.rb'

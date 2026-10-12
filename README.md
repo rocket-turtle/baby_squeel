@@ -192,20 +192,18 @@ The following methods give you access to BabySqueel's DSL:
 
 1. Pick an Active Record version to develop against, then export it: `export AR='~> 8.0.4'`. Unset, the newest version the gemspec allows is used.
 2. Run `bin/setup` to install dependencies.
-3. Run `rake` to run the specs.
+3. Run `bundle exec rspec` to run the specs.
 
 Onliner to run the specs with different rails versions
 ```
 gem install bundler:4.0.8
 
-export AR='~> 8.0.4'; bin/setup; rake
-export AR='~> 8.1.1'; bin/setup; rake
-export AR='main'; bin/setup; rake
+export AR='~> 8.0.4'; bin/setup; bundle exec rspec
+export AR='~> 8.1.1'; bin/setup; bundle exec rspec
+export AR='main'; bin/setup; bundle exec rspec
 
 bundle exec rubocop
 ```
-
-`COVERAGE=1` writes a coverage report to `coverage/`. Off by default, so a plain run does not produce one.
 
 Specs assert `produce_sql(<the Active Record relation>)`, which also proves the gem does what Active Record does. SQL that has no plain Active Record equivalent, such as a polymorphic join, is asserted as a literal SQL string.
 

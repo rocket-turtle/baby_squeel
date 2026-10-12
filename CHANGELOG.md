@@ -16,6 +16,7 @@
 - the snapshot infrastructure is gone (`__snapshots__/*.yaml`, `match_sql_snapshot`, `variants:`, `UPDATE_SNAPSHOTS`, `rake snapshots:prune`). Of the ten snapshot examples seven assert `produce_sql` with an Active Record relation or the literal SQL, the documented duplicate join with the `AS` of 8.1 removed; the three that checked plain Active Record are gone
 - `produce_sql` is one matcher file and still compares for equality
 - specs that only repeated Active Record or each other are gone: `join_dependency_spec`, all of `join_association_spec` but the thread-safety example, the plain Active Record checks in `rails_integration_spec`, `join_spec`, and a spec for the `not_in` code before `In#invert`. `table_spec` is part of `dsl_spec`, and the two spec helper modules are one. The integration specs fail without the outer marker, the `make_constraints` override, the polymorphic type condition or the reflection clone
+- `pry`, `byebug`, SimpleCov with `COVERAGE=1`, the `Rakefile` with `rake`, and the `bundler` development dependency are gone; specs run with `bundle exec rspec` as in CI, `bin/console` starts IRB, which the Gemfile lists because it leaves the default gems with Ruby 4.0, debug with `binding.irb` or `debug`. `.gitignore` drops `.byebug_history` and `/coverage/`, and the gemspec loads the version with `require_relative`
 
 ## [3.0.0.internal5] - 2026-10-04
 

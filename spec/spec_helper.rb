@@ -1,13 +1,4 @@
 require "bundler/setup"
-require "byebug"
-
-if ENV["COVERAGE"]
-  require "simplecov"
-  SimpleCov.start do
-    enable_coverage :branch
-    skip "spec/"
-  end
-end
 
 require "baby_squeel"
 require "support/schema"

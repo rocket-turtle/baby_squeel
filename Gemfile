@@ -11,8 +11,5 @@ elsif ENV["AR"]
   gem "activerecord", ENV["AR"]
 end
 
-group :test do
-  gem "byebug"
-  gem "pry"
-  gem "simplecov"
-end
+# bin/console; irb leaves the default gems with Ruby 4.0
+gem "irb", group: :development
