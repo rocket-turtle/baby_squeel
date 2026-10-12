@@ -6,7 +6,7 @@ module BabySqueel
     # An extension of the instance, not a subclass: Arel's attribute is a
     # Struct, whose == compares the class, and Active Record relies on that
     # equality in rewhere and merge to find the predicate of a
-    # column.
+    # column. clone keeps the extension, dup drops it.
     module Attribute
       # The DSL attribute for an attribute built by Arel::Table#[], which
       # resolves an alias_attribute name to the column.

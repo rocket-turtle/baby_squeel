@@ -32,7 +32,7 @@ BabySqueel's blocks use `instance_eval`, which means you won't have access to yo
 Post.where.has { |post| post.created_at.gteq(2.weeks.ago) }
 ```
 
-A column whose name is also a Ruby method, such as `hash`, `display` or `format`, or one of the DSL's own methods, `association` and `find_alias`, on the block's table `evaluate`, on an association `outer`, `of` and `join_key`, cannot be resolved by name: Ruby finds the method first. Use `[]` for those columns:
+A column whose name is also a Ruby method, such as `hash`, `display` or `format`, or the name of a method of the DSL itself, `find_alias`, on the block's table also `evaluate` and its private helpers such as `resolve`, on an association `outer`, `of` and `join_key`, cannot be resolved by name: Ruby finds the method first. Use `[]` for those columns:
 
 ```ruby
 Post.where.has { self[:hash].eq('abc') }
@@ -171,13 +171,15 @@ Picture.joining { imageable.of(Post) }
 
 ## How it works
 
-`joining` hands Active Record a nested hash of the associations in the block. Inner joins are keyed by name, so Active Record merges them with its own `joins`. An outer join or a polymorphic `of` is keyed by a `BabySqueel::Join` value carrying the join type and the class; a prepend on `JoinDependency#build` turns those keys into join associations, one on `make_constraints` lets the outer type win over the inner tree, and the copy of a polymorphic reflection made for the joined class adds the type condition to its `join_scope`.
+`joining` hands Active Record a nested hash of the associations in the block. Inner joins are keyed by name, so Active Record merges them with its own `joins`. An outer join or a polymorphic `of` is keyed by a `BabySqueel::Join` value carrying an outer flag and the class; a prepend on `JoinDependency#build` turns those keys into join associations and marks the outer ones, one on `make_constraints` lets that mark win over the inner tree, and the copy of a polymorphic reflection made for the joined class adds the type condition to its `join_scope`.
 
-An attribute of a joined association, `author.name`, has to use the alias Active Record gives that join. `Table#find_alias` builds the join dependency Active Record itself would build for the scope plus the chain, reads the table off the matching join association, and keeps it per chain for the block. Aliases are never computed by hand.
+An attribute of a joined association, `author.name`, has to use the alias Active Record gives that join. `DSL#find_alias` builds the join dependencies Active Record itself would build for the scope's `joins` and `left_joins`, on copies of the trees merged in from other models, and reads the table off the join association at the end of the chain. When the scope does not join the chain, it does the same for the scope plus the chain, joined inner or outer as the block names it. The table is kept per chain for the block. Joins of `eager_load` and `includes` are not among them: they are added when the query is built, after `where.has` has run, so a chain they join twice resolves as if they were absent. The same holds for anything `where.has` cannot see: a join added after it, and a join given as a String, which Active Record does not parse. Join first, then call `where.has`; a chain joined only by a String resolves to the alias a second join would get, `Post.joins("INNER JOIN authors ON …").where.has { author.name }` to `"authors_posts"."name"`. Aliases are never computed by hand.
 
 `where.has` passes the resulting Arel node to `where!`. A relation given to `in` or `not_in` goes through Active Record's handler for `where(column: relation)`.
 
 Known limitation: an outer join of an association the relation already inner joins, `Post.joins(:author).joining { author.outer }`, is added as a second join. Active Record's `left_joins` would merge it into the inner join. The pending spec in `spec/integration/joining_spec.rb` describes it.
+
+Inside an association scope, `where.has` resolves its chains when the scope is built. Active Record aliases the scope's joins only later, with the outer query, so a chain whose table the outer query joins as well stays on the outer join: with `has_many :kids, -> { joins(:author).where.has { author.name.eq('a') } }`, `Post.joins(:author, :kids)` compares `"authors"."name"`, not the scope's `"authors_posts"`. Active Record's own `where(authors: { name: 'a' })` in that scope does the same. Columns of the scope's own table use the association's alias.
 
 ## What's what?
 

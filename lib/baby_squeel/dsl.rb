@@ -43,8 +43,9 @@ module BabySqueel
     #
     # The chain is looked up in the joins the scope already has, inner and
     # outer, so the alias is the one of the final query whichever way the
-    # scope joined it. A chain the scope does not join is added as an inner
-    # join first; Active Record then aliases it as it would in the query.
+    # scope joined it. A chain the scope does not join is added with the
+    # keys the block gives it, inner or outer; Active Record then aliases it
+    # as it would in the query.
     #
     # Resolving means building the join dependency of the scope, so the
     # result is kept per chain for the lifetime of the DSL, which is one
