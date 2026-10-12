@@ -8,10 +8,19 @@ describe BabySqueel::Association do
     let(:table) { association }
   end
 
+  describe "#outer" do
+    it "flags the outer join" do
+      expect(association.outer._join).to eq(Arel::Nodes::OuterJoin)
+    end
+
+    it "does not mutate the original instance" do
+      expect(association.outer.object_id).not_to eq(association.object_id)
+    end
+  end
+
   describe "#of" do
     specify { expect(polymorph._scope).to be_nil }
     specify { expect(polymorph._table).to be_nil }
-    specify { expect(polymorph._polymorphic_klass).to be_nil }
     specify { expect(polymorph.inspect).to eq("#<BabySqueel::Association imageable>") }
     specify { expect { polymorph[:id] }.to raise_error(BabySqueel::Error, /'imageable' is a polymorphic association/) }
 
@@ -21,10 +30,6 @@ describe BabySqueel::Association do
 
     it "assigns the _table" do
       expect(polymorph.of(Post)._table).to eq(Post.arel_table)
-    end
-
-    it "assigns the _polymorphic_klass" do
-      expect(polymorph.of(Post)._polymorphic_klass).to eq(Post)
     end
 
     it "rejects anything but a model class" do

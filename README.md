@@ -32,7 +32,7 @@ BabySqueel's blocks use `instance_eval`, which means you won't have access to yo
 Post.where.has { |post| post.created_at.gteq(2.weeks.ago) }
 ```
 
-A column whose name is also a Ruby method, such as `hash`, `display` or `format`, or one of the DSL's own methods, `outer`, `of`, `association`, `evaluate`, `find_alias`, `join_key`, cannot be resolved by name: Ruby finds the method first. Use `[]` for those columns:
+A column whose name is also a Ruby method, such as `hash`, `display` or `format`, or one of the DSL's own methods, `association` and `find_alias`, on the block's table `evaluate`, on an association `outer`, `of` and `join_key`, cannot be resolved by name: Ruby finds the method first. Use `[]` for those columns:
 
 ```ruby
 Post.where.has { self[:hash].eq('abc') }

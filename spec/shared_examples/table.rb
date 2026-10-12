@@ -7,16 +7,6 @@ shared_examples_for "a table" do
     end
   end
 
-  describe "#outer" do
-    it "flags the outer join" do
-      expect(table.outer._join).to eq(Arel::Nodes::OuterJoin)
-    end
-
-    it "does not mutate the original instance" do
-      expect(table.outer.object_id).not_to eq(table.object_id)
-    end
-  end
-
   describe "#respond_to?" do
     it "resolves attributes" do
       is_expected.to respond_to(:title)

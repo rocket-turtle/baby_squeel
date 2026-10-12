@@ -1,14 +1,16 @@
 module BabySqueel
   class Table
-    attr_reader :_table, :_scope, :_join
+    attr_reader :_scope
 
     # scope is a model class or a relation; both answer arel_table,
     # column_names and reflect_on_association. A polymorphic association
     # passes nil until #of names the class.
     def initialize(scope)
       @_scope = scope
-      @_table = scope&.arel_table
-      @_join = Arel::Nodes::InnerJoin
+    end
+
+    def _table
+      _scope&.arel_table
     end
 
     # Constructs a new BabySqueel::Association. Raises
@@ -29,20 +31,6 @@ module BabySqueel
     def [](key)
       Nodes::Attribute.from(_table[key])
     end
-
-    # Instruct the table to be joined with a LEFT OUTER JOIN.
-    def outer
-      clone.outer!
-    end
-
-    protected
-
-    def outer!
-      @_join = Arel::Nodes::OuterJoin
-      self
-    end
-
-    public
 
     # Evaluates a DSL block. If arity is given, this method
     # `yield` itself, rather than `instance_eval`.
@@ -100,7 +88,7 @@ module BabySqueel
       associations.inject(root) do |node, association|
         node.children.find do |child|
           child.reflection.name == association._reflection.name &&
-            (!association._reflection.polymorphic? || association._polymorphic_klass == child.base_klass)
+            (!association._reflection.polymorphic? || association._scope == child.base_klass)
         end || raise(Error, "Active Record's join tree has no join for '#{association._reflection.name}'.")
       end
     end

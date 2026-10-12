@@ -5,6 +5,10 @@ describe BabySqueel::Table do
 
   include_examples "a table"
 
+  it "has no outer join, only an association does" do
+    expect { table.outer }.to raise_error(BabySqueel::Error, /no column or association named 'outer'/)
+  end
+
   describe "#find_alias" do
     it "resolves the tables Active Record's own join sources use" do
       relation = Post.joins(:author, comments: :author).left_joins(parent: :author)
