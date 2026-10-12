@@ -7,6 +7,7 @@
 - `Nodes::Attribute` is a module that extends the Arel attribute with `in`/`not_in` for a relation; the attribute stays an `Arel::Attributes::Attribute` equal to Active Record's, so `rewhere`, `merge` and `unscope` find it. `Table#[]` and `Association#[]` resolve the alias when the attribute is built instead of when the block result is unwrapped
 - `where.has` accepts nil, a String, a Hash or an Arel node and rejects anything else
 - `Table#_arel` and `Association#_arel` are `_joins`; they return the joins hash, not Arel
+- no prepend on Active Record's reflections: the copy of a polymorphic reflection `JoinDependency` makes for the class named by `#of` is extended with the type condition, every other reflection's `join_scope` is Active Record's own (was a prepend on `AbstractReflection`)
 - `where.has` names an array it rejects by its size and an attribute by table and column instead of inspecting them
 
 ### Fixed

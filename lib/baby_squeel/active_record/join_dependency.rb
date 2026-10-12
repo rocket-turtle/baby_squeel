@@ -5,6 +5,15 @@ module BabySqueel
   module ActiveRecord
     # Prepended to ActiveRecord::Associations::JoinDependency.
     module JoinDependency
+      # Extends the copy of a polymorphic reflection made by #with_klass.
+      module PolymorphicJoinScope
+        # The type column holds the polymorphic_name of the joined class,
+        # which for an STI subclass is the name of its base class.
+        def join_scope(table, foreign_table, foreign_klass)
+          super.where!(foreign_table[foreign_type].eq(klass.polymorphic_name))
+        end
+      end
+
       private
 
       # Builds the JoinAssociations for one level of the association tree.
@@ -31,11 +40,15 @@ module BabySqueel
         join_association
       end
 
-      # A copy of the polymorphic reflection whose klass is the given class.
-      # Reflection#klass reads the memoized @klass, and the copy leaves the
-      # original reflection untouched for other threads.
+      # A copy of the polymorphic reflection whose klass is the given class
+      # and whose join is constrained to it. Reflection#klass reads the
+      # memoized @klass, and the copy leaves the original reflection
+      # untouched for other threads.
       def with_klass(reflection, klass)
-        reflection.clone.tap { |copy| copy.instance_variable_set(:@klass, klass) }
+        reflection.clone.tap do |copy|
+          copy.instance_variable_set(:@klass, klass)
+          copy.extend(PolymorphicJoinScope)
+        end
       end
 
       def guard_deprecation(reflection)

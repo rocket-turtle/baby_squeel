@@ -171,7 +171,7 @@ Picture.joining { imageable.of(Post) }
 
 ## How it works
 
-`joining` hands Active Record a nested hash of the associations in the block. Inner joins are keyed by name, so Active Record merges them with its own `joins`. An outer join or a polymorphic `of` is keyed by a `BabySqueel::Join` value carrying the join type and the class; a prepend on `JoinDependency#build` turns those keys into join associations, one on `make_constraints` lets the outer type win over the inner tree, and one on `Reflection#join_scope` adds the polymorphic type condition.
+`joining` hands Active Record a nested hash of the associations in the block. Inner joins are keyed by name, so Active Record merges them with its own `joins`. An outer join or a polymorphic `of` is keyed by a `BabySqueel::Join` value carrying the join type and the class; a prepend on `JoinDependency#build` turns those keys into join associations, one on `make_constraints` lets the outer type win over the inner tree, and the copy of a polymorphic reflection made for the joined class adds the type condition to its `join_scope`.
 
 An attribute of a joined association, `author.name`, has to use the alias Active Record gives that join. `Table#find_alias` builds the join dependency Active Record itself would build for the scope plus the chain, reads the table off the matching join association, and keeps it per chain for the block. Aliases are never computed by hand.
 
