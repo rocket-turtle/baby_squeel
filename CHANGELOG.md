@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [3.0.0.internal6] - 2026-10-12
+
 ### Removed without deprecation
 - `BabySqueel::Nodes::Proxy` and `Nodes.wrap`: an attribute in a DSL block is a plain `Arel::Attributes::Attribute` of the aliased table, so every method on it is Arel's own and `==`, `!=` and `!` return a boolean (was `NoMethodError` on the node). As the block result `where.has` rejects the boolean with `ArgumentError`, and `and`/`or` reject it when the SQL is built. As an operand it is a value like any other: `id.eq(title == "x")` renders `"posts"."id" = 0` without an error
 - `Nodes.unwrap` and `DSL.evaluate`: `joining` turns the tables in the block result into joins hashes itself; `#evaluate` is on `DSL` only, not on `Table` and `Association`
