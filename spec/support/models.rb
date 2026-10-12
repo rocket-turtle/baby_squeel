@@ -19,6 +19,8 @@ class Post < ActiveRecord::Base
   has_many :ugly_author_comments, through: :ugly_author, source: :comments
 
   has_many :pictures, as: :imageable
+  has_many :instance_comments, ->(post) { where(author_id: post.author_id) }, class_name: "Comment"
+  has_many :misdeclared_comments, class_name: "Comment", inverse_of: :nothing
 
   belongs_to :parent, class_name: "Post"
   belongs_to :child, class_name: "Post"
