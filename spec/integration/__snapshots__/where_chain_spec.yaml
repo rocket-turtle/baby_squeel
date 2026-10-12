@@ -1,7 +1,0 @@
----
-"#where.has wheres on polymorphic associations 1": SELECT "pictures".* FROM "pictures"
-  INNER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type"
-  = 'Post' WHERE "posts"."title" LIKE 'meatloaf'
-"#where.has wheres on polymorphic associations outer join 1": SELECT "pictures".*
-  FROM "pictures" LEFT OUTER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id"
-  AND "pictures"."imageable_type" = 'Post' WHERE "posts"."title" LIKE 'meatloaf'

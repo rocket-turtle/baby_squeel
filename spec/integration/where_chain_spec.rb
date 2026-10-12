@@ -140,7 +140,11 @@ describe "#where.has" do
       imageable.of(Post).title.matches("meatloaf")
     end
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(<<~SQL)
+      SELECT "pictures".* FROM "pictures"
+      INNER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'
+      WHERE "posts"."title" LIKE 'meatloaf'
+    SQL
   end
 
   it "wheres on polymorphic associations outer join" do
@@ -148,7 +152,11 @@ describe "#where.has" do
       imageable.of(Post).title.matches("meatloaf")
     end
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(<<~SQL)
+      SELECT "pictures".* FROM "pictures"
+      LEFT OUTER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'
+      WHERE "posts"."title" LIKE 'meatloaf'
+    SQL
   end
 
   it "wheres and correctly aliases" do

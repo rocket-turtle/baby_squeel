@@ -25,19 +25,21 @@ describe "test that plain rails still works" do
   it "joins and merge" do
     relation = Author.joins(:posts).merge(Post.joins(:comments).merge(Comment.where(body: "body")))
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Author.joins(posts: :comments).where(comments: { body: "body" }))
   end
 
   it "left_joins" do
-    relation = Post.left_joins(:parent, :author)
+    sql = Post.left_joins(:parent, :author).to_sql
 
-    expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
+    # 8.1 writes AS before a table alias, 8.0 does not
+    expect(sql).to match(/LEFT OUTER JOIN "posts" (AS )?"parents_posts" ON "parents_posts"."id" = "posts"."parent_id"/)
+    expect(sql).to include('LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"')
   end
 
   it "joins includes" do
-    relation = Post.joins(:author).includes(:author).to_sql
+    relation = Post.joins(:author).includes(:author)
 
-    expect(relation).to match_sql_snapshot
+    expect(relation).to produce_sql(Post.joins(:author).eager_load(:author))
   end
 
   it "self joins and includes" do

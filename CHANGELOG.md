@@ -12,6 +12,10 @@
 ### Fixed
 - `attribute.clone.not_in(relation)` and `.clone.in(relation)` ran the relation when the block was evaluated and rendered its result: `1=1` and `1=0` for an empty one. The clone kept the plain Arel attribute without the DSL's handling of a relation; it now keeps it and renders the subquery. `dup` drops the extension like any singleton module and still runs the relation; use `clone`
 
+### Tooling
+- the snapshot infrastructure is gone (`__snapshots__/*.yaml`, `match_sql_snapshot`, `variants:`, `UPDATE_SNAPSHOTS`, `rake snapshots:prune`). Of the ten snapshot examples seven assert `produce_sql` with an Active Record relation or the literal SQL, the documented duplicate join with the `AS` of 8.1 removed; the three that checked plain Active Record are gone
+- `produce_sql` is one matcher file and still compares for equality
+
 ## [3.0.0.internal5] - 2026-10-04
 
 ### Removed without deprecation

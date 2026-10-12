@@ -205,12 +205,9 @@ export AR='main'; bin/setup; rake
 bundle exec rubocop
 ```
 
-Two environment variables the specs read:
+`COVERAGE=1` writes a coverage report to `coverage/`. Off by default, so a plain run does not produce one.
 
-- `COVERAGE=1` writes a coverage report to `coverage/`. Off by default, so a plain run does not produce one.
-- `UPDATE_SNAPSHOTS=1` records SQL snapshots. A missing snapshot fails the run instead of being recorded silently, so a renamed or new example needs this once. Snapshots with `variants:` are recorded per Active Record version, so run this for each version in the list; the unsuffixed key is for versions not in the list. Recording never removes keys; `rake snapshots:prune` does.
-
-A snapshot is for SQL that has no plain Active Record equivalent, such as a polymorphic join. Everything else asserts `produce_sql(<the Active Record relation>)`, which also proves the gem does what Active Record does.
+Specs assert `produce_sql(<the Active Record relation>)`, which also proves the gem does what Active Record does. SQL that has no plain Active Record equivalent, such as a polymorphic join, is asserted as a literal SQL string.
 
 `bin/setup` rewrites `Gemfile.lock` for the given `AR`. A lock left on `AR=main` needs a Rails checkout that `bin/setup` makes; run `unset AR; bin/setup` before working without it.
 
@@ -222,9 +219,8 @@ You can also run `bin/console` to open up a prompt where you'll have access to s
 2. Add the version to test matrix [build.yml](.github/workflows/build.yml)
 3. Update development section in the [README.md](README.md)
 4. If the code has to branch on the Active Record version, put the check in [version_helper.rb](lib/baby_squeel/active_record/version_helper.rb) instead of inlining it. Collecting every version branch in one file makes them easy to find and drop once support for that version ends.
-5. Add the version to every `match_sql_snapshot(variants: [...])` call whose SQL differs and record the snapshots with `UPDATE_SNAPSHOTS=1`
-6. Run the specs with all supported versions
-7. Add comment to the unreleased section in [CHANGELOG.md](CHANGELOG.md)
+5. Run the specs with all supported versions
+6. Add comment to the unreleased section in [CHANGELOG.md](CHANGELOG.md)
 
 ## Release
 

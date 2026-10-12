@@ -48,13 +48,19 @@ describe "#joining" do
       it "inner joins" do
         relation = Picture.joining { imageable.of(Post) }
 
-        expect(relation).to match_sql_snapshot
+        expect(relation).to produce_sql(<<~SQL)
+          SELECT "pictures".* FROM "pictures"
+          INNER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'
+        SQL
       end
 
       it "outer joins" do
         relation = Picture.joining { imageable.of(Post).outer }
 
-        expect(relation).to match_sql_snapshot
+        expect(relation).to produce_sql(<<~SQL)
+          SELECT "pictures".* FROM "pictures"
+          LEFT OUTER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'
+        SQL
       end
 
       it "compares the type column with the polymorphic name of a subclass" do
@@ -71,7 +77,12 @@ describe "#joining" do
           imageable.of(Author).name.eq("NameOfTheAuthor").or(imageable.of(Post).title.eq("NameOfThePost"))
         end
 
-        expect(relation).to match_sql_snapshot
+        expect(relation).to produce_sql(<<~SQL)
+          SELECT "pictures".* FROM "pictures"
+          INNER JOIN "authors" ON "authors"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Author'
+          INNER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'
+          WHERE ("authors"."name" = 'NameOfTheAuthor' OR "posts"."title" = 'NameOfThePost')
+        SQL
       end
     end
 
@@ -99,7 +110,11 @@ describe "#joining" do
       it "handles polymorphism" do
         relation = Picture.joining { imageable.of(Post).comments }
 
-        expect(relation).to match_sql_snapshot
+        expect(relation).to produce_sql(<<~SQL)
+          SELECT "pictures".* FROM "pictures"
+          INNER JOIN "posts" ON "posts"."id" = "pictures"."imageable_id" AND "pictures"."imageable_type" = 'Post'
+          INNER JOIN "comments" ON "comments"."post_id" = "posts"."id"
+        SQL
       end
 
       it "outer joins at multiple levels" do
@@ -201,7 +216,16 @@ describe "#joining" do
           # different keys in the join tree. So the through association and the
           # authors table it goes through are joined a second time, as outer
           # joins. The pending example below states what Active Record does.
-          expect(relation).to match_sql_snapshot(variants: ["8.1", "8.2"])
+          # 8.1 writes AS before a table alias, 8.0 does not
+          expect(relation.to_sql.gsub('" AS "', '" "')).to produce_sql(<<~SQL)
+            SELECT "posts".* FROM "posts"
+            INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+            INNER JOIN "posts" "posts_authors" ON "posts_authors"."author_id" = "authors"."id"
+            INNER JOIN "authors" "authors_posts_join" ON "authors_posts_join"."id" = "posts_authors"."author_id"
+            INNER JOIN "comments" ON "comments"."author_id" = "authors_posts_join"."id"
+            LEFT OUTER JOIN "authors" "authors_posts_join_2" ON "authors_posts_join_2"."id" = "posts_authors"."author_id"
+            LEFT OUTER JOIN "comments" "author_comments_posts" ON "author_comments_posts"."author_id" = "authors_posts_join_2"."id"
+          SQL
         end
 
         it "dedupes an outer join against the inner join Active Record made" do

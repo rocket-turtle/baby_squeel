@@ -31,6 +31,4 @@ RSpec.configure do |config|
   config.before :suite do
     puts "\nRunning with ActiveRecord #{ActiveRecord::VERSION::STRING}"
   end
-
-  config.after(:suite) { Matchers::Snapshot.prune! } if ENV["PRUNE_SNAPSHOTS"]
 end

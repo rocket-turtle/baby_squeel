@@ -1,39 +1,19 @@
-require_relative "matchers/snapshot"
-require_relative "matchers/sql_formatter"
-require_relative "matchers/match_formatted"
-require_relative "matchers/match_snapshot"
+# Compares normalized SQL for equality, never as a pattern. On failure each
+# clause starts a line, so the diff points at the join or condition.
+RSpec::Matchers.define :produce_sql do |expected|
+  normalize = lambda do |sql|
+    sql = sql.to_sql if sql.respond_to?(:to_sql)
+    raise ArgumentError, "cannot normalize #{sql.class}" unless sql.is_a?(String)
 
-module Matchers
-  def self.suffix(variants: [])
-    variant = variants.find do |variant|
-      ActiveRecord::VERSION::STRING.start_with?(variant)
-    end
-
-    "(Active Record: v#{variant})" if variant
+    sql.squish.gsub("( ", "(").gsub(" )", ")")
   end
+  clause = / (?=INNER JOIN|LEFT OUTER JOIN|WHERE|ORDER BY|GROUP BY|HAVING|LIMIT)/
+  format = ->(sql) { normalize.call(sql).gsub(clause, "\n") }
 
-  def snapshot_index(key)
-    @snapshot_indexes ||= Hash.new { |h, k| h[k] = 0 }
-    @snapshot_indexes[key] += 1
-  end
+  match { |actual| normalize.call(actual) == normalize.call(expected) }
 
-  def match_sql_snapshot(...)
-    example = RSpec.current_example
+  diffable
 
-    snapshot = Snapshot.new(
-      example.metadata,
-      snapshot_index(example.id),
-      suffix: Matchers.suffix(...)
-    )
-
-    MatchSnapshot.new(snapshot, SQLFormatter)
-  end
-
-  def produce_sql(sql)
-    MatchFormatted.new(sql, SQLFormatter)
-  end
-end
-
-RSpec.configure do |config|
-  config.include Matchers
+  define_method(:expected) { format.call(super()) }
+  define_method(:actual) { format.call(super()) }
 end
