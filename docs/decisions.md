@@ -89,8 +89,8 @@ the scope's own `arel`; internal3 assigned the tables of the whole tree
 without building ON clauses and was faster there (about +60 µs, +20%, for
 a filter on a scope with six joins). Active Record assigns an alias and
 builds the ON clause in the same step, so skipping the ON clauses means
-computing aliases by hand. Over all consumer query shapes HEAD is about
-15–20% faster than internal3.
+computing aliases by hand. Over all consumer query shapes internal6 is
+about 15–20% faster than internal3.
 
 **Replace the `NoMethodError` for a through association whose `through`
 names no association.** Raised when the block names the association, as
