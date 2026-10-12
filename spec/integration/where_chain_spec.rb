@@ -161,6 +161,19 @@ describe "#where.has" do
     SQL
   end
 
+  it "resolves the alias of a chain joined beside a String join of the same table" do
+    string_join = "INNER JOIN authors ON authors.id = posts.author_id"
+    relation = Post.joins(string_join).joining { author }.where.has { author.name.eq("a") }
+
+    expect(relation).to produce_sql(Post.joins(string_join).joins(:author).where(authors_posts: { name: "a" }))
+  end
+
+  it "resolves the alias references gives a table" do
+    relation = Post.joining { author }.references(Arel.sql("author")).where.has { author.name.eq("a") }
+
+    expect(relation).to produce_sql(Post.joins(:author).references(Arel.sql("author")).where(author: { name: "a" }))
+  end
+
   it "renders a default scope on the alias Active Record gives the association" do
     # TitledPost default_scope { where.has { title.eq("t") } }, joined from Post as titled_parent
     expect(Post.joins(:titled_parent).to_sql.gsub('" AS "', '" "')).to produce_sql(<<~SQL)
