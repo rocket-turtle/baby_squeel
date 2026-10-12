@@ -23,7 +23,6 @@ class Post < ActiveRecord::Base
   has_many :misdeclared_comments, class_name: "Comment", inverse_of: :nothing
 
   belongs_to :parent, class_name: "Post"
-  belongs_to :child, class_name: "Post"
   has_many :kids, -> { joins(:author).where.has { author.name.eq("a").and(title.eq("t")) } },
            class_name: "Post", foreign_key: :parent_id
   belongs_to :titled_parent, class_name: "TitledPost", foreign_key: :parent_id
@@ -44,7 +43,6 @@ class Comment < ActiveRecord::Base
 end
 
 class Picture < ActiveRecord::Base
-  belongs_to :comment
   belongs_to :imageable, polymorphic: true
 end
 
