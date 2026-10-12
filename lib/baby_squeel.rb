@@ -18,11 +18,9 @@ ActiveSupport.on_load :active_record do
   require "baby_squeel/active_record/query_methods"
   require "baby_squeel/active_record/where_chain"
   require "baby_squeel/active_record/join_dependency"
-  require "baby_squeel/active_record/join_association"
 
   ActiveRecord::Base.singleton_class.delegate :joining, to: :all
   ActiveRecord::Relation.prepend BabySqueel::ActiveRecord::QueryMethods
   ActiveRecord::QueryMethods::WhereChain.prepend BabySqueel::ActiveRecord::WhereChain
   ActiveRecord::Associations::JoinDependency.prepend BabySqueel::ActiveRecord::JoinDependency
-  ActiveRecord::Associations::JoinDependency::JoinAssociation.prepend BabySqueel::ActiveRecord::JoinAssociation
 end

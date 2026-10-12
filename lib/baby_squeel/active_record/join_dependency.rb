@@ -13,14 +13,23 @@ module BabySqueel
         end
       end
 
+      # Marks a JoinAssociation built from an outer BabySqueel::Join. An
+      # instance variable rather than an extended module, which would give
+      # every such join its own singleton class; not a subclass, because
+      # JoinPart#match? compares classes when Active Record merges trees.
+      OUTER = :@baby_squeel_outer
+
       private
 
       # Builds the JoinAssociations for one level of the association tree.
       # BabySqueel::Join keys carry a join type and, for a polymorphic
       # association, the class to join; every other key is Active Record's
       # own and goes through its builder, including its validity and
-      # deprecation checks.
+      # deprecation checks. The prepend sees every join of the application,
+      # so a level without a Join goes to Active Record as it is.
       def build(associations, base_klass)
+        return super unless associations.any? { |name, _| name.is_a?(Join) }
+
         associations.flat_map do |name, right|
           name.is_a?(Join) ? build_join(name, right, base_klass) : super({ name => right }, base_klass)
         end
@@ -35,7 +44,7 @@ module BabySqueel
         reflection = with_klass(reflection, join.klass) if join.klass
         children = build(right, reflection.klass)
         join_association = ::ActiveRecord::Associations::JoinDependency::JoinAssociation.new(reflection, children)
-        join_association.join_type = join.type
+        join_association.instance_variable_set(OUTER, true) if join.type == Arel::Nodes::OuterJoin
         join_association
       end
 
@@ -56,12 +65,11 @@ module BabySqueel
         ::ActiveRecord::Associations::Deprecation.guard(reflection) { "referenced in query to join its table" }
       end
 
-      # A child built from a BabySqueel::Join carries its own join type. An
-      # outer one takes precedence over the join type of the surrounding
-      # dependency, which is InnerJoin for joins_values, so that child is a
-      # LEFT OUTER JOIN inside an otherwise inner join tree.
+      # A child marked OUTER takes precedence over the join type of the
+      # surrounding dependency, which is InnerJoin for joins_values, so that
+      # child is a LEFT OUTER JOIN inside an otherwise inner join tree.
       def make_constraints(parent, child, join_type)
-        join_type = child.join_type if child.join_type == Arel::Nodes::OuterJoin
+        join_type = Arel::Nodes::OuterJoin if child.instance_variable_get(OUTER)
         super
       end
     end

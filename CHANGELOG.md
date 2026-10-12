@@ -11,6 +11,8 @@
 - `Table#_arel` and `Association#_arel` are `_joins`; they return the joins hash, not Arel
 - `BabySqueel::ActiveRecord::Base`, `lib/baby_squeel/errors.rb` and `lib/baby_squeel/join.rb` are folded into `lib/baby_squeel.rb`; `Join` has no default arguments
 - `Association#_polymorphic_klass` is gone: `#of` sets the scope and nothing else, and the table is derived from the scope instead of stored
+- no prepend on `JoinAssociation`: a join association built from an `.outer` key carries the instance variable named by `JoinDependency::OUTER`, which `make_constraints` checks; `JoinAssociation#join_type` is gone. A marker module would give each such join its own singleton class, which made a query with three outer chains and four resolved chains about 8% slower
+- `JoinDependency#build` hands a level without a `BabySqueel::Join` to Active Record unchanged, so the joins, includes and eager loads of the rest of the application allocate as they would without the gem
 - no prepend on Active Record's reflections: the copy of a polymorphic reflection `JoinDependency` makes for the class named by `#of` is extended with the type condition, every other reflection's `join_scope` is Active Record's own (was a prepend on `AbstractReflection`)
 - joining and resolving an alias reject a polymorphic association without `#of` in `Association#join_key`, which `#[]` and `#_joins` reach; `method_missing` keeps its own check for names looked up on it. The message is unchanged
 - `where.has` names an array it rejects by its size and an attribute by table and column instead of inspecting them

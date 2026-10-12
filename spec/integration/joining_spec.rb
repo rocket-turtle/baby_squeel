@@ -250,6 +250,11 @@ describe "#joining" do
           expect(relation).to produce_sql(Post.joins(:author).left_joins(author: :comments))
         end
 
+        it "merges an outer join with Active Record's left_joins of the same association" do
+          expect(Post.joining { comments.outer }.left_joins(:comments)).to produce_sql(Post.left_joins(:comments))
+          expect(Post.left_joins(:comments).joining { comments.outer }).to produce_sql(Post.left_joins(:comments))
+        end
+
         it "dedupes incremental outer joins (in any order)" do
           relation = Post.joining { author.comments.outer }.joins(:author)
 

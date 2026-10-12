@@ -1,4 +1,4 @@
-describe ActiveRecord::Associations::JoinDependency::JoinAssociation do
+describe ActiveRecord::Associations::JoinDependency do
   it "leaves the original reflection intact for thread safety" do
     reflection = Picture.reflect_on_association(:imageable)
     new_join_dependency(Picture, new_join(:imageable, Arel::Nodes::OuterJoin, Post) => {})
