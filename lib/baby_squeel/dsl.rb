@@ -84,10 +84,10 @@ module BabySqueel
     # the inner joins first, then the stashed ones of left_joins, so each
     # JoinAssociation carries the table the final query will use.
     def join_roots(relation)
-      buckets, join_type = relation.send(:build_join_buckets)
-      alias_tracker = relation.alias_tracker(buckets[:leading_join] + buckets[:join_node])
-      join_dependency = relation.construct_join_dependency(buckets[:named_join], join_type)
-      stashed = buckets[:stashed_join].map { |dependency| copy_join_dependency(dependency) }
+      join_nodes, named_joins, stashed_joins, join_type = ActiveRecord::VersionHelper.join_buckets(relation)
+      alias_tracker = relation.alias_tracker(join_nodes)
+      join_dependency = relation.construct_join_dependency(named_joins, join_type)
+      stashed = stashed_joins.map { |dependency| copy_join_dependency(dependency) }
       join_dependency.join_constraints(stashed, alias_tracker, relation.references_values)
       [join_dependency, *stashed].map { |dependency| dependency.send(:join_root) }
     end
