@@ -10,6 +10,13 @@ module BabySqueel
         defined?(::ActiveRecord::Associations::Deprecation) ? true : false
       end
 
+      # Active Record main joins the left_joins of a relation before the joins
+      # merged in from another model (rails/rails 2f8b10a), so they take the
+      # plain table name where 8.1 and earlier alias them.
+      def self.left_joins_before_merged_joins?
+        ::ActiveRecord.gem_version >= Gem::Version.new("8.2.0.alpha")
+      end
+
       # The joins of a relation grouped as ActiveRecord::QueryMethods#build_joins
       # groups them: the join nodes the alias tracker counts, the association
       # names, the stashed join dependencies and the join type. Active Record

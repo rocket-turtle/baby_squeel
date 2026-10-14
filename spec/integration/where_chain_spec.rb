@@ -127,8 +127,9 @@ describe "#where.has" do
   it "resolves the alias of a chain past the joins merged in from another model" do
     scope = Post.joins(:comments).left_joins(:author).merge(Comment.joins(:author))
     relation = scope.where.has { author.name.eq("x") }
+    table = BabySqueel::ActiveRecord::VersionHelper.left_joins_before_merged_joins? ? :authors : :authors_posts
 
-    expect(relation).to produce_sql(scope.where(authors_posts: { name: "x" }))
+    expect(relation).to produce_sql(scope.where(table => { name: "x" }))
   end
 
   it "leaves the joins merged in from another model to the final query" do
